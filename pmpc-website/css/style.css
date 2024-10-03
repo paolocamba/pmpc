@@ -1,0 +1,173 @@
+/* Reset margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%; /* Ensure the body and HTML take the full height of the viewport */
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styles */
+body {
+  padding-top: 80px; /* Same height as the navbar */
+  background-image: url('../assets/bg.jpg'); /* Path to your image */
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+/* Sticky Navbar Styling */
+.topnav {
+  display: flex;
+  align-items: center;
+  background-color: #fff; /* White background */
+  padding: 0 40px; /* Add padding on sides */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  height: 80px;
+  position: fixed; /* Make the navbar stick to the top */
+  top: 0; /* Ensure it stays at the very top */
+  width: 100%; /* Make sure the navbar spans the full width of the page */
+  z-index: 1000; /* Ensure the navbar stays on top of other content */
+}
+
+/* Logo Section */
+.logo-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Allows space to push the nav items to the right */
+}
+
+/* Logo Image */
+.logo {
+  height: 70px;
+  margin-right: 15px;
+}
+
+/* PASCHAL Text */
+.logo-text {
+  font-size: 40px; /* Larger font size for PASCHAL */
+  font-weight: bold;
+  color: #0F4332; /* Change logo text color */
+  text-decoration: none;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+/* Default Nav Links */
+.nav-links a {
+  color: #0F4332; /* Default dark green text color */
+  text-align: center;
+  padding: 10px 12px; /* Equal padding for all links */
+  text-decoration: none;
+  font-size: 20px; /* All links font size */
+  font-weight: 700;
+  margin-left: 10px; /* Equal margin between links */
+}
+
+/* Active Link */
+.nav-links a.active {
+  color: #10C98F; /* Light green for active link */
+}
+
+/* Hover Effects */
+.nav-links a:hover {
+  background-color: #ddd;
+  color: #10C98F; /* Change to light green when hovering */
+}
+
+/* Apply for Loan Button */
+.nav-links a.apply-loan {
+  background-color: #00FFAF; /* New green color */
+  color: black; /* Black text */
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 15px 25px; /* Same padding as other links */
+}
+
+.nav-links a.apply-loan:hover {
+  background-color: #ddd;
+  color: #10C98F; /* Apply for loan hover color */
+}
+
+/* Footer Styles */
+.footer-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 5px;
+  text-align: center;
+  color: white;
+  background-color: #0F4332; /* Dark background color for footer */
+}
+
+.footer-title h3 {
+  font-size: 24px;
+  color: #F3F902; /* Bright yellow color for the title */
+  margin-bottom: 10px;
+}
+
+/* Contact Section (Main Office and Contact Number) */
+.footer-contact {
+  display: flex;
+  justify-content: space-around; /* Aligns items side by side with space between */
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  margin: 5px 0;
+}
+
+/* Social Section (Facebook and Email) */
+.footer-social {
+  display: flex;
+  justify-content: space-around; /* Aligns items side by side */
+  margin-bottom: 20px;
+}
+
+.footer-social a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  text-decoration: underline;
+}
+
+/* Horizontal Line */
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+/* Footer Bottom */
+.footer-bottom p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Mobile Responsive Styling */
+@media (max-width: 768px) {
+  .footer-contact, .footer-social {
+      flex-direction: column; /* Stack items vertically on smaller screens */
+      align-items: center;
+  }
+
+  .footer-title h3 {
+      font-size: 20px;
+  }
+
+  .contact-info p, .social-info p {
+      font-size: 14px;
+  }
+
+  .footer-bottom p {
+      font-size: 12px;
+  }
+}
