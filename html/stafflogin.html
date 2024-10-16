@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Login - PASCHAL COOPERATIVE</title>
-    <link rel="stylesheet" href="../css/stafflogin.css">   <!-- Linking the updated staff login CSS -->
+    <link rel="stylesheet" href="../css/stafflogin.css"> <!-- Linking the updated staff login CSS -->
     <script>
-        // JavaScript function to handle form submission
+        // JavaScript function to handle form submission and email format validation
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+
         function handleLogin(event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
+            // Prevent the form from submitting the traditional way
+            event.preventDefault(); 
 
             // Capture the input values
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Simple username and password validation (replace with real authentication later)
-            if (username === 'admin@gmail.com' && password === '1') {
-                window.location.href = '../html/admin/admin.html';
-            } else if (username === 'loanofficer@gmail.com' && password === '1') {
-                window.location.href = '../html/loan/loanofficer.html';
-            } else if (username === 'membershipofficer@gmail.com' && password === '1') {
-                window.location.href = '../html/membership/membership.html';
-            } else if (username === 'medicalofficer@gmail.com' && password === '1') {
-                window.location.href = '../html/medical/medicalofficer.html';
-            } else if (username === 'liaisonofficer@gmail.com' && password === '1') {
-                window.location.href = '../html/liaison/liaison.html';
-            } else {
-                alert("Invalid username or password. Please try again.");
+            // Email validation
+            if (!validateEmail(username)) {
+                alert("Please enter a valid email address.");
+                return;
             }
+
+            // Submit the form if the email is valid
+            document.querySelector('form').submit();
         }
     </script>
 </head>
@@ -40,9 +40,9 @@
         <p class="welcome-text">Welcome Staff!</p>
 
         <!-- Login Form -->
-        <form onsubmit="handleLogin(event)" method="post">
+        <form onsubmit="handleLogin(event)" method="post" action="stafflogin.php"> <!-- Ensure action points to your PHP file -->
             <div class="input-group">
-                <input type="text" id="username" name="username" placeholder="Enter username" required>
+                <input type="text" id="username" name="username" placeholder="Enter email address" required>
             </div>
             <div class="input-group">
                 <input type="password" id="password" name="password" placeholder="Enter password" required>
@@ -61,7 +61,7 @@
         <!-- Additional Links -->
         <div class="additional-links">
             <p>Not a Staff Member? <a href="signup.html">Create Account</a> instead.</p>
-            <p>If already a staff member, <a href="#">Request Account Credentials</a>.</p>
+            <p>If already a staff member, <a="#">Request Account Credentials</a>.</p>
         </div>
     </div>
 
