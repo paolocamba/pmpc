@@ -1,0 +1,236 @@
+/* General Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  background: white;
+}
+
+/* Navbar Styling */
+.topnav {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 0 40px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  height: 80px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 70px;
+  margin-right: 15px;
+}
+
+.logo-text {
+  font-size: 40px;
+  font-weight: bold;
+  color: #0F4332;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nav-links a {
+  color: #0F4332;
+  text-align: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 10px;
+}
+
+.nav-links a.active {
+  color: #10C98F;
+}
+
+.nav-links a:hover {
+  background-color: #ddd;
+  color: #10C98F;
+}
+
+.nav-links a.apply-loan {
+  background-color: #00FFAF;
+  color: black;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 15px 25px;
+}
+
+.nav-links a.apply-loan:hover {
+  background-color: #ddd;
+  color: #10C98F;
+}
+
+/* Welcome Section */
+.welcome-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 150px 50px;
+  background: linear-gradient(135deg, #00FFAF, #0F4332);
+  color: white;
+}
+
+.welcome-text h1 {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.welcome-text p {
+  font-size: 24px;
+}
+
+.services-btn {
+  padding: 15px 30px;
+  background-color: white;
+  color: #0F4332;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.services-btn:hover {
+  background-color: #10C98F;
+  color: white;
+}
+
+.coop-image img {
+  width: 600px; /* You can adjust this width value */
+  height: 400px; /* Maintain the aspect ratio */
+  margin-right: 100px;
+  border-radius: 29px; /* Optional: to give the image rounded corners */
+}
+
+/* Events Section */
+.events-section {
+  padding: 100px 50px;
+  background-color: white;
+  text-align: center;
+}
+
+.events-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.event {
+  text-align: center;
+  width: 30%;
+}
+
+.event img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.event h3 {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.event p {
+  font-size: 16px;
+}
+
+/* Success Section */
+.success-section {
+  padding: 100px 50px;
+  background-color: #F5F5F5;
+  text-align: center;
+}
+
+.success-section iframe {
+  margin-top: 20px;
+}
+
+/* Map Section */
+.map-section {
+  padding: 100px 50px;
+  background-color: #ffffff;
+  color: white;
+  text-align: center;
+}
+
+.map-container iframe {
+  width: 100%;
+  border: none;
+}
+
+/* Footer Styling */
+.footer-container {
+  background-color: #0F4332;
+  color: white;
+  text-align: center;
+
+}
+
+.footer-title h3 {
+  font-size: 24px;
+  color: #F3F902;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.footer-contact, .footer-social {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.footer-contact p, .footer-social p {
+  margin: 5px 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+.footer-bottom p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.footer-social a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .welcome-section, .events-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-contact, .footer-social {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,0 +1,116 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure full height */
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styling */
+body {
+    padding-top: 80px; /* Same height as the navbar */
+    background-image: url('../assets/bg.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+/* Login Container */
+.login-container {
+    max-width: 400px; /* Maximum width for the login box */
+    min-height: 50px;
+    margin: 20px auto; /* Center the container vertically and horizontally */
+    padding: 30px; /* Padding around the content */
+    background-color: rgb(255, 255, 255); /* Light background */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center text inside the container */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    display: flex; /* Use flexbox to center content */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+}
+
+/* Login Logo */
+.login-logo {
+    width: auto; /* Use auto to maintain aspect ratio */
+    height: 100px; /* Set a fixed height */
+    max-width: 100%; /* Ensure it does not exceed the container */
+    margin-bottom: 20px; /* Space below the logo */
+    object-fit: contain; /* Ensures the image scales while maintaining aspect ratio */
+}
+
+/* Login Headings */
+.login-container h1 {
+    margin-bottom: 10px;
+    font-weight: bolder;
+    color: #0F4332; /* Dark green color for headings */
+}
+
+.welcome-text {
+    font-size: smaller;
+    color: #777; /* Light grey for welcome text */
+    margin-bottom: 60px;
+}
+
+/* Login Button */
+.login-button {
+    background-color: #0F4332; /* Button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 8px 40px; /* Adjust padding for the button */
+    font-size: 16px; /* Button text size */
+    font-weight: bold;
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    max-width: 250px; /* Set maximum width */
+    width: 100%; /* Make the button responsive to its parent */
+    margin: 2px auto;
+}
+
+.login-button:hover {
+    background-color: #10C98F; /* Lighter green on hover */
+}
+
+/* Login Options */
+h2 {
+    font-size: 18px;
+    color: #0F4332;
+    margin-bottom: 10px;
+}
+
+.login-options {
+    margin-bottom: 20px;
+}
+
+.or-text {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+    font-weight: normal;
+}
+
+/* Additional Links */
+.additional-links {
+    margin-top: 20px;
+}
+
+.additional-links a {
+    color: #0F4332;
+    text-decoration: none;
+}
+
+.additional-links a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsive Styling */
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%; /* Make the login box responsive */
+    }
+}
