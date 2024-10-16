@@ -1,0 +1,96 @@
+/* Benefits Section */
+.benefits-section {
+    padding: 120px 50px; /* Padding compensating for the fixed navbar */
+    background: linear-gradient(135deg, rgba(0,255,175,0.9), rgba(15,67,50,0.9)); /* Gradient background */
+    color: white;
+    text-align: center;
+  }
+  
+  .benefits-section h1 {
+    font-size: 50px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .benefits-section h1::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background-color: #00FFAF; /* Light green underline */
+    margin: 10px auto;
+  }
+  
+  .benefits-section h2 {
+    font-size: 30px;
+    font-weight: 600;
+    color: white; /* White text for the subtitle */
+    margin-bottom: 30px;
+  }
+  
+  /* Benefits List Styling */
+  .benefits-list {
+    background-color: #f0f8f5;
+    padding: 40px;
+    text-align: left;
+    color: #333;
+    border-radius: 10px;
+    margin-top: 30px;
+  }
+  
+  .benefits-list ol {
+    list-style-position: inside;
+  }
+  
+  .benefits-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .benefits-list ul li {
+    font-size: 16px;
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+  
+  /* Membership Costs Section */
+  .membership-costs {
+    padding: 80px 50px;
+    background-color: white;
+    text-align: center;
+  }
+  
+  .membership-costs h2 {
+    font-size: 30px;
+    font-weight: 600;
+    color: #0F4332;
+    margin-bottom: 20px;
+  }
+  
+  .membership-costs table {
+    margin: 0 auto 20px;
+    border-collapse: collapse;
+    font-size: 18px;
+  }
+  
+  .membership-costs table td {
+    padding: 10px 20px;
+  }
+  
+  .membership-costs table tr td:first-child {
+    text-align: left;
+    color: #333;
+  }
+  
+  .membership-costs table tr td:last-child {
+    text-align: right;
+    font-weight: bold;
+    color: #0F4332;
+  }
+  
+  .membership-costs p {
+    font-size: 16px;
+    color: #666;
+  }
+  

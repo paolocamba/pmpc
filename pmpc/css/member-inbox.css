@@ -1,0 +1,86 @@
+
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 60px; /* Copied from home page */
+    border-bottom: 1.5px solid #ffffff; /* Copied from home page */
+    margin-bottom: 20px; /* Optional: space below the heading */
+}
+
+header h1 {
+    font-size: 50px;
+    font-weight: 800;
+    color: #f6f6f6;
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: #0F4332; /* New green color */
+    color: rgb(255, 255, 255); /* Black text */
+    border-radius: 8px;
+    margin-top: -150px;
+    font-size: 20px;
+    font-weight: bold;
+    width: 150px;
+    height: 50px;
+    padding: 15px 25px; /* Same padding as the apply-loan button */
+    border: none; /* Remove any default borders */
+    cursor: pointer; /* Pointer cursor to indicate it's clickable */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.logout-button:hover {
+    background-color: #10C98F;
+}
+
+
+/* Inbox Section */
+.inbox-section {
+    margin-top: 40px;
+}
+
+.inbox-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.inbox-table thead {
+    background-color: #0F4332;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.inbox-table th, .inbox-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.inbox-table td {
+    font-size: 16px;
+    color: #333;
+}
+
+.inbox-table tr:last-child td {
+    border-bottom: none; /* Remove bottom border from the last row */
+}
+
+/* Hover effect for rows */
+.inbox-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Settings</title>
+    <link rel="stylesheet" href="../../css/admin-settings.css">
+    <link rel="stylesheet" href="../../css/admin-general.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../../assets/pmpc-logo.png" alt="PMPC Logo">
+                </div>
+                <h2 class="pmpc-text">PASCHAL</h2>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="admin.html">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-loans.html">Loans</a></li>
+                <li><a href="admin-transactions.html">Transactions</a></li>
+                <li><a href="admin-appointments.html">Appointments</a></li>
+            </ul>
+
+            <ul class="sidebar-settings">
+                <li><a href="#settings" class="active">Settings</a></li>
+            </ul>
+        </div>
+
+        <main class="main-content">
+            <header>
+                <h1>Settings</h1>
+                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+            </header>
+
+            <section class="dashboard-metrics">
+                <!-- Announcement Form -->
+                <div class="metric-box">
+                    <h3>Post Announcement</h3>
+                    <form id="announcement-form" method="POST" action="index.php">
+                        <input type="hidden" name="announcement" value="1">
+                        <label for="event_name">Event Name</label>
+                        <input type="text" id="event_name" name="event_name" placeholder="Enter event name" required>
+
+                        <label for="event_date">Event Date</label>
+                        <input type="date" id="event_date" name="event_date" required>
+
+                        <button type="submit">Post Announcement</button>
+                    </form>
+                </div>
+
+                <!-- Event Form -->
+                <div class="metric-box">
+                    <h3>Post Event</h3>
+                    <form id="event-form" method="POST" action="index.php" enctype="multipart/form-data">
+                        <input type="hidden" name="event" value="1">
+                        <label for="title">Event Title</label>
+                        <input type="text" id="title" name="title" placeholder="Enter event title" required>
+
+                        <label for="image">Event Image</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+
+                        <label for="date">Event Date</label>
+                        <input type="date" id="date" name="date" required>
+
+                        <label for="event_description">Event Description</label>
+                        <textarea id="event_description" name="event_description" rows="3" placeholder="Enter event description" required></textarea>
+
+                        <button type="submit">Post Event</button>
+                    </form>
+                </div>
+
+                    <?php endwhile; ?>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function redirectToIndex() {
+            window.location.href = "../../html/index.html";
+        }
+    </script>
+
+    
+</body>
+</html>

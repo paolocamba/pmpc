@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../css/admin.css"> <!-- Linking CSS -->
+    <link rel="stylesheet" href="../../css/admin-general.css">
+</head>
+<body>
+    <!-- Container for the sidebar and main content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../../assets/pmpc-logo.png" alt="PMPC Logo">
+                </div>
+                <h2 class="pmpc-text">PASCHAL</h2> <!-- Text beside the logo -->
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="admin.html" class="active">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-loans.html">Loans</a></li>
+                <li><a href="admin-transactions.html">Transactions</a></li>
+                <li><a href="admin-appointments.html">Appointments</a></li>
+            </ul>
+
+            <ul class="sidebar-settings">
+                <li><a href="admin-settings.html">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Admin Panel</h1>
+                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+            </header>
+
+            <section class="dashboard-metrics">
+                <div class="metric-box">
+                    <h3>2521</h3>
+                    <p>Members</p>
+                </div>
+                <div class="metric-box">
+                    <h3>13</h3>
+                    <p>Member Application</p>
+                </div>
+                <div class="metric-box">
+                    <h3>9</h3>
+                    <p>Loan Application</p>
+                </div>
+                <div class="metric-box">
+                    <h3>400</h3>
+                    <p>Medical Records</p>
+                </div>
+                <div class="metric-box">
+                    <h3>2</h3>
+                    <p>Account Request</p>
+                </div>
+                <div class="metric-box">
+                    <h3>19</h3>
+                    <p>Appointments</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function redirectToIndex() {
+            window.location.href = "../../html/index.html";
+        }
+    </script>
+</body>
+</html>
