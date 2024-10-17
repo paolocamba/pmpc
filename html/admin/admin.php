@@ -121,7 +121,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../html/index.php";
+            window.location.href = "../../html/index.html";
         }
     </script>
 </body>

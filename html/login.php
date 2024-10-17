@@ -1,62 +1,64 @@
 <?php
-// Start the session
 session_start();
 
-// Database connection
+// Database connection setup
 $servername = "localhost";
-$username = "root";
-$password = "";
+$dbUsername = "root";
+$dbPassword = ""; // Update if you have a password
 $dbname = "pmpc";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     // Email format validation
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Invalid email format. Please try again.');</script>";
+        echo "<script>alert('Invalid email format.');</script>";
         exit();
     }
 
-    // Prepare and bind
+    // Prepare statement to select the member's hashed password from the database
     $stmt = $conn->prepare("SELECT MemberID, Password FROM member_credentials WHERE Email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
-    // Check if email exists
+    // Check if the email exists
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($memberId, $hashedPassword);
         $stmt->fetch();
 
-        // Verify the password
-        if (password_verify($password, $hashedPassword)) {
-            // Set session variables
-            $_SESSION['member_id'] = $memberId; // Store MemberID in session
-            $_SESSION['email'] = $email;
+        // Debugging output for fetched data
+        echo "<script>console.log('Fetched Hashed Password: " . addslashes($hashedPassword) . "');</script>";
+        echo "<script>console.log('Entered Password: " . addslashes($password) . "');</script>";
+        echo "<script>console.log('password_verify Result: " . (password_verify($password, $hashedPassword) ? "True" : "False") . "');</script>";
 
-            // Redirect to member landing page
-            header("Location: ../../pmpc/html/member/member-landing.php");
+        // Verify password
+        if (password_verify($password, $hashedPassword)) {
+            echo "<script>console.log('Password verification succeeded.');</script>";
+            
+            // Set session variables
+            $_SESSION['email'] = $email;
+            $_SESSION['member_id'] = $memberId;
+
+            // Redirect to the member landing page
+            header("Location: ../html/member/member-landing.php");
             exit();
         } else {
-            echo "<script>alert('Invalid email or password. Please try again.');</script>";
+            echo "<script>alert('Invalid email or password. Password verification failed.');</script>";
         }
     } else {
-        echo "<script>alert('Invalid email or password. Please try again.');</script>";
+        echo "<script>alert('Invalid email or password. Email not found in database.');</script>";
     }
 
-    // Close the statement
     $stmt->close();
 }
 
-// Close the connection
 $conn->close();
 ?>

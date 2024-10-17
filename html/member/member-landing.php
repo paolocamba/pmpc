@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+session_start();
 
 // Connect to the database
 $servername = "localhost";
@@ -14,7 +14,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if member_id is set in session
 if (isset($_SESSION['member_id'])) {
     $member_id = $_SESSION['member_id'];
 
@@ -27,16 +26,15 @@ if (isset($_SESSION['member_id'])) {
     $stmt->fetch();
     $stmt->close();
 } else {
-    // Handle the case where the user is not logged in
-    $first_name = "Guest"; // Default value
+    $first_name = "Guest";
 }
 
 // Pagination setup
-$limit = 3; // Number of items per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page number
-$offset = ($page - 1) * $limit; // Calculate offset
+$limit = 3;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
-// Fetch events from the database with pagination
+// Fetch events with pagination
 $sql = "SELECT title, event_date, event_description, image FROM events ORDER BY event_date DESC LIMIT $limit OFFSET $offset";
 $result = $conn->query($sql);
 ?>
@@ -47,13 +45,11 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Landing Page</title>
-    <link rel="stylesheet" href="../../css/member-landing.css"> 
+    <link rel="stylesheet" href="../../css/member-landing.css">
     <link rel="stylesheet" href="../../css/member-general.css">
 </head>
 <body>
-
     <div class="container">
-        
         <div class="sidebar">
             <div class="logo-container">
                 <div class="logo">
@@ -61,7 +57,6 @@ $result = $conn->query($sql);
                 </div>
                 <h2 class="pmpc-text">PASCHAL</h2>
             </div>
-            
             <ul class="sidebar-menu">
                 <li><a href="member-landing.php" class="active">Home</a></li>
                 <li><a href="member-dashboard.php">Dashboard</a></li>
@@ -77,13 +72,13 @@ $result = $conn->query($sql);
         <div class="main-content">
             <header>
                 <h1>Welcome, <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='logout.php'">Log out</button>
+
             </header>
 
             <section class="news-bulletin">
                 <div class="news">
                     <h2>News and Events</h2>
-
                     <?php
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
@@ -100,12 +95,10 @@ $result = $conn->query($sql);
                         echo '<p>No events available.</p>';
                     }
 
-                    // Pagination logic
                     $totalResult = $conn->query("SELECT COUNT(*) as total FROM events");
                     $totalItems = $totalResult->fetch_assoc()['total'];
                     $totalPages = ceil($totalItems / $limit);
 
-                    // Display pagination controls
                     echo '<div class="pagination">';
                     if ($page > 1) {
                         echo '<a href="?page=' . ($page - 1) . '">Previous</a>';
@@ -124,7 +117,6 @@ $result = $conn->query($sql);
 
                 <div class="announcement">
                     <h2>Bulletin</h2>
-
                     <?php
                     $sql_announcements = "SELECT Ann_Name, Ann_Date FROM announcement ORDER BY Ann_Date DESC";
                     $result_announcements = $conn->query($sql_announcements);
@@ -139,21 +131,11 @@ $result = $conn->query($sql);
                     } else {
                         echo '<p>No announcements available.</p>';
                     }
-
-                    // Close connection
                     $conn->close();
                     ?>
                 </div>
-
             </section>
         </div>
     </div>
-
-    <script>
-        function redirectToIndex() {
-            window.location.href = "../../html/index.html";
-        }
-    </script>
-
 </body>
 </html>
