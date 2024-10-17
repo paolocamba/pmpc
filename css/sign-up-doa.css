@@ -1,0 +1,139 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure full height */
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styling */
+body {
+    padding-top: 80px; /* Same height as the navbar */
+    background-image: url('../assets/bg.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+/* Appointment Container */
+.appointment-container {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Appointment Form Styling */
+.appointment-form {
+    padding: 30px;
+    text-align: center;
+}
+
+.form-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 22px;
+    color: #0F4332; /* Dark green color for the heading */
+}
+
+p {
+    margin: 10px 0;
+    color: #333;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Step and Button Container */
+.step-and-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Step Indicators Styling */
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 60px; /* Gap between steps */
+    margin-bottom: 30px; /* Space between steps and buttons */
+}
+
+.step-indicators::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    right: 15px;
+    height: 4px;
+    background-color: #0F4332; /* Line between steps */
+    z-index: 0; /* Place the line behind the steps */
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #00ffaf; /* Default step color */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    z-index: 1; /* Ensure steps appear above the line */
+}
+
+.step.completed {
+    background-color: #00ffaf; /* Dark green for completed steps */
+}
+
+.step.active {
+    background-color: #0F4332; /* Dark green for active step */
+}
+
+/* Navigation Buttons Styling */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px; /* Width of the button container */
+}
+
+.nav-button {
+    background-color: #0F4332; /* Dark green button */
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-button:hover {
+    background-color: #0C3B2A; /* Darker green on hover */
+}

@@ -1,0 +1,115 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure full height */
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styling */
+body {
+    padding-top: 80px; /* Same height as the navbar */
+    background-image: url('../assets/bg.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+
+
+/* Signup Container */
+.signup-container {
+    max-width: 714px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Membership Header Styling */
+.membership-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.membership-header h2 {
+    margin-right: 10px; /* Space between text and logo */
+}
+
+
+
+/* Membership Type Styling */
+.membership-type {
+    margin-bottom: 20px;
+    text-align: left; /* Align to the left */
+}
+
+.membership-type h3 {
+    color: #0F4332;
+    margin-bottom: 5px;
+}
+
+.subtext {
+    margin-left: 30px; /* Create tab effect */
+    color: rgb(0, 0, 0);
+}
+
+.breakdown-list {
+    list-style-type: none;
+    padding-left: 0;
+    text-align: center; /* Center the list */
+}
+
+.breakdown-list li {
+    margin-bottom: 5px;
+}
+
+/* Get Started Button */
+.continue-button {
+    background-color: #0F4332; /* Button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 8px 40px; /* Adjust padding for the button */
+    font-size: 18px; /* Button text size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    max-width: 250px; /* Set maximum width */
+    width: 100%; /* Make the button responsive to its parent */
+    margin: 20px auto;
+    text-decoration: none;
+}
+
+.continue-button:hover {
+    background-color: #0F4332; /* Darker shade on hover */
+}
+
+/* Mobile Responsive Styling */
+@media (max-width: 768px) {
+    .signup-container {
+        width: 90%; /* Make the signup box responsive */
+    }
+
+    .membership-header {
+        flex-direction: column;
+    }
+
+    .membership-logo {
+        margin-top: 10px; /* Add space on smaller screens */
+    }
+
+    .subtext {
+        margin-left: 20px; /* Adjust tab size for smaller screens */
+    }
+}

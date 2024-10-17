@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Submit</title>
+    <link rel="stylesheet" href="../css/style.css">  <!-- Main styles -->
+    <link rel="stylesheet" href="../css/sign-up-submit.css">  <!-- Signup specific styles -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="topnav">
+        <div class="logo-container">
+            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="logo">
+            <a href="index.html" class="logo-text">PASCHAL</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="benefits.html">Benefits</a>
+            <a href="about.html">About</a>
+            <a href="signup.html" class="active">Sign Up</a>
+            <a href="apply-loan.html" class="apply-loan">Apply for Loan</a>
+        </div>
+    </div>
+
+    <!-- Submit Membership Form -->
+    <div class="membership-container">
+        <div class="membership-form">
+            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="form-logo">
+            <h3>SUBMIT MEMBERSHIP APPLICATION</h3>
+            <p>Please verify you are human *</p>
+            <!-- Google reCAPTCHA -->
+            <div class="g-recaptcha" data-sitekey="your-site-key-here"></div> <!-- Replace with your reCAPTCHA site key -->
+            
+            <!-- Step Navigation -->
+            <div class="step-and-buttons-container">
+                <div class="step-indicators">
+                    <span class="step completed">1</span>
+                    <span class="step completed">2</span>
+                    <span class="step completed">3</span>
+                    <span class="step active">4</span>
+                </div>
+
+                <div class="navigation-buttons">
+                    <a href="sign-up-doa.html" class="nav-button previous-button">Previous</a>
+                    <a href="sign-up-success.html" class="nav-button submit-button">Submit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
