@@ -1,0 +1,250 @@
+/* Main content container */
+.collateral-assessment-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Title styling */
+.collateral-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.collateral-title h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.collateral-id {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Land title image styling */
+.land-title {
+    text-align: center; /* Center the Land Title text */
+}
+
+.title-image {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Set a maximum height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.title-image img {
+    max-width: 100%; /* Responsive image */
+    max-height: 100%; /* Responsive image */
+}
+
+/* Table styling */
+.collateral-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.collateral-table th, .collateral-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.collateral-table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+/* Input fields and select box styling */
+.collateral-table td input, .collateral-table td select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Result box styling */
+.result-box {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: white; /* Default background color */
+}
+
+/* Matched and not matched styles for results */
+.matched {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.not-matched {
+    background-color: #e57373;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Greyed-out style for results (e.g., unavailable) */
+.greyed-out {
+    color: #9e9e9e;
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+/* Styling for the comments section */
+.comments-section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Values section styling */
+.values-section {
+    display: flex;
+    justify-content: space-between; /* Space between value inputs and comments */
+    margin-top: 20px;
+}
+
+.value-inputs {
+    flex: 1; /* Take up remaining space */
+    margin-right: 20px; /* Space between value inputs and comments */
+}
+
+/* Style for value input fields */
+.value-inputs .value-input {
+    width: 100%; /* Full width */
+    padding: 8px; /* Consistent padding */
+    border: 1px solid #ccc; /* Consistent border */
+    border-radius: 4px; /* Consistent border radius */
+    box-sizing: border-box; /* Ensure padding is included in width */
+    margin-bottom: 10px; /* Space between input fields */
+    height: 40px; /* Increased height for better usability */
+}
+
+/* Adjust textarea for comments */
+.comments-section {
+    flex: 1; /* Equal space for comments */
+}
+
+.comments-section textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    height: 150px; /* Increased height for the comments section */
+}
+
+/* Submit button styling */
+.submit-btn {
+    display: block; /* Center the button */
+    margin: 20px auto; /* Center the button horizontally */
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px; /* Bigger padding for a larger button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Increased font size */
+    text-align: center; /* Center text */
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Adjust input width for better form alignment */
+.collateral-table input, .collateral-table select {
+    width: calc(100% - 20px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Responsive design: ensure the table scales well on smaller devices */
+@media (max-width: 768px) {
+    .collateral-assessment-container {
+        padding: 15px;
+    }
+
+    .collateral-table th, .collateral-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .collateral-table input, .collateral-table select {
+        width: 100%;
+        font-size: 13px;
+    }
+}
+
+/* Container for the file upload section */
+.file-upload-section {
+    margin-top: 20px; /* Space above the upload section */
+}
+
+/* Style for the label of the file input */
+.file-upload-section label {
+    display: block; /* Block display for label */
+    font-weight: bold; /* Bold text for better visibility */
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+/* Style for the file input */
+.file-upload-section input[type="file"] {
+    display: block; /* Block display for file input */
+    margin-bottom: 10px; /* Space below the file input */
+}
+
+/* Container for image previews */
+#imagePreviewContainer {
+    display: flex; /* Flex display for the images */
+    flex-wrap: wrap; /* Wrap images to new lines if needed */
+    margin-top: 10px; /* Space above the preview container */
+}
+
+/* Style for the uploaded images */
+#imagePreviewContainer img {
+    width: 400px; /* Set a larger fixed width for images */
+    height: auto; /* Maintain aspect ratio */
+    margin: 5px; /* Space between images */
+    border: 1px solid #ddd; /* Light border around images */
+    border-radius: 4px; /* Rounded corners for images */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Style for the delete button */
+.delete-btn {
+    background-color: #e57373; /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-top: 5px; /* Space above the button */
+}
+
+/* Hover effect for delete button */
+.delete-btn:hover {
+    background-color: #c62828; /* Darker red on hover */
+}
