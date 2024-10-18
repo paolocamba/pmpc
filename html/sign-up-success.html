@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - PASCHAL</title>
+    <title>Sign Up - Success</title>
     <link rel="stylesheet" href="../css/style.css">  <!-- Main styles -->
-    <link rel="stylesheet" href="../css/sign-up.css">  <!-- Signup specific styles -->
+    <link rel="stylesheet" href="../css/sign-up-success.css">  <!-- Signup specific styles -->
 </head>
 <body>
 
@@ -25,22 +25,15 @@
         </div>
     </div>
 
-    <!-- Sign Up Content -->
-    <div class="signup-container">
-        <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="signup-logo">
-        <h1>PASCHAL</h1>
-        <h2>Multi-Purpose Cooperative</h2>
-        <h3>MEMBERSHIP APPLICATION</h3>
-        <button class="get-started-button" onclick="redirectToChecklist()">Get Started</button>
-        <p>Already have an account? <a href="login.html">Log in instead.</a></p>
+    <!-- Success Message Container -->
+    <div class="success-message-container">
+        <div class="success-message">
+            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="success-logo">
+            <h1>Membership Application <br>Submitted Successfully!</h1>
+            <p>Please settle the payment for <br> Share Capital on the Appointment Date.</p>
+            <a href="index.html" class="home-button">Home</a>
+        </div>
     </div>
-
-    <!-- JavaScript for redirection -->
-    <script>
-        function redirectToChecklist() {
-            window.location.href = "sign-up-checklist.html";
-        }
-    </script>
 
 </body>
 </html>

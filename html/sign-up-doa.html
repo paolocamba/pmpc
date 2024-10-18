@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - DOA</title>
+    <link rel="stylesheet" href="../css/style.css">  <!-- Main styles -->
+    <link rel="stylesheet" href="../css/sign-up-doa.css">  <!-- Signup specific styles -->
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="topnav">
+        <div class="logo-container">
+            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="logo">
+            <a href="index.html" class="logo-text">PASCHAL</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="benefits.html">Benefits</a>
+            <a href="about.html">About</a>
+            <a href="signup.html" class="active">Sign Up</a>
+            <a href="apply-loan.html" class="apply-loan">Apply for Loan</a>
+        </div>
+    </div>
+
+    <!-- Date Appointment Form -->
+    <div class="appointment-container">
+        <div class="appointment-form">
+            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="form-logo">
+            <h3>Date of Appointment *</h3>
+            <p>For Payment Settlement</p>
+            <form action="process-appointment.php" method="POST">
+                <input type="date" id="appointment-date" name="appointment-date" required>
+                
+                <!-- Hidden field to store member ID -->
+                <input type="hidden" name="member-id" value="<?php echo $_GET['member-id']; ?>"> 
+
+                <!-- Step Navigation with Line -->
+                <div class="step-and-buttons-container">
+                    <div class="step-indicators">
+                        <span class="step completed">1</span>
+                        <span class="step completed">2</span>
+                        <span class="step active">3</span>
+                        <span class="step">4</span>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <a href="sign-up-videoseminar.php" class="nav-button previous-button">Previous</a>
+                        <button type="submit" class="nav-button next-button">Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

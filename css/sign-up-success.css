@@ -1,0 +1,137 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure full height */
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+body {
+    position: relative;
+    min-height: 100vh; /* Minimum height of body covers full viewport */
+    padding-top: 80px; /* Same height as the navbar */
+    background-image: url('../assets/bg.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+.signup-logo {
+    width: auto; /* Use auto to maintain aspect ratio */
+    height: 120px; /* Set a fixed height */
+    max-width: 100%; /* Ensure it does not exceed the container */
+    margin-bottom: 20px; /* Space below the logo */
+    object-fit: contain; /* Ensures the image scales while maintaining aspect ratio */
+}
+
+.signup-container {
+    max-width: 714px; /* Maximum width for the signup box */
+    min-height: 515px;
+    margin: 80px auto; /* Center the container vertically and horizontally */
+    padding: 30px; /* Padding around the content */
+    background-color: rgb(255, 255, 255); /* Light background */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center text inside the container */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    display: flex; /* Use flexbox to center content */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+}
+
+/* Navigation Bar */
+.topnav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-weight: bold;
+    color: #0F4332;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.nav-links a {
+    margin-left: 20px;
+    color: #0F4332;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.apply-loan {
+    background-color: #00C851;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* Success Message Styling */
+.success-message-container {
+    height: 100vh; /* Full screen height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.success-message {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.success-logo {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.success-message h1 {
+    font-size: 24px;
+    color: #0F4332;
+    margin-bottom: 20px;
+}
+
+.success-message p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.home-button {
+    background-color: #0F4332; /* Button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 8px 40px; /* Adjust padding for the button */
+    font-size: 18px; /* Button text size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    max-width: 250px; /* Set maximum width */
+    width: 100%; /* Make the button responsive to its parent */
+    margin: 20px auto;
+    text-decoration: none; 
+}
+
+.home-button:hover {
+    background-color: #0d3b29;
+}

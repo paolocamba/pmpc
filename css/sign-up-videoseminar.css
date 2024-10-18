@@ -1,0 +1,150 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure full height */
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styling */
+body {
+    padding-top: 80px; /* Same height as the navbar */
+    background-image: url('../assets/bg.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+/* Signup Container */
+.signup-container {
+    max-width: 714px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Video Seminar Styling */
+.video-seminar {
+    width: 100%;
+    max-width: 714px;
+    margin: 20px auto;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Step and Button Container */
+.step-and-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Step Indicators Styling */
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Aligns the steps and lines vertically */
+    position: relative;
+    gap: 60px; /* Gap between steps */
+    margin-bottom: 50px; /* Increased space between step indicators and buttons */
+    margin-top: -20px; /* Moves step indicators slightly upward */
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #00ffaf; /* Default step color */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative; /* Needed for the pseudo-elements */
+}
+
+/* Default Line Between Steps */
+.step-indicators::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    right: 5px;
+    height: 4px; /* Line thickness */
+    background-color: #0F4332; /* Default line color */
+    z-index: 0;
+}
+
+/* Line behind each step (default color) */
+.step::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 40px); /* Length of the line */
+    height: 4px;
+    background-color: inherit; /* Same color as the steps */
+    z-index: -1; /* Send behind the step circles */
+    transform: translateX(-50%);
+}
+
+.step:first-child::before {
+    display: none; /* Remove the line before the first step */
+}
+
+/* Active Step and Previous Steps */
+.step.active {
+    background-color: #0F4332; /* Dark green for active step */
+}
+
+.step.active::before {
+    background-color: #0F4332; /* Change line color behind the active step */
+}
+
+.step.active ~ .step::before {
+    background-color: #00ffaf; /* Keep the default color for steps after the active one */
+}
+
+/* Navigation Buttons Styling */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px; /* Width of the button container */
+}
+
+.nav-button {
+    background-color: #0F4332; /* Dark green button color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    width: 120px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #0C3B2A; /* Darker green on hover */
+}
+
+/* Disabled Button */
+.disabled-button {
+    background-color: #d3d3d3; /* Gray color for disabled button */
+    cursor: not-allowed; /* Show a disabled cursor */
+}

@@ -156,16 +156,14 @@
 
 /* Submit button styling */
 .submit-btn {
-    display: block; /* Center the button */
-    margin: 20px auto; /* Center the button horizontally */
+    align-self: center; /* Center the button */
     background-color: #4CAF50;
     color: white;
-    padding: 12px 24px; /* Bigger padding for a larger button */
+    padding: 15px 30px; /* Increased padding for larger button */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px; /* Increased font size */
-    text-align: center; /* Center text */
 }
 
 .submit-btn:hover {
@@ -247,4 +245,15 @@
 /* Hover effect for delete button */
 .delete-btn:hover {
     background-color: #c62828; /* Darker red on hover */
+}
+
+/* Additional styles */
+.image-preview {
+    position: relative; /* Position for the delete button */
+    margin: 5px; /* Space between images */
+}
+.submit-container {
+    display: flex; /* Use flexbox to center the button */
+    justify-content: center; /* Center the button */
+    margin-top: 20px; /* Add some space above the button */
 }

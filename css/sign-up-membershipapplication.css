@@ -1,0 +1,172 @@
+/* Reset margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+/* Body Styling */
+body {
+    padding-top: 80px;
+    background-image: url('../assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.signup-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+/* Form Grid Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-gap: 15px;
+}
+
+/* Form Fields Styling */
+.form-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.form-row input,
+.form-row select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* Step and Button Container */
+.step-and-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Step Indicators Styling */
+.step-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 60px; /* Gap between steps */
+    margin-bottom: 50px;
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #00ffaf; /* Default step color */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+}
+
+/* Default Line Between Steps */
+.step-indicators::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    right: 5px;
+    height: 4px; /* Line thickness */
+    background-color: #0F4332; /* Default line color */
+    z-index: 0;
+}
+
+/* Line behind each step (default color) */
+.step::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 40px); /* Length of the line */
+    height: 4px;
+    background-color: inherit;
+    z-index: -1; 
+    transform: translateX(-50%);
+}
+
+.step:first-child::before {
+    display: none;
+}
+
+.step.active {
+    background-color: #0F4332; /* Dark green for active step */
+}
+
+.step.active::before {
+    background-color: #0F4332; 
+}
+
+.step.active ~ .step::before {
+    background-color: #00ffaf; /* Keep the default color for steps after the active one */
+}
+
+/* Navigation Buttons Styling */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px;
+}
+
+.nav-button {
+    background-color: #0F4332; 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    width: 120px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #0C3B2A;
+}
+
+.disabled-button {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
