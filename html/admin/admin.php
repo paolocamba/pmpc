@@ -71,11 +71,11 @@ $conn->close();
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin.html" class="active">Dashboard</a></li>
-                <li><a href="admin-members.html">Members</a></li>
-                <li><a href="admin-loans.html">Loans</a></li>
-                <li><a href="admin-transactions.html">Transactions</a></li>
-                <li><a href="admin-appointments.html">Appointments</a></li>
+                <li><a href="admin.php" class="active">Dashboard</a></li>
+                <li><a href="admin-members.php">Members</a></li>
+                <li><a href="admin-loans.php">Loans</a></li>
+                <li><a href="admin-transactions.php">Transactions</a></li>
+                <li><a href="admin-appointments.php">Appointments</a></li>
             </ul>
 
             <ul class="sidebar-settings">

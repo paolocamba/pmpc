@@ -1,0 +1,7 @@
+Duplicate entry '' for key 'unique_email'
+Duplicate entry '' for key 'unique_email'
+Duplicate entry '987654321' for key 'unique_tin'
+Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`signupform`, CONSTRAINT `fk_application` FOREIGN KEY (`MemberID`) REFERENCES `membership_application` (`MemberID`) ON DELETE CASCADE)
+Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`signupform`, CONSTRAINT `fk_application` FOREIGN KEY (`MemberID`) REFERENCES `membership_application` (`MemberID`) ON DELETE CASCADE)
+Duplicate entry '' for key 'unique_email'
+Duplicate entry 'ricardo' for key 'Username'

@@ -5,73 +5,121 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbUsername = "root";
     $dbPassword = "";
     $dbname = "pmpc";
-
+    
+    // Create a database connection
     $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
-
+    
+    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Collect form data
-    $firstName = $_POST['first-name'];
-    $middleName = $_POST['middle-name'];
-    $lastName = $_POST['last-name']; 
-    $gender = $_POST['gender'];
-    $street = $_POST['street'];
-    $barangay = $_POST['barangay'];
-    $municipality = $_POST['municipality'];
-    $province = $_POST['province'];
-    $tin = $_POST['tin'];
-    $birthday = $_POST['birthday'];
-    $phone = $_POST['phone'];
-    $email = $_POST['email'];
-    $username = $_POST['username']; // Added username input
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Secure password storage
+    // Initialize statements
+    $stmtAddress = null;
 
-    // Insert data into address table
-    $address_sql = "INSERT INTO address (Street, Barangay, Municipality, Province)
-                    VALUES (?, ?, ?, ?)";
-    
-    $stmt = $conn->prepare($address_sql);
-    $stmt->bind_param("ssss", $street, $barangay, $municipality, $province);
-    $stmt->execute();
-    
-    if ($stmt->affected_rows > 0) {
-        $addressID = $stmt->insert_id; // Get the last inserted AddressID
-        
-        // Insert data into members table
-        $member_sql = "INSERT INTO member (FirstName, MiddleName, LastName, Sex, AddressID, TINNumber, Birthday, ContactNo, Email)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $conn->prepare($member_sql);
-        $stmt->bind_param("sssssisss", $firstName, $middleName, $lastName, $gender, $addressID, $tin, $birthday, $phone, $email);
-        $stmt->execute();
-        
-        if ($stmt->affected_rows > 0) {
-            $memberID = $stmt->insert_id; // Get the last inserted MemberID
-            
-            // Insert into member_credentials table
-            $credentials_sql = "INSERT INTO member_credentials (MemberID, Username, Email, Password)
-                                VALUES (?, ?, ?, ?)";
-            
-            $stmt = $conn->prepare($credentials_sql);
-            $stmt->bind_param("isss", $memberID, $username, $email, $password);
-            $stmt->execute();
-            
-            if ($stmt->affected_rows > 0) {
-                header("Location: sign-up-videoseminar.php"); // Redirect to the next page
-                exit();
-            } else {
-                echo "Error: " . $credentials_sql . "<br>" . $conn->error;
-            }
-        } else {
-            echo "Error: " . $member_sql . "<br>" . $conn->error;
-        }
-    } else {
-        echo "Error: " . $address_sql . "<br>" . $conn->error;
+    // Gather and trim variables from the form submission
+    $firstName = trim($_POST['first-name']);
+    $middleName = trim($_POST['middle-name']);
+    $lastName = trim($_POST['last-name']);
+    $gender = trim($_POST['gender']);
+    $street = trim($_POST['street']);
+    $barangay = trim($_POST['barangay']);
+    $municipality = trim($_POST['municipality']);
+    $province = trim($_POST['province']);
+    $tin = trim($_POST['tin']);
+    $birthday = trim($_POST['birthday']);
+    $phone = trim($_POST['phone']);
+    $email = trim($_POST['email']);
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirm-password']);
+
+    // Validate passwords match
+    if ($password !== $confirmPassword) {
+        die("Error: Passwords do not match.");
     }
 
-    $stmt->close();
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Check for empty email
+    if (empty($email)) {
+        die("Error: Email cannot be empty.");
+    }
+
+    // Check if email already exists
+    $emailCheckStmt = $conn->prepare('SELECT Email FROM member_credentials WHERE Email = ?');
+    $emailCheckStmt->bind_param('s', $email);
+    $emailCheckStmt->execute();
+    $emailCheckStmt->store_result();
+
+    if ($emailCheckStmt->num_rows > 0) {
+        die("Error: Email already in use.");
+    }
+
+    // Additional fields for membership application
+    $fillUpForm = true; // Replace with actual form value
+    $watchedVideoSeminar = false; // Replace with actual boolean value from form
+    $paidRegistrationFee = 100.00; // Replace with actual fee from form
+    $status = "Pending"; // Example status for the application
+
+    // Start transaction
+    $conn->begin_transaction();
+
+    try {
+       // Insert into member table first to get MemberID
+    $stmt1 = $conn->prepare('INSERT INTO member (FirstName, MiddleName, LastName, Sex, TINNumber, Birthday, ContactNo, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt1->bind_param('ssisssss', $firstName, $middleName, $lastName, $gender, $tin, $birthday, $phone, $email); // Notice the type definition string now matches the placeholders
+    $stmt1->execute();
+
+        
+        // Get the new MemberID from the member table
+        $newMemberID = $conn->insert_id;
+
+        // Insert into membership_application first
+        $stmtMembership = $conn->prepare('INSERT INTO membership_application (MemberID, FillUpForm, WatchedVideoSeminar, PaidRegistrationFee, Status) VALUES (?, ?, ?, ?, ?)');
+        $stmtMembership->bind_param('issds', $newMemberID, $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $status);
+        $stmtMembership->execute();
+
+        // Insert the new address into the address table
+        $stmtAddress = $conn->prepare('INSERT INTO address (Street, Barangay, Municipality, Province) VALUES (?, ?, ?, ?)');
+        $stmtAddress->bind_param('ssss', $street, $barangay, $municipality, $province);
+        $stmtAddress->execute();
+        
+        // Get the new AddressID
+        $newAddressID = $conn->insert_id;
+
+        // Insert the new member into the signupform table using the new MemberID
+        $stmt2 = $conn->prepare('INSERT INTO signupform (FirstName, MiddleName, LastName, Sex, AddressID, TINNumber, Birthday, ContactNo, MemberID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt2->bind_param('ssssisssi', $firstName, $middleName, $lastName, $gender, $newAddressID, $tin, $birthday, $phone, $newMemberID);
+        $stmt2->execute();
+
+        // Insert into member_credentials with the new MemberID
+        $stmt3 = $conn->prepare('INSERT INTO member_credentials (MemberID, Username, Email, Password) VALUES (?, ?, ?, ?)');
+        $stmt3->bind_param('isss', $newMemberID, $username, $email, $hashedPassword);
+        $stmt3->execute();
+        
+        // Commit the member creation and application update
+        $conn->commit();
+        
+        // Redirect to the video seminar page after successful submission
+        header("Location: sign-up-videoseminar.php");
+        exit(); // Stop further execution
+
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $conn->rollback();
+        file_put_contents('error_log.txt', $e->getMessage() . PHP_EOL, FILE_APPEND);
+        echo "Error: " . $e->getMessage();
+    }
+
+    // Close statements and connection
+    if (isset($stmtAddress)) $stmtAddress->close();
+    if (isset($stmt1)) $stmt1->close();
+    if (isset($stmtMembership)) $stmtMembership->close();
+    if (isset($stmt2)) $stmt2->close();
+    if (isset($stmt3)) $stmt3->close();
+    if (isset($emailCheckStmt)) $emailCheckStmt->close();
     $conn->close();
 }
 ?>
@@ -129,7 +177,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="female">Female</option>
                     </select>
                 </div>
-    
                 <div class="form-row">
                     <label for="street">Street</label>
                     <input type="text" id="street" name="street" required>
@@ -164,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-row">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required> <!-- Added username field -->
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div class="form-row">
                     <label for="password">Password</label>
