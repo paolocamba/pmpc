@@ -1,7 +1,45 @@
-.main-content {
-    width: 80%;
-    padding: 20px;
-    background-color: #f0f4f8;
+.personal-info-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four columns */
+    gap: 20px; /* Space between items */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold; /* Make the label bold */
+}
+
+.input-group input,
+.input-group select {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.button-group {
+    grid-column: span 4; /* Make the button span across all columns */
+    display: flex;
+    justify-content: flex-end; /* Align the button to the right */
+}
+
+.save-changes {
+    padding: 10px 20px;
+    background-color: #0F4332;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Adjust the layout of the groups */
+.personal-info-header,
+.personal-info-section {
+    grid-column: span 4; /* Header spans all columns */
 }
 
 .dashboard-metrics {
@@ -24,7 +62,8 @@
     color: #0F4332;
 }
 
-.metric-box input, .metric-box textarea {
+.metric-box input,
+.metric-box textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;

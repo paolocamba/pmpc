@@ -65,7 +65,7 @@ $result = $conn->query($sql);
                 <li><a href="member-about.html">About</a></li>
             </ul>
             <ul class="sidebar-settings">
-                <li><a href="#settings">Settings</a></li>
+                <li><a href="member-settings.php">Settings</a></li>
             </ul>
         </div>
 

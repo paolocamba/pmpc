@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         } else {
-            echo "<script>alert('Invalid email or password. Please try again.');</script>";
+            echo "<script>alert('Invalid email or password');</script>";
         }
     } else {
         echo "<script>alert('Invalid email or password. Please try again.');</script>";

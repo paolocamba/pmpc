@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Set FillUpForm value
         $fillUpForm = 1; // Completed signup form
         $watchedVideoSeminar = 0; // Not yet watched
-        $paidRegistrationFee = 100.00; // Example fee
-        $status = "Pending"; // Example status for the application
+        $paidRegistrationFee = 0; // Example fee
+        $status = "In Progress"; // Example status for the application
 
         // Insert into membership_application
         $stmtMembership = $conn->prepare('INSERT INTO membership_application (MemberID, FillUpForm, WatchedVideoSeminar, PaidRegistrationFee, Status) VALUES (?, ?, ?, ?, ?)');

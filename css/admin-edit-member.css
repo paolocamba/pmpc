@@ -1,0 +1,105 @@
+/* Member details section */
+.member-details {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.member-details h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.member-details p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Application form section */
+.application-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.application-details h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* Buttons */
+/* Button container */
+.button-container {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+.action-button {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* No borders */
+    color: white; /* White text */
+    padding: 10px 20px; /* Consistent padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    font-size: 16px; /* Consistent font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.action-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Specific styles for the delete button */
+.delete-button {
+    background-color: #f44336; /* Red background for delete */
+}
+
+.delete-button:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .logout-button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+}

@@ -24,7 +24,7 @@ if (!$totalMembersResult) {
 $totalMembers = $totalMembersResult->fetch_assoc()['total'];
 
 // Fetch active member applications
-$activeMemberApplicationsQuery = "SELECT COUNT(*) as total FROM membership_application WHERE Status = 'Active'";
+$activeMemberApplicationsQuery = "SELECT COUNT(*) as total FROM membership_application WHERE Status = 'In Progress'";
 $activeMemberApplicationsResult = $conn->query($activeMemberApplicationsQuery);
 if (!$activeMemberApplicationsResult) {
     die("Query failed: " . $conn->error);
@@ -99,7 +99,7 @@ $conn->close();
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1>Members Overview</h1>
+                <h1>Membership Application</h1>
                 <button class="logout-button" onclick="redirectToIndex()">Log out</button>
             </header>
 
@@ -123,7 +123,7 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Member Application</h3>
-                    <a href="manage-members.php" class="manage-link">Manage / View All</a>
+                    <a href="admin-manage-members.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>

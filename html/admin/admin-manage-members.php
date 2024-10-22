@@ -15,35 +15,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch total members
-$totalMembersQuery = "SELECT COUNT(*) as total FROM member";
-$totalMembersResult = $conn->query($totalMembersQuery);
-if (!$totalMembersResult) {
-    die("Query failed: " . $conn->error);
-}
-$totalMembers = $totalMembersResult->fetch_assoc()['total'];
+// Fetch all member applications along with their status
+$allMembersQuery = "
+    SELECT 
+        mc.MemberID, 
+        sf.LastName, 
+        sf.FirstName, 
+        sf.MiddleName, 
+        sf.ContactNo, 
+        mc.Email,
+        ma.Status
+    FROM 
+        member_credentials mc
+    JOIN 
+        signupform sf ON mc.MemberID = sf.MemberID
+    JOIN 
+        membership_application ma ON mc.MemberID = ma.MemberID
+";
 
-// Fetch active member applications
-$activeMemberApplicationsQuery = "SELECT COUNT(*) as total FROM membership_application WHERE Status = 'In Progress'";
-$activeMemberApplicationsResult = $conn->query($activeMemberApplicationsQuery);
-if (!$activeMemberApplicationsResult) {
-    die("Query failed: " . $conn->error);
-}
-$activeMemberApplications = $activeMemberApplicationsResult->fetch_assoc()['total'];
-
-// Fetch account requests
-$accountRequestsQuery = "SELECT COUNT(*) as total FROM Account_request";
-$accountRequestsResult = $conn->query($accountRequestsQuery);
-if (!$accountRequestsResult) {
-    die("Query failed: " . $conn->error);
-}
-$accountRequests = $accountRequestsResult->fetch_assoc()['total'];
-
-// Fetch members list
-$membersQuery = "SELECT MemberID, LastName, FirstName, MiddleName, ContactNo, Email FROM member LIMIT 5";
-$membersResult = $conn->query($membersQuery);
-
-// Close the database connection
+$allMembersResult = $conn->query($allMembersQuery);
 $conn->close();
 ?>
 
@@ -53,7 +43,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Members</title>
-    <link rel="stylesheet" href="../../css/admin-members.css">
+    <link rel="stylesheet" href="../../css/admin-manage-members.css">
     <link rel="stylesheet" href="../../css/admin-general.css">
 </head>
 <body>
@@ -82,34 +72,15 @@ $conn->close();
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1>Members Overview</h1>
+                <h1>Manage Membership Applications</h1>
                 <button class="logout-button" onclick="redirectToIndex()">Log out</button>
             </header>
-
-            <!-- Summary Cards -->
-            <section class="summary-cards">
-            <div class="card" onclick="window.location.href='admin-members.php'">
-            <h2><?php echo $totalMembers; ?></h2>
-            <p>Members</p>
-        </div>
-        <a href="admin-membership-app.php" class="card-link">
-            <div class="card">
-                <h2><?php echo $activeMemberApplications; ?></h2>
-                <p>Member Application</p>
-            </div>
-        </a>
-        <div class="card" onclick="window.location.href='admin-account-req.php'">
-            <h2><?php echo $accountRequests; ?></h2>
-            <p>Account Request</p>
-        </div>
-            </section>
-
 
             <!-- Member List Table -->
             <section class="member-list">
                 <div class="table-header">
-                    <h3>Member</h3>
-                    <a href="manage-members.php" class="manage-link">Manage / View All</a>
+                    <h3>Members</h3>
+                    <a href="admin-members.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>
@@ -120,12 +91,14 @@ $conn->close();
                             <th>Middle Name</th>
                             <th>Phone Number</th>
                             <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if ($membersResult->num_rows > 0) {
-                            while ($row = $membersResult->fetch_assoc()) {
+                        if ($allMembersResult->num_rows > 0) {
+                            while ($row = $allMembersResult->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . htmlspecialchars($row['MemberID']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
@@ -133,10 +106,12 @@ $conn->close();
                                 echo "<td>" . htmlspecialchars($row['MiddleName']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['ContactNo']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>"; // Display the status
+                                echo "<td><a href='admin-edit-member.php?id=" . htmlspecialchars($row['MemberID']) . "'>Edit</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No members found.</td></tr>";
+                            echo "<tr><td colspan='8'>No members found.</td></tr>";
                         }
                         ?>
                     </tbody>
