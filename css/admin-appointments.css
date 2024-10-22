@@ -1,0 +1,149 @@
+/* Ensure links don't show underline and inherit text styles */
+.card-link {
+    text-decoration: none; /* Remove underline from link */
+    color: inherit; /* Ensure link text color matches the card */
+    display: block; /* Make the link wrap the entire card */
+}
+
+/* Flexbox for equal-height cards */
+.summary-cards {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: stretch; /* Ensure cards are aligned to the same height */
+}
+
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+    flex: 1; /* Makes all cards flexible with equal width */
+    margin: 0 10px; /* Add margin for spacing */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content within the card */
+    width: 395px;
+    height: 150px;
+}
+
+/* Card hover effect */
+.card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.card h2 {
+    font-size: 36px;
+    margin: 0;
+    color: #006400;
+}
+
+.card p {
+    margin: 10px 0 0;
+    font-size: 16px;
+}
+
+/* Table */
+.member-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.table-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.manage-link {
+    text-decoration: none;
+    color: #006400;
+    font-weight: bold;
+}
+
+.manage-link:hover {
+    text-decoration: underline;
+}
+
+.member-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.member-list th, .member-list td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Specify column widths for consistency */
+.member-list th:nth-child(1), .member-list td:nth-child(1) {
+    width: 50px; /* ID */
+}
+
+.member-list th:nth-child(2), .member-list td:nth-child(2) {
+    width: 80px; /* MemberID */
+}
+
+.member-list th:nth-child(3), .member-list td:nth-child(3) {
+    width: 150px; /* Last Name */
+}
+
+.member-list th:nth-child(4), .member-list td:nth-child(4) {
+    width: 120px; /* Date */
+}
+
+.member-list th:nth-child(5), .member-list td:nth-child(5) {
+    width: 150px; /* Service */
+}
+
+.member-list th:nth-child(6), .member-list td:nth-child(6) {
+    width: 100px; /* Status */
+}
+
+.member-list th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.member-list tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.member-list tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.member-list td {
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .summary-cards {
+        flex-direction: column;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .member-list table, .member-list th, .member-list td {
+        font-size: 14px;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+}

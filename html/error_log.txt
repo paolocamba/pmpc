@@ -5,3 +5,4 @@ Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`signup
 Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`signupform`, CONSTRAINT `fk_application` FOREIGN KEY (`MemberID`) REFERENCES `membership_application` (`MemberID`) ON DELETE CASCADE)
 Duplicate entry '' for key 'unique_email'
 Duplicate entry 'ricardo' for key 'Username'
+Duplicate entry '888888888' for key 'unique_tin'

@@ -57,28 +57,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Error: Email already in use.");
     }
 
-    // Additional fields for membership application
-    $fillUpForm = true; // Replace with actual form value
-    $watchedVideoSeminar = false; // Replace with actual boolean value from form
-    $paidRegistrationFee = 100.00; // Replace with actual fee from form
-    $status = "Pending"; // Example status for the application
-
     // Start transaction
     $conn->begin_transaction();
 
     try {
-       // Insert into member table first to get MemberID
-    $stmt1 = $conn->prepare('INSERT INTO member (FirstName, MiddleName, LastName, Sex, TINNumber, Birthday, ContactNo, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-    $stmt1->bind_param('ssisssss', $firstName, $middleName, $lastName, $gender, $tin, $birthday, $phone, $email); // Notice the type definition string now matches the placeholders
-    $stmt1->execute();
+        // Insert into member table first to get MemberID
+        $stmt1 = $conn->prepare('INSERT INTO member (FirstName, MiddleName, LastName, Sex, TINNumber, Birthday, ContactNo, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt1->bind_param('ssisssss', $firstName, $middleName, $lastName, $gender, $tin, $birthday, $phone, $email);
+        $stmt1->execute();
 
-        
         // Get the new MemberID from the member table
         $newMemberID = $conn->insert_id;
 
-        // Insert into membership_application first
+        // Set FillUpForm value
+        $fillUpForm = 1; // Completed signup form
+        $watchedVideoSeminar = 0; // Not yet watched
+        $paidRegistrationFee = 100.00; // Example fee
+        $status = "Pending"; // Example status for the application
+
+        // Insert into membership_application
         $stmtMembership = $conn->prepare('INSERT INTO membership_application (MemberID, FillUpForm, WatchedVideoSeminar, PaidRegistrationFee, Status) VALUES (?, ?, ?, ?, ?)');
-        $stmtMembership->bind_param('issds', $newMemberID, $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $status);
+        $stmtMembership->bind_param('iiids', $newMemberID, $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $status);
         $stmtMembership->execute();
 
         // Insert the new address into the address table
@@ -103,8 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->commit();
         
         // Redirect to the video seminar page after successful submission
-        header("Location: sign-up-videoseminar.php");
-        exit(); // Stop further execution
+        header("Location: sign-up-videoseminar.php?member-id=" . $newMemberID);
+        exit();
 
     } catch (Exception $e) {
         // Rollback transaction on error

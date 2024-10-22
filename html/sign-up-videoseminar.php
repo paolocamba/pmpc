@@ -17,38 +17,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $seminarCompleted = isset($_POST['seminar-completed']) ? 1 : 0;
 
     // Update WatchedVideoSeminar
-    $sql = "UPDATE membership_application SET WatchedVideoSeminar = '$seminarCompleted' WHERE MemberID = '$memberID'";
+    $stmt = $conn->prepare("UPDATE membership_application SET WatchedVideoSeminar = ? WHERE MemberID = ?");
+    $stmt->bind_param('ii', $seminarCompleted, $memberID);
+    $stmt->execute();
 
-    if ($conn->query($sql) === TRUE) {
-        // Check the status of the application
-        $statusSql = "SELECT FillUpForm, WatchedVideoSeminar, PaidRegistrationFee FROM membership_application WHERE MemberID = '$memberID'";
-        $result = $conn->query($statusSql);
+    // Check the status of the application
+    $statusSql = "SELECT FillUpForm, WatchedVideoSeminar, PaidRegistrationFee FROM membership_application WHERE MemberID = ?";
+    $stmtStatus = $conn->prepare($statusSql);
+    $stmtStatus->bind_param('i', $memberID);
+    $stmtStatus->execute();
+    $result = $stmtStatus->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            // Determine the application status
-            if ($row['FillUpForm'] && $row['WatchedVideoSeminar'] && $row['PaidRegistrationFee']) {
-                $status = "Approved";
-            } else {
-                $status = "In Progress"; // Change to "Failed" if necessary
-            }
-
-            // Update the status
-            $updateStatusSql = "UPDATE membership_application SET Status = '$status' WHERE MemberID = '$memberID'";
-            $conn->query($updateStatusSql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Determine the application status
+        if ($row['FillUpForm'] && $row['WatchedVideoSeminar'] && $row['PaidRegistrationFee']) {
+            $status = "Approved";
+        } else {
+            $status = "In Progress"; // Change to "Failed" if necessary
         }
 
-        header("Location: sign-up-doa.html"); // Redirect to the next step
-        exit();
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        // Update the status
+        $updateStatusSql = "UPDATE membership_application SET Status = ? WHERE MemberID = ?";
+        $stmtUpdateStatus = $conn->prepare($updateStatusSql);
+        $stmtUpdateStatus->bind_param('si', $status, $memberID);
+        $stmtUpdateStatus->execute();
     }
 
-    $conn->close();
+    header("Location: sign-up-doa.php?member-id=" . $memberID); // Redirect to the next step
+    exit();
 }
 
-// Assume the member ID is passed as a query parameter for this example
 $memberID = isset($_GET['member-id']) ? $_GET['member-id'] : '';
+if (empty($memberID)) {
+    die("Error: Member ID is missing.");
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,12 +93,12 @@ $memberID = isset($_GET['member-id']) ? $_GET['member-id'] : '';
         </div>
 
         <!-- Confirmation Form -->
-        <form class="signup-form" action="sign-up-videoseminar.php?member-id=<?php echo $memberID; ?>" method="POST">
-            <input type="hidden" name="member-id" value="<?php echo $memberID; ?>"> <!-- Member ID from previous step -->
+        <form class="signup-form" action="sign-up-videoseminar.php?member-id=<?php echo htmlspecialchars($memberID); ?>" method="POST">
+            <input type="hidden" name="member-id" value="<?php echo htmlspecialchars($memberID); ?>"> <!-- Member ID from previous step -->
 
             <div class="form-row">
                 <label for="seminar-completed">I have completed the video seminar</label>
-                <input type="checkbox" id="seminar-completed" name="seminar-completed" required>
+                <input type="checkbox" id="seminar-completed" name="seminar-completed">
             </div>
 
             <div class="navigation-buttons">

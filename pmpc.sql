@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2024 at 05:08 PM
+-- Generation Time: Oct 20, 2024 at 02:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,12 +24,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `account_request`
+--
+
+CREATE TABLE `account_request` (
+  `Id` int(11) NOT NULL,
+  `MemberId` int(11) NOT NULL,
+  `RequestDate` date NOT NULL,
+  `RequestType` varchar(255) NOT NULL,
+  `Status` enum('Pending','Approved','Rejected') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `address`
 --
 
 CREATE TABLE `address` (
   `AddressID` int(11) NOT NULL,
-  `HouseNo` varchar(10) DEFAULT NULL,
   `Street` varchar(50) DEFAULT NULL,
   `Barangay` varchar(50) DEFAULT NULL,
   `Municipality` varchar(50) DEFAULT NULL,
@@ -40,17 +53,33 @@ CREATE TABLE `address` (
 -- Dumping data for table `address`
 --
 
-INSERT INTO `address` (`AddressID`, `HouseNo`, `Street`, `Barangay`, `Municipality`, `Province`) VALUES
-(1, '123', 'Main St', 'Barangay 1', 'City A', 'Province A'),
-(2, '456', 'Second St', 'Barangay 2', 'City B', 'Province B'),
-(3, '789', 'Third St', 'Barangay 3', 'City C', 'Province C'),
-(4, '321', 'Fourth St', 'Barangay 4', 'City D', 'Province D'),
-(5, '654', 'Fifth St', 'Barangay 5', 'City E', 'Province E'),
-(6, '987', 'Sixth St', 'Barangay 6', 'City F', 'Province F'),
-(7, '135', 'Seventh St', 'Barangay 7', 'City G', 'Province G'),
-(8, '246', 'Eighth St', 'Barangay 8', 'City H', 'Province H'),
-(9, '357', 'Ninth St', 'Barangay 9', 'City I', 'Province I'),
-(10, '468', 'Tenth St', 'Barangay 10', 'City J', 'Province J');
+INSERT INTO `address` (`AddressID`, `Street`, `Barangay`, `Municipality`, `Province`) VALUES
+(1, 'Main St', 'Barangay 1', 'City A', 'Province A'),
+(2, 'Second St', 'Barangay 2', 'City B', 'Province B'),
+(3, 'Third St', 'Barangay 3', 'City C', 'Province C'),
+(4, 'Fourth St', 'Barangay 4', 'City D', 'Province D'),
+(5, 'Fifth St', 'Barangay 5', 'City E', 'Province E'),
+(6, 'Sixth St', 'Barangay 6', 'City F', 'Province F'),
+(7, 'Seventh St', 'Barangay 7', 'City G', 'Province G'),
+(8, 'Eighth St', 'Barangay 8', 'City H', 'Province H'),
+(9, 'Ninth St', 'Barangay 9', 'City I', 'Province I'),
+(10, 'Tenth St', 'Barangay 10', 'City J', 'Province J'),
+(11, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(12, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(13, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(14, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(15, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(16, '173', 'Siling Bata', 'Pandi', 'Bulacan'),
+(17, 'fafafaf', 'afagga', 'agagag', 'agaga'),
+(18, 'fafafaf', 'afagga', 'agagag', 'agaga'),
+(22, 'fafafaf', 'gbaa', 'babab', 'agaga'),
+(35, 'fafafaf', 'gbaa', 'babab', 'agaga'),
+(36, 'eqe', 'eqeq', 'qeq', 'qeq'),
+(37, 'eqe', 'eqeq', 'qeq', 'qeq'),
+(38, 'eqe', 'eqeq', 'qeq', 'qeq'),
+(39, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(42, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(43, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales');
 
 -- --------------------------------------------------------
 
@@ -337,6 +366,21 @@ CREATE TABLE `loan_admin` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `medical`
+--
+
+CREATE TABLE `medical` (
+  `Id` int(11) NOT NULL,
+  `MemberId` int(11) NOT NULL,
+  `LastName` varchar(255) NOT NULL,
+  `Date` date NOT NULL,
+  `ServiceID` varchar(255) NOT NULL,
+  `Status` enum('Completed','In Progress') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `member`
 --
 
@@ -367,16 +411,19 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Age`, `Sex`, `Status`, `BirthPlace`, `Occupation`, `TINNumber`, `ContactNo`, `SpouseID`, `EmergencyContactID`, `DateCreated`, `Savings`, `TypeOfMember`) VALUES
-('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 39, 'Male', 'Single', 'City A', 'Engineer', '123456789', '09123456789', 1, 1, '2024-10-16', 0.00, 'Regular'),
-('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 34, 'Female', 'Married', 'City B', 'Teacher', '987654321', '09234567890', 2, 2, '2024-10-16', 0.00, 'Regular'),
-('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 42, 'Male', 'Married', 'City C', 'Doctor', '456123789', '09345678901', 3, 3, '2024-10-16', 3000.00, 'Regular'),
-('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 28, 'Female', 'Single', 'City D', 'Nurse', '321654987', '09456789012', 4, 4, '2024-10-16', 0.00, 'Regular'),
+('413@gmail.com', 35, '0', 'qeqe', 'qeqe', NULL, '2024-10-20', NULL, 'male', NULL, NULL, NULL, '123498766', '0909765234', NULL, NULL, NULL, 0.00, 'Regular'),
 ('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 44, 'Male', 'Divorced', 'City E', 'Architect', '654789123', '09567890123', 5, 5, '2024-10-16', 0.00, 'Regular'),
 ('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 36, 'Female', 'Single', 'City F', 'Designer', '159753486', '09678901234', 6, 6, '2024-10-16', 0.00, 'Regular'),
+('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 34, 'Female', 'Married', 'City B', 'Teacher', '987564321', '09234567890', 2, 2, '2024-10-16', 0.00, 'Regular'),
 ('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 39, 'Male', 'Married', 'City G', 'Chef', '357951486', '09789012345', 7, 7, '2024-10-16', 40000.00, 'Regular'),
-('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 32, 'Female', 'Single', 'City H', 'Scientist', '852456123', '09890123456', 8, 8, '2024-10-16', 0.00, 'Regular'),
+('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 29, 'Female', 'Single', 'City J', 'Accountant', '753159852', '09012345678', 10, 10, '2024-10-16', 0.00, 'Regular'),
+('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 39, 'Male', 'Single', 'City A', 'Engineer', '123456789', '09123456789', 1, 1, '2024-10-16', 0.00, 'Regular'),
+('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 28, 'Female', 'Single', 'City D', 'Nurse', '321654987', '09456789012', 4, 4, '2024-10-16', 0.00, 'Regular'),
 ('Martinez@gmail.com', 9, 'Martinez', 'Lucas', 'I', 9, '1975-09-05', 49, 'Male', 'Married', 'City I', 'Manager', '951357258', '09901234567', 9, 9, '2024-10-16', 0.00, 'Regular'),
-('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 29, 'Female', 'Single', 'City J', 'Accountant', '753159852', '09012345678', 10, 10, '2024-10-16', 0.00, 'Regular');
+('ricardo1@gmail.com', 40, '0', 'Ricardo', 'Janda', NULL, '2003-03-09', NULL, 'male', NULL, NULL, NULL, '987651233', '09127599973', NULL, NULL, NULL, 0.00, 'Regular'),
+('rickpaolocamba@gmail.com', 12, 'Camba', 'Rick Paolo', 'Pampuan', 15, '2003-03-09', NULL, 'male', NULL, NULL, NULL, '121212123', '09466446039', NULL, NULL, NULL, 0.00, 'Regular'),
+('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 32, 'Female', 'Single', 'City H', 'Scientist', '852456123', '09890123456', 8, 8, '2024-10-16', 0.00, 'Regular'),
+('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 42, 'Male', 'Married', 'City C', 'Doctor', '456123789', '09345678901', 3, 3, '2024-10-16', 3000.00, 'Regular');
 
 -- --------------------------------------------------------
 
@@ -385,13 +432,20 @@ INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`
 --
 
 CREATE TABLE `membership_application` (
-  `ApplicationID` int(11) NOT NULL,
   `MemberID` int(11) NOT NULL,
   `FillUpForm` tinyint(1) NOT NULL,
   `WatchedVideoSeminar` tinyint(1) NOT NULL,
   `PaidRegistrationFee` tinyint(1) NOT NULL,
   `Status` enum('Failed','In progress','Completed') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `membership_application`
+--
+
+INSERT INTO `membership_application` (`MemberID`, `FillUpForm`, `WatchedVideoSeminar`, `PaidRegistrationFee`, `Status`) VALUES
+(35, 0, 1, 100, ''),
+(40, 0, 1, 100, '');
 
 -- --------------------------------------------------------
 
@@ -411,16 +465,19 @@ CREATE TABLE `member_credentials` (
 --
 
 INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`) VALUES
-(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$urxHo1ee1en18Zwn36lUFuIGlHdL84BzEjqnpG2hJNGOxkc9mmUmC'),
-(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$C19CC2p/T3gebxU7Ewn2sOy3fClP7MpzcBzGV5ZE4Y/djZbSGAKka'),
-(3, 'Williams', 'Williams@gmail.com', '$2y$10$kPrc/EeOIPmhYx45rdN.IuOCRf05EBorUosm/Z4lDF.gPCyyvbsMW'),
-(4, 'Jones', 'Jones@gmail.com', '$2y$10$L9HJ.3zQTym5NMTOGLrbde6Cxx5ddcX58Ea.38/ZHphVnFBLUWd2W'),
-(5, 'Brown', 'Brown@gmail.com', '$2y$10$CRb7l/AXBRzKtKSiigJTl.LAbbX56LoDnV25RS0gxpVjxUzNxZ4f6'),
-(6, 'Davis', 'Davis@gmail.com', '$2y$10$FPERIHzvSxJfETdadF9C/.uljBRolGnTtavEv0RfNs0jeOo/8R2xC'),
-(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$xuXdo4/UNGZ5j1EGbvccleX2AS2rQfibftJAQeAWIljohr1q1Pn7u'),
-(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$KgRxMlbFny5bz1reQMbUQ.3sumy4sg2OdtMBtwOE5O3HBmbjENPeO'),
-(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$FsZ.yJwKf5vzqHgj3kRmeO4LwI9zPjyav647uN70lGvh6ICft7d3.'),
-(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$9dRk7cBiA4CnQopIekm5Zu3MMbWgnPbo.Ow5mioykwkzFCQST2gdO');
+(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$YhOdll4vQAF61IaVnc9Rm.RCUDdNqg39i0Z3Ke1SIBVe1Kq8YUeVG'),
+(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$Gw0cK/GQRm9SQ81ECASScuXWGUdn0sbYJpRcbB5ApYwTiH/zmJax2'),
+(3, 'Williams', 'Williams@gmail.com', '$2y$10$VHNmnE7igow0PKE.NGDuDen3utrqV6iKNPSGF3w4R4SBLOhbPHGue'),
+(4, 'Jones', 'Jones@gmail.com', '$2y$10$QoTu/uA.5.ex261BYqt2AuyGwMJ0N2NTxqmhzkxkEiAOYEadNtTC.'),
+(5, 'Brown', 'Brown@gmail.com', '$2y$10$c2VbDJGm9PeckLMDPeaEIuLOtwoZWYShxxELZlupk5TzabrhYW.x.'),
+(6, 'Davis', 'Davis@gmail.com', '$2y$10$yS6ro6EZtkTUrrBOxq/7n.K8TSQgxKESwZpTB6YDWgb/g/jbQvHey'),
+(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$vyTVwTgXQ9APkrSWjU4ttOZgwXNrJbNyICDav6tw7GKDwiNOWfb56'),
+(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$hkxFzryxhf1eTSqtMHucMOfSvUlfFbMguEHscqmAxsh96gikNR5HG'),
+(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$wbCGzoPw24jDBaBmWJTHlO1pZLHdx5DOzfUum6SprVojT7A8MMHuK'),
+(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$WAOb0jWV4XWLQWetQ42KK.ue9ac0sXDuZAzEkFH/x85hPpzt1sI0e'),
+(12, 'rickpaolo', 'rickpaolocamba@gmail.com', '$2y$10$u7V4IdeWlX35kSSAWdFMVuDdqwfPNnVCtHkCWyUwwKlNtN0I6VGza'),
+(35, 'huehuedd', '413@gmail.com', '$2y$10$nuy2Jk6A1iZs/w0eI26lOe/RzA/C47M7bBzeIDSA4KrptLSgOSWwS'),
+(40, 'ricardoo', 'ricardo1@gmail.com', '$2y$10$2hWOywa.a7cHzW0iUn3wk.e8IKN3peaU8onE6sfTBMS3FEn5uNSKO');
 
 -- --------------------------------------------------------
 
@@ -481,6 +538,32 @@ INSERT INTO `service` (`ServiceID`, `ServiceName`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `signupform`
+--
+
+CREATE TABLE `signupform` (
+  `MemberID` int(11) NOT NULL,
+  `FirstName` varchar(50) NOT NULL,
+  `LastName` varchar(50) NOT NULL,
+  `MiddleName` varchar(50) DEFAULT NULL,
+  `Sex` enum('Male','Female','Other') NOT NULL,
+  `AddressID` int(11) DEFAULT NULL,
+  `TINNumber` varchar(15) DEFAULT NULL,
+  `Birthday` date DEFAULT NULL,
+  `ContactNo` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `signupform`
+--
+
+INSERT INTO `signupform` (`MemberID`, `FirstName`, `LastName`, `MiddleName`, `Sex`, `AddressID`, `TINNumber`, `Birthday`, `ContactNo`) VALUES
+(35, 'qeqe', 'qeqe', 'qeqe', 'Male', 38, '123498766', '2024-10-20', '0909765234'),
+(40, 'Ricardo', 'Camba', 'Janda', 'Male', 43, '987651233', '2003-03-09', '09127599973');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `spouse`
 --
 
@@ -521,6 +604,17 @@ CREATE TABLE `staff_credentials` (
   `Role` enum('Admin','Medical Officer','Loan Officer','Liaison Officer','Membership Officer') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `staff_credentials`
+--
+
+INSERT INTO `staff_credentials` (`StaffID`, `Username`, `Email`, `Password`, `Role`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$E7s7TJzGFW3ocX4CKIWp6.Rb6IzA903FUQmwk5kqiQWd5Gg/1/oIK', 'Admin'),
+(2, 'loan', 'loan@gmail.com', '$2y$10$Ljxdf8EN16VBwkaKyrET/u7jFmcApW7A8tmlbVlhnjiu21bFz7p/6', 'Loan Officer'),
+(3, 'liaison', 'liaison@gmail.com', '$2y$10$22Gm7UYKltfpAP1TTmolpu3B8GCQdZdhvo5HKUkr9HwBE1RfK.ADC', 'Liaison Officer'),
+(4, 'member', 'member@gmail.com', '$2y$10$BtEAMNtktThlbKnLfVSPzutb1EDuAGKiltSKUKl9NeQ.m7uyCs2DO', 'Membership Officer'),
+(5, 'medical', 'medical@gmail.com', '$2y$10$DupV1wMY7SVYjsr101CmBORO9Naupgn6GkvUeQ1NkN9TKWVEwj1Ra', 'Medical Officer');
+
 -- --------------------------------------------------------
 
 --
@@ -541,11 +635,19 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`TransactID`, `MemberID`, `ServiceID`, `Date`, `Amount`, `Status`) VALUES
-(1, 7, 7, '2024-10-14 16:28:07', 200.00, 'In Progress');
+(1, 7, 7, '2024-10-14 16:28:07', 200.00, 'In Progress'),
+(2, 12, 3, '2024-10-20 09:05:45', 4500.00, 'Completed');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `account_request`
+--
+ALTER TABLE `account_request`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `MemberId` (`MemberId`);
 
 --
 -- Indexes for table `address`
@@ -620,11 +722,18 @@ ALTER TABLE `loan_admin`
   ADD PRIMARY KEY (`LoanID`);
 
 --
+-- Indexes for table `medical`
+--
+ALTER TABLE `medical`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `MemberId` (`MemberId`);
+
+--
 -- Indexes for table `member`
 --
 ALTER TABLE `member`
-  ADD PRIMARY KEY (`MemberID`),
   ADD UNIQUE KEY `unique_email` (`Email`),
+  ADD UNIQUE KEY `MemberID` (`MemberID`) USING BTREE,
   ADD UNIQUE KEY `unique_number` (`ContactNo`),
   ADD UNIQUE KEY `unique_tin` (`TINNumber`),
   ADD KEY `AddressID` (`AddressID`),
@@ -635,8 +744,7 @@ ALTER TABLE `member`
 -- Indexes for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  ADD PRIMARY KEY (`ApplicationID`),
-  ADD KEY `MemberID` (`MemberID`);
+  ADD UNIQUE KEY `MemberID` (`MemberID`) USING BTREE;
 
 --
 -- Indexes for table `member_credentials`
@@ -644,7 +752,8 @@ ALTER TABLE `membership_application`
 ALTER TABLE `member_credentials`
   ADD PRIMARY KEY (`MemberID`),
   ADD UNIQUE KEY `Username` (`Username`),
-  ADD UNIQUE KEY `Email` (`Email`);
+  ADD UNIQUE KEY `Email` (`Email`) USING BTREE,
+  ADD UNIQUE KEY `unique_email` (`Email`);
 
 --
 -- Indexes for table `residencedetails`
@@ -657,6 +766,13 @@ ALTER TABLE `residencedetails`
 --
 ALTER TABLE `service`
   ADD PRIMARY KEY (`ServiceID`);
+
+--
+-- Indexes for table `signupform`
+--
+ALTER TABLE `signupform`
+  ADD UNIQUE KEY `MemberID` (`MemberID`) USING BTREE,
+  ADD KEY `AddressID` (`AddressID`);
 
 --
 -- Indexes for table `spouse`
@@ -685,10 +801,16 @@ ALTER TABLE `transaction`
 --
 
 --
+-- AUTO_INCREMENT for table `account_request`
+--
+ALTER TABLE `account_request`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `announcement`
@@ -751,16 +873,22 @@ ALTER TABLE `loan_admin`
   MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `medical`
+--
+ALTER TABLE `medical`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  MODIFY `ApplicationID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `residencedetails`
@@ -775,6 +903,12 @@ ALTER TABLE `service`
   MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `signupform`
+--
+ALTER TABLE `signupform`
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
 -- AUTO_INCREMENT for table `spouse`
 --
 ALTER TABLE `spouse`
@@ -784,17 +918,23 @@ ALTER TABLE `spouse`
 -- AUTO_INCREMENT for table `staff_credentials`
 --
 ALTER TABLE `staff_credentials`
-  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `account_request`
+--
+ALTER TABLE `account_request`
+  ADD CONSTRAINT `account_request_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `beneficiaries`
@@ -818,6 +958,12 @@ ALTER TABLE `loanapplication`
   ADD CONSTRAINT `loanapplication_ibfk_4` FOREIGN KEY (`ExpenseDetailsID`) REFERENCES `expensedetails` (`ExpenseDetailsID`);
 
 --
+-- Constraints for table `medical`
+--
+ALTER TABLE `medical`
+  ADD CONSTRAINT `medical_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `member`
 --
 ALTER TABLE `member`
@@ -829,13 +975,22 @@ ALTER TABLE `member`
 -- Constraints for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  ADD CONSTRAINT `membership_application_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `member_credentials`
 --
 ALTER TABLE `member_credentials`
+  ADD CONSTRAINT `fk_credentials_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE,
   ADD CONSTRAINT `member_credentials_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `signupform`
+--
+ALTER TABLE `signupform`
+  ADD CONSTRAINT `fk_application` FOREIGN KEY (`MemberID`) REFERENCES `membership_application` (`MemberID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_signupform_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `signupform_ibfk_1` FOREIGN KEY (`AddressID`) REFERENCES `address` (`AddressID`);
 
 --
 -- Constraints for table `transaction`
