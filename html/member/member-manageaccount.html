@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Manage Account</title>
+    <link rel="stylesheet" href="../../css/member-manageaccount.css"> <!-- Linking CSS -->
+    <link rel="stylesheet" href="../../css/member-general.css">
+</head>
+<body>
+
+    <!-- Container for the sidebar and main content -->
+    <div class="container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../../assets/pmpc-logo.png" alt="PMPC Logo">
+                </div>
+                <h2 class="pmpc-text">PASCHAL</h2> <!-- PMPC text beside the logo -->
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li><a href="member-landing.php">Home</a></li>
+                <li><a href="member-dashboard.php">Dashboard</a></li>
+                <li><a href="member-services.html">Services</a></li>
+                <li><a href="member-inbox.html">Inbox</a></li>
+                <li><a href="member-about.html">About</a></li>
+            </ul>
+            <ul class="sidebar-settings">
+                <li><a href="member-manageaccount.html"class="active">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Account Settings</h1>
+                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+            </header>
+
+            <!-- Personal Information Section -->
+            <section class="personal-info-section">
+                <div class="personal-info-header">
+                    <h2>Personal Information</h2>
+                    <a href="#" class="edit-link">Edit</a>
+                </div>
+
+                <div class="personal-info-form">
+                    <!-- First Row -->
+                    <div class="input-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName">
+                    </div>
+                    <div class="input-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName">
+                    </div>
+                    <div class="input-group">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" id="middleName">
+                    </div>
+                    <div class="input-group">
+                        <label for="gender">Gender </label>
+                        <select id="gender">
+                            <option value="" disabled selected hidden>Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <!-- Second Row -->
+                    <div class="input-group">
+                        <label for="street">Street</label>
+                        <input type="text" id="street">
+                    </div>
+                    <div class="input-group">
+                        <label for="barangay">Barangay</label>
+                        <input type="text" id="barangay">
+                    </div>
+                    <div class="input-group">
+                        <label for="municipality">Municipality</label>
+                        <input type="text" id="municipality">
+                    </div>
+                    <div class="input-group">
+                        <label for="province">Province</label>
+                        <input type="text" id="province">
+                    </div>
+
+                    <!-- Third Row -->
+                    <div class="input-group">
+                        <label for="tin">TIN No. (Required)</label>
+                        <input type="text" id="tin">
+                    </div>
+                    <div class="input-group">
+                        <label for="birthday">Birthday</label>
+                        <input type="date" id="birthday">
+                    </div>
+                    <div class="input-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="number" id="phoneNumber" min="11" max="11" >
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email">
+                    </div>
+
+                    <!-- Fourth Row -->
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password">
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="save-changes">Save Changes</button>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function redirectToIndex() {
+            window.location.href = "index.php";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-image: url('../assets/bg.jpg'); /* Use the background image */
+    background-size: auto; /* Set to auto to allow repeating */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Enable repeating of the background image */
+}
+
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 70px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.pmpc-text {
+    font-size: 27px;
+    color: #0F4332;
+    font-weight: 800;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    margin: 20px 0;
+}
+
+.sidebar-settings {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar-menu a {
+    color: #0F4332;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    padding: 10px 40px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-settings a.active, .sidebar-settings a:hover {
+    background-color: #10C98F;
+    border-radius: 10px;
+}
+/* Sidebar Settings at the bottom */
+.sidebar-settings {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar-settings li {
+    margin: 0;
+}
+
+.sidebar-settings a {
+    color: #0F4332;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 40px;
+    display: block;
+    transition: background-color 0.3s ease;
+    margin-top:200px;
+}
+
+.sidebar-settings a:hover {
+    background-color: #10C98F;
+    border-radius: 10px;
+}
+
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 60px; /* Copied from home page */
+    border-bottom: 1.5px solid #ffffff; /* Copied from home page */
+    margin-bottom: 20px; /* Optional: space below the heading */
+}
+
+header h1 {
+    font-size: 50px;
+    font-weight: 800;
+    color: #f6f6f6;
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: #0F4332; /* New green color */
+    color: rgb(255, 255, 255); /* Black text */
+    border-radius: 8px;
+    margin-top: -150px;
+    font-size: 20px;
+    font-weight: bold;
+    width: 150px;
+    height: 50px;
+    padding: 15px 25px; /* Same padding as the apply-loan button */
+    border: none; /* Remove any default borders */
+    cursor: pointer; /* Pointer cursor to indicate it's clickable */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.logout-button:hover {
+    background-color: #10C98F;
+}
+
+/* Personal Information Section */
+.personal-info-section {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.personal-info-header h2 {
+    color: #0F4332;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.edit-link {
+    color: #10C98F;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.personal-info-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-group input, .input-group select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.save-changes {
+    background-color: #0F4332;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-changes:hover {
+    background-color: #10C98F;
+}
