@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Loan Application</title>
+    <link rel="stylesheet" href="../css/styles.css"> <!-- Link to the updated CSS -->
+    <link rel="stylesheet" href="../css/regular-loan.css"> <!-- Link to the updated CSS -->
+</head>
+</head>
+<body>
+
+    <!-- Container for the sidebar and main content -->
+    <div class="container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../assets/pmpc-logo.png" alt="PMPC Logo">
+                </div>
+                <h2 class="pmpc-text">PASCHAL</h2> <!-- PMPC text beside the logo -->
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li><a href="member-landing.php">Home</a></li>
+                <li><a href="member-dashboard.php">Dashboard</a></li>
+                <li><a href="member-services.html" class="active">Services</a></li>
+                <li><a href="member-inbox.html">Inbox</a></li>
+                <li><a href="member-about.html">About</a></li>
+            </ul>
+            <ul class="sidebar-settings">
+                <li><a href="member-manageaccount.html">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Regular Loan Application</h1>
+            </header>
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <form>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="amount">Amount Requested</label>
+                            <input type="number" id="amount" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="purpose">Purpose</label>
+                            <input type="text" id="purpose" required>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="loan-term">Loan Term</label>
+                            <select id="loan-term" required>
+                                <option value="" disabled selected hidden>Select Term</option>
+                                <option value="6">6 months</option>
+                                <option value="12">12 months</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="payment">Mode of Payment</label>
+                            <select id="payment" required>
+                                <option value="" disabled selected hidden>Select Mode</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <!-- Additional options can go here -->
+                            </select>
+                        </div>
+                    </div>
+
+                <section class="loan-form">
+                <h2>NET INCOME</h2>
+
+                <div class="form-group-horizontal">
+                    <div>
+                        <label>* No. of Dependents</label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>* In School</label>
+                        <input type="text">
+                    </div>
+                </div>
+
+                <div class="dependents-section">
+                    <div class="form-group">
+                        <label>Dependents</label>
+                        <label>Age</label>
+                        <label>Grade Level</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Age">
+                        <input type="text" placeholder="Grade Level">
+                    </div>
+            
+                    <div class="form-group">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Age">
+                        <input type="text" placeholder="Grade Level">
+                    </div>
+            
+                    <div class="form-group">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Age">
+                        <input type="text" placeholder="Grade Level">
+                    </div>
+            
+                    <div class="form-group">
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Age">
+                        <input type="text" placeholder="Grade Level">
+                    </div>
+                </div>
+
+                <h3>INCOME: (Per Month)</h3>
+
+
+                <div class="form-group-horizontal">
+                <label><strong>Member of the Family</strong></label>
+                <input type="text">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <div>
+                        <label>Self Income</label>
+                        <input type="text">
+                        <label>Other Income</label>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <label>Amount in Pesos</label>
+                        <input type="text">
+                        <label>Amount in Pesos</label>
+                        <input type="text">
+                    </div>
+                </div>
+                
+                <div class="form-group-horizontal">
+                    <div>
+                        <label>Spouse Income</label>
+                        <input type="text">
+                        <label>Other Income</label>
+                        <input type="text">
+                        
+                    </div>
+                    <div>
+                        <label>Amount in Pesos</label>
+                        <input type="text">
+                        <label>Amount in Pesos</label>
+                        <input type="text">
+                    </div>
+                </div>
+                
+                <div class="form-group-horizontal">
+                <label><strong>Total Income in Pesos</strong></label>
+                <input type="text">
+            </div>
+
+                <h3>Expenses: (Per Month)</h3>
+
+                <div class="form-group-horizontal">
+                    <label>Food and Groceries</label>
+                    <input type="text" placeholder="Expense in Pesos">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label>Gas, Oil, and Transportation</label>
+                    <input type="text" placeholder="Expense in Pesos">
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label>Schooling (Tuition and Allowance)</label>
+                    <input type="text" placeholder="Expense in Pesos">            
+                </div>
+
+                <div class="form-group-horizontal">
+                    <label>Lights, Water, and Telephone</label>
+                    <input type="text" placeholder="Expense in Pesos">
+                 </div>    
+
+                <div class="form-group-horizontal">
+                    <label>Miscellaneous</label>
+                    <input type="text" placeholder="Expense in Pesos">
+                </div>
+
+            <div class="form-group-horizontal">
+                <label><strong>Total Expense in Pesos</strong></label>
+                <input type="text">
+            </div>
+
+            <div class="form-group-horizontal">
+                <label><strong>NET FAMILY INCOME</strong></label>
+                <input type="text">
+            </section>
+        
+
+    <section class="loan-form">
+    
+        <h2>EMPLOYMENT</h2>
+
+        <div class="form-group-horizontal">
+            <div>
+                <label for="employer-name">* Employer Name</label>
+                <input type="text" id="employer-name" required>
+            </div>
+            <div>
+                <label for="employer-address">* Address</label>
+                <input type="text" id="employer-address" required>
+            </div>
+        </div>
+
+        <div class="form-group-horizontal">
+            <div>
+                <label for="position">* Present Position</label>
+                <input type="text" id="position" required>
+            </div>
+            <div>
+                <label for="date-of-employment">* Date of Employment</label>
+                <input type="date" id="date-of-employment" required>
+            </div>
+            <div>
+                <label for="monthly-income">* Monthly Income</label>
+                <input type="number" id="monthly-income" required>
+            </div>
+        </div>
+
+        <!-- Contact Person and Telephone Number -->
+        <div class="form-group-horizontal">
+            <div>
+                <label for="contact-person">* Contact Person</label>
+                <input type="text" id="contact-person" required>
+            </div>
+            <div>
+                <label for="contact-number">* Telephone No.</label>
+                <input type="tel" id="contact-number" required>
+            </div>
+        </div>
+
+        <div class="form-group-horizontal">
+            <div>
+                <label for="self-employed-type">* If Self-Employed, Type of Business</label>
+                <input type="text" id="self-employed-type">
+            </div>
+            <div>
+                <label for="business-start">* Start of Business</label>
+                <input type="date" id="business-start">
+            </div>
+        </div>
+    </section>
+
+    <section class="loan-form">
+        <h2>ASSETS</h2>
+        
+        <div class="form-group-horizontal">
+            <div>
+                <label for="savings-acct">Savings Account</label>
+                <input type="text" id="savings-acct">
+            </div>
+            <div>
+                <label for="bank-savings">Bank</label>
+                <input type="text" id="bank-savings">
+            </div>
+            <div>
+                <label for="branch-savings">Branch</label>
+                <input type="text" id="branch-savings">
+            </div>
+        </div>
+    
+        <div class="form-group-horizontal">
+            <div>
+                <label for="current-acct">Current Account</label>
+                <input type="text" id="current-acct">
+            </div>
+            <div>
+                <label for="bank-current">Bank</label>
+                <input type="text" id="bank-current">
+            </div>
+            <div>
+                <label for="branch-current">Branch</label>
+                <input type="text" id="branch-current">
+            </div>
+        </div>
+    
+        <div class="form-group-horizontal">
+            <div>
+                <label for="assets-list">List of Assets (Ari-arian)</label>
+                <input type="text" id="assets-list">
+            </div>
+        </div>
+        
+        <div class="form-group-horizontal">
+            <input type="text">
+        </div>
+    
+        <div class="form-group-horizontal">
+            <input type="text">
+        </div>
+    
+        <div class="form-group-horizontal">
+            <input type="text">
+        </div>
+        
+    </section>
+
+    <section class="loan-form">
+        <h2>DEBTS</h2>
+        
+        <div class="debts-section">
+            <div class="form-group-horizontal">
+                <div>
+                <label for="creditor-name">Creditor's Name</label>
+                <input type="text" id="creditor-name" placeholder="Name">
+                 </div>
+                <div>
+                <label for="creditor-address">Address</label>
+                <input type="text" id="creditor-address" placeholder="Address">
+                </div>
+                <div>
+                <label for="original-amount">Original Amount</label>
+                <input type="number" id="original-amount" placeholder="Amount in Pesos">
+                </div>
+                <div>
+                <label for="present-balance">Present Balance</label>
+                <input type="number" id="present-balance" placeholder="Balance in Pesos">
+                </div>
+            </div>
+    
+            <div class="form-group-horizontal">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Address">
+                <input type="number" placeholder="Amount in Pesos">
+                <input type="number" placeholder="Balance in Pesos">
+            </div>
+    
+            <div class="form-group-horizontal">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Address">
+                <input type="number" placeholder="Amount in Pesos">
+                <input type="number" placeholder="Balance in Pesos">
+            </div>
+    
+            <div class="form-group-horizontal">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Address">
+                <input type="number" placeholder="Amount in Pesos">
+                <input type="number" placeholder="Balance in Pesos">
+            </div>
+        </div>
+    </section>
+
+    <section class="loan-form">
+        <h2>OTHER INFORMATION</h2>
+        <label> <i>IF A “YES” ANSWER IS GIVEN TO A QUESTION, EXPLAIN ON ATTACHED SHEET.<br><br></i></label>
+
+        <div class="form-group-vertical">
+            <p>1. HAVE YOU HAD PROPERTY FORECLOSED OR REPOSSESSED?</p>
+            <label class="radio-inline">
+                <input type="radio" name="foreclosure" value="yes" required> Yes
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="foreclosure" value="no" required> No
+            </label>
+        </div>
+    
+        <div class="form-group-vertical">
+            <p>2. ARE YOU A CO-MAKER, CO-SIGNER OR GUARANTOR ON ANY LOAN NOT LISTED ABOVE?</p>
+            <label class="radio-inline">
+                <input type="radio" name="co-signer" value="yes" required> Yes
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="co-signer" value="no" required> No
+            </label>
+        </div>
+    </section>
+
+    <section class="loan-form">
+        <h2>REFERENCES</h2>
+        <div class="form-group-horizontal">
+            <div>
+                <label for="ref-name">Reference Name</label>
+                <input type="text" id="ref-name" required>
+                <input type="text" id="ref-name" required>
+                <input type="text" id="ref-name" required>
+                <input type="text" id="ref-name" required>
+            </div>
+            <div>
+                <label for="ref-address">Address</label>
+                <input type="text" id="ref-address" required>
+                <input type="text" id="ref-address" required>
+                <input type="text" id="ref-address" required>
+                <input type="text" id="ref-address" required>
+            </div>
+            <div>
+                <label for="ref-contact">Contact Number</label>
+                <input type="tel" id="ref-contact" required>
+                <input type="tel" id="ref-contact" required>
+                <input type="tel" id="ref-contact" required>
+                <input type="tel" id="ref-contact" required>
+            </div>
+        </div>
+    </section>
+
+    <div class="button-group">
+        <button type="submit" class="submit-button">Submit</button>
+    </div>
+</form>
+</section>
+</div>
+</div>
+                    
+</div>
+</div>
+
+</body>
+</html>
