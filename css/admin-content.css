@@ -1,3 +1,4 @@
+
 /* Ensure links don't show underline and inherit text styles */
 .card-link {
     text-decoration: none; /* Remove underline from link */
@@ -7,7 +8,7 @@
 
 /* Flexbox for equal-height cards */
 .summary-cards {
-    display: inline-flex;
+    display: flex;
     justify-content: space-between;
     align-items: stretch; /* Ensure cards are aligned to the same height */
 }
@@ -24,7 +25,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centers content within the card */
-    width: 3950px;
+    width: 395px;
     height: 150px;
 }
 
@@ -44,7 +45,8 @@
     font-size: 16px;
 }
 
-/* Table */
+
+/* Member List Table */
 .member-list {
     background-color: #fff;
     padding: 20px;
@@ -84,31 +86,6 @@
     text-align: left;
     padding: 8px;
     border-bottom: 1px solid #ddd;
-}
-
-/* Specify column widths for consistency */
-.member-list th:nth-child(1), .member-list td:nth-child(1) {
-    width: 50px; /* ID */
-}
-
-.member-list th:nth-child(2), .member-list td:nth-child(2) {
-    width: 80px; /* MemberID */
-}
-
-.member-list th:nth-child(3), .member-list td:nth-child(3) {
-    width: 150px; /* Last Name */
-}
-
-.member-list th:nth-child(4), .member-list td:nth-child(4) {
-    width: 120px; /* Date */
-}
-
-.member-list th:nth-child(5), .member-list td:nth-child(5) {
-    width: 150px; /* Service */
-}
-
-.member-list th:nth-child(6), .member-list td:nth-child(6) {
-    width: 100px; /* Status */
 }
 
 .member-list th {

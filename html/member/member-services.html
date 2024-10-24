@@ -18,7 +18,7 @@
                 <div class="logo">
                     <img src="../../assets/pmpc-logo.png" alt="PMPC Logo">
                 </div>
-                <h2 class="pmpc-text">PASCHAL</h2> <!-- PMPC text beside the logo -->
+                <h2 class="pmpc-text">PASCHAL</h2>
             </div>
             
             <ul class="sidebar-menu">
@@ -42,6 +42,7 @@
 
             <!-- Services Section -->
             <section class="services-section">
+                <!-- Products and Services -->
                 <div class="service-card">
                     <h2>Products and Services</h2>
                     <ul>
@@ -50,9 +51,10 @@
                         <li>Rice</li>
                         <li>Space for Rent</li>
                     </ul>
-                    <button class="avail-button">Avail</button>
+                    <button class="avail-button products-button">Avail Products</button>
                 </div>
 
+                <!-- Medical Services -->
                 <div class="service-card">
                     <h2>Medical Services</h2>
                     <ul>
@@ -62,17 +64,23 @@
                         <li>Hilot Healom</li>
                         <li>Health Card</li>
                     </ul>
-                    <button class="avail-button">Avail</button>
+                    <button class="avail-button medical-button">Avail Medical</button>
                 </div>
 
+                <!-- Loan Services -->
                 <div class="service-card">
-                    <h2>Loan Services</h2>
-                    <div class="loan-options">
-                        <button class="loan-button">Apply Now</button>
-                        <button class="loan-button">Apply Now</button>
+                    <div class="loan-service">
+                        <h2>Regular Loan</h2>
+                        <button class="loan-button" onclick="showModal('modalRegularLoan')">Apply Now</button>
+                    </div>
+
+                    <div class="loan-service">
+                        <h2>Collateral Loan</h2>
+                        <button class="loan-button" onclick="showModal('modalCollateralLoan')">Apply Now</button>
                     </div>
                 </div>
 
+                <!-- Amortization Calculator -->
                 <div class="service-card">
                     <h2>Amortization Calculator</h2>
                     <button class="loan-button">Try Now</button>
@@ -81,10 +89,113 @@
         </div>
     </div>
 
+    <!-- Modal for Availing Products Services -->
+    <div id="availProductsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('availProductsModal')">&times;</span>
+            <div class="modal-body">
+                <img src="../../assets/pmpc-logo.png" alt="PMPC Logo" class="modal-logo">
+                <h2>Set up Appointment</h2>
+                <form>
+                    <label for="product-service">Choose Service</label>
+                    <select id="product-service" name="service">
+                        <option value="Savings">Savings</option>
+                        <option value="Life Insurance">Life Insurance</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Space for Rent">Space for Rent</option>
+                    </select>
+                    <label for="product-date">Date</label>
+                    <input type="date" id="product-date" name="date">
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Availing Medical Services -->
+    <div id="availMedicalModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('availMedicalModal')">&times;</span>
+            <div class="modal-body">
+                <img src="../../assets/pmpc-logo.png" alt="PMPC Logo" class="modal-logo">
+                <h2>Set up Appointment</h2>
+                <form>
+                    <label for="medical-service">Choose Service</label>
+                    <select id="medical-service" name="service">
+                        <option value="X-RAY">X-RAY</option>
+                        <option value="Medical Consultation">Medical Consultation</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Hilot Healom">Hilot Healom</option>
+                        <option value="Health Card">Health Card</option>
+                    </select>
+                    <label for="medical-date">Date</label>
+                    <input type="date" id="medical-date" name="date">
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Regular Loan -->
+    <div id="modalRegularLoan" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('modalRegularLoan')">&times;</span>
+            <div class="modal-body">
+                <img src="../../assets/pmpc-logo.png" alt="PMPC Logo" class="modal-logo">
+                <h2>Regular Loan</h2>
+                <p>Apply for a Regular Loan and get up to 90% of your share capital and savings deposits. Convenient access to funds while leveraging your savings!</p>
+                <a href="regularloan.html" class="button-link">Go to Application</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Collateral Loan -->
+    <div id="modalCollateralLoan" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('modalCollateralLoan')">&times;</span>
+            <div class="modal-body">
+                <img src="../../assets/pmpc-logo.png" alt="PMPC Logo" class="modal-logo">
+                <h2>Collateral Loan</h2>
+                <p>Apply for a Collateral Loan using your land title and get up to 50% of your collateral's value to cover your financial needs!</p>
+                <a href="collateralloan.html" class="button-link">Go to Application</a>
+            </div>
+        </div>
+    </div>
+
     <script>
         function redirectToIndex() {
             window.location.href = "../../html/index.html";
         }
+
+        function showModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "flex"; // Show modal
+        }
+
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            modal.style.display = "none";
+        }
+
+        // Close modal if clicking outside of it
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        };
+
+        // Get the buttons for Products and Medical Services
+        var productsButton = document.querySelector(".products-button");
+        var medicalButton = document.querySelector(".medical-button");
+
+        // Assign event listeners to buttons for opening specific modals
+        productsButton.onclick = function() {
+            document.getElementById("availProductsModal").style.display = "flex";
+        };
+
+        medicalButton.onclick = function() {
+            document.getElementById("availMedicalModal").style.display = "flex";
+        };
     </script>
 
 </body>
