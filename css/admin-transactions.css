@@ -10,8 +10,10 @@
     display: inline-flex;
     justify-content: space-between;
     align-items: stretch; /* Ensure cards are aligned to the same height */
+    flex-wrap: wrap; /* Wrap the cards to prevent overflow */
 }
 
+/* Card styling */
 .card {
     background-color: #fff;
     padding: 20px;
@@ -19,13 +21,13 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     text-align: center;
     transition: box-shadow 0.3s ease;
-    flex: 1; /* Makes all cards flexible with equal width */
-    margin: 0 10px; /* Add margin for spacing */
+    flex: 1 1 calc(33% - 20px); /* Flexible, responsive cards with margin */
+    margin: 10px; /* Add margin for spacing */
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centers content within the card */
-    width: 395px;
     height: 150px;
+    box-sizing: border-box; /* Prevent width overflow */
 }
 
 /* Card hover effect */
@@ -44,13 +46,14 @@
     font-size: 16px;
 }
 
-/* Table */
+/* Table styling */
 .member-list {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-top: 20px;
+    width: 100%; /* Ensure the table container spans the full width */
 }
 
 .table-header {
@@ -75,42 +78,26 @@
     text-decoration: underline;
 }
 
+/* Table structure */
 .member-list table {
-    width: 100%;
+    width: 100%; /* Ensure full table width */
     border-collapse: collapse;
+    table-layout: fixed; /* Fix table layout to respect column widths */
 }
 
 .member-list th, .member-list td {
-    text-align: left;
-    padding: 8px;
+    padding: 12px 8px; /* Increase padding for better spacing */
     border-bottom: 1px solid #ddd;
+    text-align: center; /* Align text to the center */
+    word-wrap: break-word; /* Handle text overflow */
 }
 
-/* Specify column widths for consistency */
-.member-list th:nth-child(1), .member-list td:nth-child(1) {
-    width: 50px; /* ID */
+/* Ensure even spacing for columns in the Active Loans table */
+.member-list th, .member-list td {
+    width: auto; /* Allow columns to auto-adjust */
 }
 
-.member-list th:nth-child(2), .member-list td:nth-child(2) {
-    width: 80px; /* MemberID */
-}
-
-.member-list th:nth-child(3), .member-list td:nth-child(3) {
-    width: 150px; /* Last Name */
-}
-
-.member-list th:nth-child(4), .member-list td:nth-child(4) {
-    width: 120px; /* Date */
-}
-
-.member-list th:nth-child(5), .member-list td:nth-child(5) {
-    width: 150px; /* Service */
-}
-
-.member-list th:nth-child(6), .member-list td:nth-child(6) {
-    width: 100px; /* Status */
-}
-
+/* Background for header and hover */
 .member-list th {
     background-color: #f0f0f0;
     font-weight: bold;
@@ -125,6 +112,7 @@
     cursor: pointer;
 }
 
+/* Font size for table */
 .member-list td {
     font-size: 16px;
 }
@@ -132,7 +120,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .summary-cards {
-        flex-direction: column;
+        flex-direction: column; /* Stack cards vertically on smaller screens */
     }
 
     .card {
@@ -140,7 +128,7 @@
     }
 
     .member-list table, .member-list th, .member-list td {
-        font-size: 14px;
+        font-size: 14px; /* Reduce font size on smaller screens */
     }
 
     .sidebar {

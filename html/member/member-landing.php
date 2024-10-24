@@ -72,7 +72,7 @@ $result = $conn->query($sql);
         <div class="main-content">
             <header>
                 <h1>Welcome, <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
-                <button class="logout-button" onclick="window.location.href='logout.php'">Log out</button>
+                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
 
             </header>
 
@@ -137,5 +137,11 @@ $result = $conn->query($sql);
             </section>
         </div>
     </div>
+
+    <script>
+    function redirectToIndex() {
+        window.location.href = "../../html/index.html";
+    }
+</script>
 </body>
 </html>

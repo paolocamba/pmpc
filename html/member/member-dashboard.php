@@ -15,7 +15,7 @@ session_start();
 session_regenerate_id(true);
 
 // Check if the user is logged in
-if (!isset($_SESSION['member_id'])) {
+if (!isset($_SESSION['MemberID'])) {
     header("Location: ../../html/index.html");
     exit();
 }
@@ -33,7 +33,7 @@ if ($conn->connect_error) {
 }
 
 // Retrieve MemberID from session
-$member_id = $_SESSION['member_id'];
+$member_id = $_SESSION['MemberID'];
 
 // Fetch savings balance
 $savings_balance = 0;
@@ -126,7 +126,7 @@ $conn->close();
     <div class="main-content">
         <header>
             <h1>Dashboard</h1>
-            <button class="logout-button" onclick="window.location.href='logout.php'">Log out</button>
+            <button class="logout-button" onclick="redirectToIndex()">Log out</button>
         </header>
 
         <section class="dashboard-info">

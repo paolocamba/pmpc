@@ -1,0 +1,46 @@
+.personal-info-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for input fields */
+    gap: 20px; /* Space between items */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold; /* Make the label bold */
+}
+
+.input-group input,
+.input-group select {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.button-group {
+    grid-column: span 2; /* Make the button span across all columns */
+    display: flex;
+    justify-content: flex-end; /* Align the button to the right */
+}
+
+.save-changes {
+    padding: 10px 20px;
+    background-color: #0F4332;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Adjust the layout of the sections */
+.personal-info-section {
+    margin-top: 40px;
+    background-color: white; /* Optional: add background color to the section */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

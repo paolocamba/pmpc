@@ -21,7 +21,7 @@ $totalMembersResult = $conn->query($totalMembersQuery);
 $totalMembers = $totalMembersResult->fetch_assoc()['total'];
 
 // Fetch active member applications
-$activeMemberApplicationsQuery = "SELECT COUNT(*) as total FROM membership_application WHERE Status = 'Active'";
+$activeMemberApplicationsQuery = "SELECT COUNT(*) as total FROM membership_application WHERE Status = 'In Progress'";
 $activeMemberApplicationsResult = $conn->query($activeMemberApplicationsQuery);
 $activeMemberApplications = $activeMemberApplicationsResult->fetch_assoc()['total'];
 

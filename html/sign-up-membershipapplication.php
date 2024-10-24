@@ -57,69 +57,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Error: Email already in use.");
     }
 
+    // Additional fields for membership application
+    $fillUpForm = true; // Replace with actual form value
+    $watchedVideoSeminar = false; // Replace with actual boolean value from form
+    $paidRegistrationFee = 100.00; // Replace with actual fee from form
+    $status = "Pending"; // Example status for the application
+
     // Start transaction
     $conn->begin_transaction();
 
-    try {
-        // Insert into member table first to get MemberID
-        $stmt1 = $conn->prepare('INSERT INTO member (FirstName, MiddleName, LastName, Sex, TINNumber, Birthday, ContactNo, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt1->bind_param('ssisssss', $firstName, $middleName, $lastName, $gender, $tin, $birthday, $phone, $email);
-        $stmt1->execute();
+    // Start transaction
+$conn->begin_transaction();
 
-        // Get the new MemberID from the member table
-        $newMemberID = $conn->insert_id;
-
-        // Set FillUpForm value
-        $fillUpForm = 1; // Completed signup form
-        $watchedVideoSeminar = 0; // Not yet watched
-        $paidRegistrationFee = 0; // Example fee
-        $status = "In Progress"; // Example status for the application
-
-        // Insert into membership_application
-        $stmtMembership = $conn->prepare('INSERT INTO membership_application (MemberID, FillUpForm, WatchedVideoSeminar, PaidRegistrationFee, Status) VALUES (?, ?, ?, ?, ?)');
-        $stmtMembership->bind_param('iiids', $newMemberID, $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $status);
-        $stmtMembership->execute();
-
-        // Insert the new address into the address table
-        $stmtAddress = $conn->prepare('INSERT INTO address (Street, Barangay, Municipality, Province) VALUES (?, ?, ?, ?)');
-        $stmtAddress->bind_param('ssss', $street, $barangay, $municipality, $province);
-        $stmtAddress->execute();
-        
-        // Get the new AddressID
-        $newAddressID = $conn->insert_id;
-
-        // Insert the new member into the signupform table using the new MemberID
-        $stmt2 = $conn->prepare('INSERT INTO signupform (FirstName, MiddleName, LastName, Sex, AddressID, TINNumber, Birthday, ContactNo, MemberID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt2->bind_param('ssssisssi', $firstName, $middleName, $lastName, $gender, $newAddressID, $tin, $birthday, $phone, $newMemberID);
-        $stmt2->execute();
-
-        // Insert into member_credentials with the new MemberID
-        $stmt3 = $conn->prepare('INSERT INTO member_credentials (MemberID, Username, Email, Password) VALUES (?, ?, ?, ?)');
-        $stmt3->bind_param('isss', $newMemberID, $username, $email, $hashedPassword);
-        $stmt3->execute();
-        
-        // Commit the member creation and application update
-        $conn->commit();
-        
-        // Redirect to the video seminar page after successful submission
-        header("Location: sign-up-videoseminar.php?member-id=" . $newMemberID);
-        exit();
-
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        $conn->rollback();
-        file_put_contents('error_log.txt', $e->getMessage() . PHP_EOL, FILE_APPEND);
-        echo "Error: " . $e->getMessage();
+try {
+    // Insert the new address into the address table
+    $stmtAddress = $conn->prepare('INSERT INTO address (Street, Barangay, Municipality, Province) VALUES (?, ?, ?, ?)');
+    if (!$stmtAddress) {
+        throw new Exception("Error preparing address insert statement: " . $conn->error);
+    }
+    $stmtAddress->bind_param('ssss', $street, $barangay, $municipality, $province);
+    if (!$stmtAddress->execute()) {
+        throw new Exception("Error executing address insert statement: " . $stmtAddress->error);
     }
 
-    // Close statements and connection
-    if (isset($stmtAddress)) $stmtAddress->close();
-    if (isset($stmt1)) $stmt1->close();
-    if (isset($stmtMembership)) $stmtMembership->close();
-    if (isset($stmt2)) $stmt2->close();
-    if (isset($stmt3)) $stmt3->close();
-    if (isset($emailCheckStmt)) $emailCheckStmt->close();
-    $conn->close();
+    // Get the new AddressID
+    $newAddressID = $conn->insert_id;
+
+    // Check if the insert was successful and AddressID is valid
+    if ($newAddressID <= 0) {
+        throw new Exception("Error: Failed to get new AddressID.");
+    }
+
+    // Insert into member table with the new AddressID
+    $stmt1 = $conn->prepare('INSERT INTO member (FirstName, MiddleName, LastName, Sex, AddressID, TINNumber, Birthday, ContactNo, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    if (!$stmt1) {
+        echo "Error preparing member insert statement: " . $conn->error;
+
+    }
+    $stmt1->bind_param('sssisssss', $firstName, $middleName, $lastName, $gender, $newAddressID, $tin, $birthday, $phone, $email);
+    if (!$stmt1->execute()) {
+        throw new Exception("Error executing member insert statement: " . $stmt1->error);
+    }
+
+    // Get the new MemberID from the member table
+    $newMemberID = $conn->insert_id;
+
+    // Set FillUpForm value
+    $fillUpForm = 1; // Completed signup form
+    $watchedVideoSeminar = 0; // Not yet watched
+    $paidRegistrationFee = 0; // Example fee
+    $status = "In Progress"; // Example status for the application
+
+    // Insert into membership_application
+    $stmtMembership = $conn->prepare('INSERT INTO membership_application (MemberID, FillUpForm, WatchedVideoSeminar, PaidRegistrationFee, Status) VALUES (?, ?, ?, ?, ?)');
+    if (!$stmtMembership) {
+        throw new Exception("Error preparing membership application insert statement: " . $conn->error);
+    }
+    $stmtMembership->bind_param('iiids', $newMemberID, $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $status);
+    if (!$stmtMembership->execute()) {
+        throw new Exception("Error executing membership application insert statement: " . $stmtMembership->error);
+    }
+
+    // Insert the new member into the signupform table using the new MemberID
+    $stmt2 = $conn->prepare('INSERT INTO signupform (FirstName, MiddleName, LastName, Sex, AddressID, TINNumber, Birthday, ContactNo, MemberID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    if (!$stmt2) {
+        throw new Exception("Error preparing signupform insert statement: " . $conn->error);
+    }
+    $stmt2->bind_param('ssssisssi', $firstName, $middleName, $lastName, $gender, $newAddressID, $tin, $birthday, $phone, $newMemberID);
+    if (!$stmt2->execute()) {
+        throw new Exception("Error executing signupform insert statement: " . $stmt2->error);
+    }
+
+    // Insert into member_credentials with the new MemberID
+    $stmt3 = $conn->prepare('INSERT INTO member_credentials (MemberID, Username, Email, Password) VALUES (?, ?, ?, ?)');
+    if (!$stmt3) {
+        throw new Exception("Error preparing member credentials insert statement: " . $conn->error);
+    }
+    $stmt3->bind_param('isss', $newMemberID, $username, $email, $hashedPassword);
+    if (!$stmt3->execute()) {
+        throw new Exception("Error executing member credentials insert statement: " . $stmt3->error);
+    }
+
+    // Commit the transaction
+    $conn->commit();
+
+    // Redirect to the video seminar page after successful submission
+    header("Location: sign-up-videoseminar.php?member-id=" . $newMemberID);
+    exit();
+
+} catch (Exception $e) {
+    // Rollback transaction on error
+    $conn->rollback();
+    file_put_contents('error_log.txt', $e->getMessage() . PHP_EOL, FILE_APPEND);
+    echo "Error: " . $e->getMessage();
+}
+
+// Close statements and connection
+if (isset($stmtAddress)) $stmtAddress->close();
+if (isset($stmt1)) $stmt1->close();
+if (isset($stmtMembership)) $stmtMembership->close();
+if (isset($stmt2)) $stmt2->close();
+if (isset($stmt3)) $stmt3->close();
+if (isset($emailCheckStmt)) $emailCheckStmt->close();
+$conn->close();
+
 }
 ?>
 

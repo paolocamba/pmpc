@@ -4,9 +4,9 @@ session_start();
 
 // Include database connection
 $servername = "localhost";
-$dbUsername = "root"; // Update if you have a different username
-$dbPassword = ""; // Update if you have a password
-$dbname = "pmpc"; // Your database name
+$dbUsername = "root";
+$dbPassword = "";
+$dbname = "pmpc";
 
 $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 
@@ -15,25 +15,66 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all member applications along with their status
-$allMembersQuery = "
-    SELECT 
-        mc.MemberID, 
-        sf.LastName, 
-        sf.FirstName, 
-        sf.MiddleName, 
-        sf.ContactNo, 
-        mc.Email,
-        ma.Status
-    FROM 
-        member_credentials mc
-    JOIN 
-        signupform sf ON mc.MemberID = sf.MemberID
-    JOIN 
-        membership_application ma ON mc.MemberID = ma.MemberID
-";
+// Pagination setup
+$limit = 12; // Number of members per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
-$allMembersResult = $conn->query($allMembersQuery);
+// Check if a search query exists
+$searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
+
+// Modify the query to handle search
+if (!empty($searchQuery)) {
+    // If search is performed
+    $allMembersQuery = "
+        SELECT 
+            MemberID, 
+            LastName, 
+            FirstName, 
+            ContactNo, 
+            Email, 
+            Savings
+        FROM 
+            member
+        WHERE 
+            LastName LIKE ? OR
+            FirstName LIKE ? OR
+            Email LIKE ?
+        LIMIT ?, ?
+    ";
+    $searchTerm = "%" . $searchQuery . "%";
+    $stmt = $conn->prepare($allMembersQuery);
+    $stmt->bind_param("sssii", $searchTerm, $searchTerm, $searchTerm, $offset, $limit);
+} else {
+    // If no search is performed
+    $allMembersQuery = "
+        SELECT 
+            MemberID, 
+            LastName, 
+            FirstName, 
+            ContactNo, 
+            Email, 
+            Savings
+        FROM 
+            member
+        LIMIT ?, ?
+    ";
+    $stmt = $conn->prepare($allMembersQuery);
+    $stmt->bind_param("ii", $offset, $limit);
+}
+
+$stmt->execute();
+$allMembersResult = $stmt->get_result();
+
+// Count total members for pagination (considering search)
+$countQuery = "SELECT COUNT(*) as total FROM member";
+if (!empty($searchQuery)) {
+    $countQuery .= " WHERE LastName LIKE '%$searchQuery%' OR FirstName LIKE '%$searchQuery%' OR Email LIKE '%$searchQuery%'";
+}
+$countResult = $conn->query($countQuery);
+$totalMembers = $countResult->fetch_assoc()['total'];
+$totalPages = ceil($totalMembers / $limit);
+
 $conn->close();
 ?>
 
@@ -72,7 +113,7 @@ $conn->close();
         <!-- Main Content -->
         <div class="main-content">
             <header>
-                <h1>Manage Membership Applications</h1>
+                <h1>Manage Members Information</h1>
                 <button class="logout-button" onclick="redirectToIndex()">Log out</button>
             </header>
 
@@ -80,7 +121,11 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Members</h3>
-                    <a href="admin-members.php" class="manage-link">Manage / View All</a>
+                    <!-- Search Form -->
+                    <form action="admin-manage-members.php" method="GET">
+                        <input type="text" name="search" placeholder="Search by name or email" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
                 <table>
                     <thead>
@@ -88,10 +133,9 @@ $conn->close();
                             <th>ID</th>
                             <th>Last Name</th>
                             <th>First Name</th>
-                            <th>Middle Name</th>
                             <th>Phone Number</th>
                             <th>Email</th>
-                            <th>Status</th>
+                            <th>Savings</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -103,19 +147,29 @@ $conn->close();
                                 echo "<td>" . htmlspecialchars($row['MemberID']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['FirstName']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['MiddleName']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['ContactNo']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>"; // Display the status
+                                echo "<td>" . htmlspecialchars($row['Savings']) . "</td>";
                                 echo "<td><a href='admin-edit-member.php?id=" . htmlspecialchars($row['MemberID']) . "'>Edit</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='8'>No members found.</td></tr>";
+                            echo "<tr><td colspan='7'>No members found.</td></tr>";
                         }
                         ?>
                     </tbody>
                 </table>
+
+                <!-- Pagination Buttons -->
+                <div class="pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>&search=<?php echo htmlspecialchars($searchQuery); ?>">Previous</a>
+                    <?php endif; ?>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>&search=<?php echo htmlspecialchars($searchQuery); ?>">Next</a>
+                    <?php endif; ?>
+                </div>
             </section>
         </div>
     </div>

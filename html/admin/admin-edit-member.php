@@ -1,6 +1,12 @@
 <?php
-// Start the session
 session_start();
+
+// Check if MemberID is set in the session
+if (!isset($_SESSION['MemberID'])) {
+    // Redirect to login page if MemberID is not found
+    header("Location: ../../html/index.php");
+    exit();
+}
 
 // Include database connection
 $servername = "localhost";
@@ -15,94 +21,108 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the member ID from URL
-$memberID = $_GET['id'] ?? null;
+$memberID = $_SESSION['MemberID'];
 
-if ($memberID) {
-    // Fetch member's application data
-    $query = "
-        SELECT 
-            ma.FillUpForm,
-            ma.WatchedVideoSeminar,
-            ma.PaidRegistrationFee,
-            ma.MembershipFeePaidAmount,
-            ma.AppointmentDate,
-            ma.Status,
-            sf.LastName,
-            sf.FirstName,
-            sf.MiddleName,
-            sf.ContactNo,
-            mc.Email
-        FROM 
-            membership_application ma
-        JOIN 
-            member_credentials mc ON mc.MemberID = ma.MemberID
-        JOIN 
-            signupform sf ON sf.MemberID = mc.MemberID
-        WHERE 
-            ma.MemberID = ?
-    ";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $memberID);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $memberData = $result->fetch_assoc();
+// Fetch member's information
+$query = "
+    SELECT 
+        m.LastName, 
+        m.FirstName, 
+        m.MiddleName, 
+        m.Sex, 
+        m.TINNumber, 
+        m.Birthday, 
+        m.ContactNo, 
+        m.Email,
+        m.Savings,
+        m.TypeOfMember,
+        a.Street, 
+        a.Barangay, 
+        a.Municipality, 
+        a.Province
+    FROM 
+        member m
+    JOIN 
+        address a ON a.AddressID = m.AddressID
+    WHERE 
+        m.MemberID = ?
+";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $memberID);
+$stmt->execute();
+$result = $stmt->get_result();
+$memberData = $result->fetch_assoc();
+
+// Check if data was found
+if (!$memberData) {
+    echo "No member data found for MemberID: " . $memberID;
+    exit();
 }
 
-// Update the application form
+// Handle form submission for saving changes
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fillUpForm = isset($_POST['fillUpForm']) ? 1 : 0; // Use 0 for unchecked, 1 for checked
-    $watchedVideoSeminar = isset($_POST['watchedVideoSeminar']) ? 1 : 0; // Use 0 for unchecked, 1 for checked
-    $membershipFeePaidAmount = $_POST['membershipFeePaidAmount'] ?? 0; // Numeric input for amount
-    $status = $_POST['status'] ?? 'InProgress'; // Default status is 'InProgress'
+    // Fetch form data
+    $lastName = $_POST['lastName'];
+    $firstName = $_POST['firstName'];
+    $middleName = $_POST['middleName'];
+    $gender = $_POST['gender'];
+    $street = $_POST['street'];
+    $barangay = $_POST['barangay'];
+    $municipality = $_POST['municipality'];
+    $province = $_POST['province'];
+    $tin = $_POST['tin'];
+    $birthday = $_POST['birthday'];
+    $phoneNumber = $_POST['phoneNumber'];
+    $email = $_POST['email'];
+    $savings = $_POST['savings'];
+    $typeOfMembership = $_POST['typeOfMembership'];
+    $currentPassword = $_POST['currentPassword'];
 
-    // Set PaidRegistrationFee based on MembershipFeePaidAmount
-    $paidRegistrationFee = ($membershipFeePaidAmount > 0) ? 1 : 0; // 1 for Yes, 0 for No
+    // Verify the entered password matches the stored password
+    if (!password_verify($currentPassword, $memberData['Password'])) {
+        echo "<script>alert('Invalid current password. Please try again.');</script>";
+        exit();
+    }
 
-    // Update member application in the database
-    $updateQuery = "
-        UPDATE membership_application 
-        SET FillUpForm = ?, WatchedVideoSeminar = ?, PaidRegistrationFee = ?, MembershipFeePaidAmount = ?, Status = ?
+    // If password matches, proceed with the updates
+    $conn->begin_transaction(); // Start transaction to ensure consistency
+
+    // Update member table
+    $updateMember = "
+        UPDATE member 
+        SET LastName = ?, FirstName = ?, MiddleName = ?, Sex = ?, TINNumber = ?, Birthday = ?, ContactNo = ?, Email = ?, Savings = ?, TypeOfMember = ?
         WHERE MemberID = ?
     ";
-    $updateStmt = $conn->prepare($updateQuery);
-    
-    // Bind parameters: i for int, s for string
-    $updateStmt->bind_param("iisisi", $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $membershipFeePaidAmount, $status, $memberID);
-    
-    if ($updateStmt->execute()) {
-        echo "Membership application updated successfully!";
-    } else {
-        echo "Error updating membership application: " . $conn->error;
-    }
-}
+    $stmt = $conn->prepare($updateMember);
+    $stmt->bind_param("ssssssssssi", $lastName, $firstName, $middleName, $gender, $tin, $birthday, $phoneNumber, $email, $savings, $typeOfMembership, $memberID);
+    $stmt->execute();
 
-// Handle delete request
-if (isset($_POST['delete'])) {
-    $deleteQuery = "DELETE FROM membership_application WHERE MemberID = ?";
-    $deleteStmt = $conn->prepare($deleteQuery);
-    $deleteStmt->bind_param("i", $memberID);
-    
-    if ($deleteStmt->execute()) {
-        echo "Membership application deleted successfully!";
-        header("Location: admin-members.php");
-        exit();
-    } else {
-        echo "Error deleting membership application: " . $conn->error;
-    }
+    // Update address table
+    $updateAddress = "
+        UPDATE address 
+        SET Street = ?, Barangay = ?, Municipality = ?, Province = ?
+        WHERE AddressID = (SELECT AddressID FROM member WHERE MemberID = ?)
+    ";
+    $stmt = $conn->prepare($updateAddress);
+    $stmt->bind_param("ssssi", $street, $barangay, $municipality, $province, $memberID);
+    $stmt->execute();
+
+    // Commit transaction
+    $conn->commit();
+
+    echo "<script>alert('Account details updated successfully!');</script>";
 }
 
 // Close the database connection
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Membership Application</title>
-    <link rel="stylesheet" href="../../css/admin-edit-member.css">
+    <title>Admin Dashboard - Members</title>
+    <link rel="stylesheet" href="../../css/admin-edit-members.css">
     <link rel="stylesheet" href="../../css/admin-general.css">
 </head>
 <body>
@@ -122,76 +142,110 @@ $conn->close();
                 <li><a href="admin-transactions.php">Transactions</a></li>
                 <li><a href="admin-appointments.php">Appointments</a></li>
             </ul>
+
+            <ul class="sidebar-settings">
+                <li><a href="admin-settings.html">Settings</a></li>
+            </ul>
         </div>
 
-        <div class="main-content">
+        <main class="main-content">
             <header>
-                <h1>Edit Membership Application</h1>
+                <h1>Manage Member Information</h1>
                 <button class="logout-button" onclick="redirectToIndex()">Log out</button>
             </header>
 
-            <!-- Member Application Form -->
-            <form method="POST" action="">
-                <div class="member-details">
-                    <h3>Member: <?php echo htmlspecialchars($memberData['FirstName'] . ' ' . $memberData['LastName']); ?></h3>
-                    <p>Email: <?php echo htmlspecialchars($memberData['Email']); ?></p>
-                    <p>Phone: <?php echo htmlspecialchars($memberData['ContactNo']); ?></p>
-                </div>
+            <section class="personal-info-section">
+                <h2>Personal Information</h2>
+                <form method="POST" class="personal-info-form">
+                    <div class="input-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($memberData['LastName']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($memberData['FirstName']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" id="middleName" name="middleName" value="<?php echo htmlspecialchars($memberData['MiddleName']); ?>">
+                    </div>
+                    <div class="input-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="male" <?php echo ($memberData['Sex'] == 'male') ? 'selected' : ''; ?>>Male</option>
+                            <option value="female" <?php echo ($memberData['Sex'] == 'female') ? 'selected' : ''; ?>>Female</option>
+                        </select>
+                    </div>
 
-                <div class="application-details">
-                    <h4>Application Status</h4>
-                    <label>
-                        Application Form: 
-                        <input type="checkbox" name="fillUpForm" value="1" <?php echo $memberData['FillUpForm'] == 1 ? 'checked' : ''; ?>>
-                    </label>
-                    <br>
-                    <label>
-                        Video Seminar: 
-                        <input type="checkbox" name="watchedVideoSeminar" value="1" <?php echo $memberData['WatchedVideoSeminar'] == 1 ? 'checked' : ''; ?>>
-                    </label>
-                    <br>
-                    <label>
-                        Membership Fee Amount: 
-                        <input type="number" name="membershipFeePaidAmount" value="<?php echo htmlspecialchars($memberData['MembershipFeePaidAmount']); ?>">
-                    </label>
-                    <br>
-                    <label>
-                    Status: 
-                    <select name="status">
-                        <option value="In progress" <?php echo $memberData['Status'] === 'In progress' ? 'selected' : ''; ?>>In Progress</option>
-                        <option value="Completed" <?php echo $memberData['Status'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
-                        <option value="Failed" <?php echo $memberData['Status'] === 'Failed' ? 'selected' : ''; ?>>Failed</option>
-                    </select>
-                </label>
-                    <br>
-                    <h4>Appointment Set by Member: <?php echo htmlspecialchars($memberData['AppointmentDate']); ?></h4>
-                </div>
+                    <div class="input-group">
+                        <label for="street">Street</label>
+                        <input type="text" id="street" name="street" value="<?php echo htmlspecialchars($memberData['Street']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="barangay">Barangay</label>
+                        <input type="text" id="barangay" name="barangay" value="<?php echo htmlspecialchars($memberData['Barangay']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="municipality">Municipality</label>
+                        <input type="text" id="municipality" name="municipality" value="<?php echo htmlspecialchars($memberData['Municipality']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="province">Province</label>
+                        <input type="text" id="province" name="province" value="<?php echo htmlspecialchars($memberData['Province']); ?>" required>
+                    </div>
 
-                <div class="button-container">
-                    <button type="submit" class="action-button">Update Application</button>
-                    <button type="button" class="action-button delete-button" onclick="confirmDelete()">Delete Application</button>
-                </div>
+                    <div class="input-group">
+                        <label for="tin">TIN No. (Required)</label>
+                        <input type="text" id="tin" name="tin" value="<?php echo htmlspecialchars($memberData['TINNumber']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="birthday">Birthday</label>
+                        <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($memberData['Birthday']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo htmlspecialchars($memberData['ContactNo']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($memberData['Email']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="savings">Savings</label>
+                        <input type="text" id="savings" name="savings" value="<?php echo htmlspecialchars($memberData['Savings']); ?>" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="typeOfMembership">Type of Membership</label>
+                        <input type="text" id="typeOfMembership" name="typeOfMembership" value="<?php echo htmlspecialchars($memberData['TypeOfMember']); ?>" required>
+                    </div>
 
-            </form>
-
-            <!-- Hidden delete form to be submitted on confirmation -->
-            <form method="POST" id="deleteForm" style="display: none;">
-                <input type="hidden" name="delete" value="1">
-            </form>
-        </div>
+                    <div class="button-group">
+                        <button class="save-changes" type="button" onclick="askForPassword()">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+        </main>
     </div>
 
     <script>
-        function confirmDelete() {
-            const confirmDelete = window.confirm("Are you sure you want to delete this application?");
-            if (confirmDelete) {
-                document.getElementById('deleteForm').submit();
+        function askForPassword() {
+            const currentPassword = prompt("Please enter your current password:");
+            if (currentPassword) {
+                const passwordInput = document.createElement("input");
+                passwordInput.type = "hidden";
+                passwordInput.name = "currentPassword";
+                passwordInput.value = currentPassword;
+
+                const form = document.querySelector("form");
+                form.appendChild(passwordInput);
+                form.submit();
             }
         }
 
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = '../../html/index.php';
         }
     </script>
 </body>
 </html>
+

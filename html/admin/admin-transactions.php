@@ -37,7 +37,7 @@ SELECT
     t.TransactID, 
     t.MemberID, 
     m.LastName, 
-    t.Date, 
+    DATE(t.Date) as Date,  -- Extract only the date 
     s.ServiceName, 
     t.Status 
 FROM 
@@ -54,27 +54,25 @@ LIMIT 5
 ";
 $transactionsResult = $conn->query($transactionsQuery);
 
-// Fetch medical records from the transaction table where ServiceID is in the medical services category (4, 5, 6, 7)
+// Fetch medical records from the medical table
 $medicalRecordsQuery = "
 SELECT 
-    t.TransactID AS ID,         -- Use the transaction's ID as the medical record ID
-    t.MemberID, 
+    m.TransactID AS ID,         -- Use the transaction's ID as the medical record ID
+    m.MemberID, 
     mem.LastName, 
-    t.Date, 
+    DATE(m.Date) as Date,  -- Extract only the date
     s.ServiceName, 
-    t.Status
+    m.Status
 FROM 
-    transaction t
+    medical m
 JOIN 
     member mem 
 ON 
-    t.MemberID = mem.MemberID
+    m.MemberID = mem.MemberID
 JOIN 
     service s
 ON 
-    t.ServiceID = s.ServiceID
-WHERE 
-    t.ServiceID IN (4, 5, 6, 7)  -- Only include services related to medical services
+    m.ServiceID = s.ServiceID
 LIMIT 5
 ";
 $medicalRecordsResult = $conn->query($medicalRecordsQuery);
@@ -138,7 +136,7 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Transaction</h3>
-                    <a href="manage-transactions.php" class="manage-link">Manage / View All</a>
+                    <a href="admin-manage-trans.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>
@@ -176,7 +174,7 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Medical Records</h3>
-                    <a href="manage-medical-records.php" class="manage-link">Manage / View All</a>
+                    <a href="admin-manage-medical.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>

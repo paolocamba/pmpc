@@ -109,7 +109,7 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Member</h3>
-                    <a href="manage-members.php" class="manage-link">Manage / View All</a>
+                    <a href="admin-manage-members.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>

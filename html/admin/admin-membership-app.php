@@ -123,7 +123,7 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Member Application</h3>
-                    <a href="admin-manage-members.php" class="manage-link">Manage / View All</a>
+                    <a href="admin-manage-membership.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
                     <thead>

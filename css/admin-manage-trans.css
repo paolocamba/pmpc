@@ -1,0 +1,112 @@
+/* Main Content */
+.main-content {
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Transaction List */
+.transaction-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Table Header */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.table-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+/* Search Form */
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    width: 300px;
+}
+
+.search-form button {
+    padding: 8px 12px;
+    background-color: #006400;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #005700;
+}
+
+/* Transaction Table */
+.transaction-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transaction-list th,
+.transaction-list td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-list th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.transaction-list tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transaction-list tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.transaction-list td {
+    font-size: 16px;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+    text-decoration: none;
+    color: #006400;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination a:disabled {
+    background-color: #ddd;
+    color: #999;
+    pointer-events: none;
+}
