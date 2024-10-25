@@ -1,0 +1,150 @@
+<?php
+// Start the session and check if the user is logged in
+session_start();
+
+// Check if the user is logged in and if LoanID exists
+if (!isset($_SESSION['MemberID']) || !isset($_SESSION['loan_application_id'])) {
+    header("Location: ../../html/index.html");
+    exit();
+}
+
+// Database connection settings
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pmpc";
+
+// Create connection to the database
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch the LoanID from the session
+$loan_id = $_SESSION['loan_application_id'];
+
+// Fetch all the loan application data from the database
+$query = "SELECT * FROM loanapplication WHERE LoanID = ?";
+$stmt = $conn->prepare($query);
+if (!$stmt) {
+    die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+}
+
+$stmt->bind_param("i", $loan_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$loan_data = $result->fetch_assoc();
+
+$stmt->close();
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application Summary</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/regular-loan.css">
+</head>
+<body>
+
+    <!-- Container for the sidebar and main content -->
+    <div class="container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../../assets/pmpc-logo.png" alt="PMPC Logo">
+                </div>
+                <h2 class="pmpc-text">PASCHAL</h2>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li><a href="member-landing.php">Home</a></li>
+                <li><a href="member-dashboard.php">Dashboard</a></li>
+                <li><a href="member-services.html">Services</a></li>
+                <li><a href="member-inbox.html">Inbox</a></li>
+                <li><a href="member-about.html">About</a></li>
+            </ul>
+            <ul class="sidebar-settings">
+                <li><a href="member-manageaccount.html">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Loan Application Summary</h1>
+            </header>
+
+            <!-- Summary Section -->
+            <section class="form-section">
+                <h2>Review Your Loan Application</h2>
+                
+                <div class="summary-group">
+                    <h3>Personal and Loan Details</h3>
+                    <p><strong>Date of Loan:</strong> <?php echo htmlspecialchars($loan_data['DateOfLoan']); ?></p>
+                    <p><strong>Amount Requested:</strong> <?php echo htmlspecialchars($loan_data['AmountRequested']); ?></p>
+                    <p><strong>Loan Term:</strong> <?php echo htmlspecialchars($loan_data['LoanTerm']); ?></p>
+                    <p><strong>Purpose:</strong> <?php echo htmlspecialchars($loan_data['Purpose']); ?></p>
+                    <p><strong>Loan Type:</strong> <?php echo htmlspecialchars($loan_data['LoanType']); ?></p>
+                    <p><strong>Mode of Payment:</strong> <?php echo htmlspecialchars($loan_data['ModeOfPayment']); ?></p>
+                    <p><strong>Years Stay at Present Address:</strong> <?php echo htmlspecialchars($loan_data['years_stay_present_address']); ?></p>
+                    <p><strong>Marital Status:</strong> <?php echo htmlspecialchars($loan_data['status']); ?></p>
+                    <p><strong>Spouse Name:</strong> <?php echo htmlspecialchars($loan_data['spouse_name']); ?></p>
+                </div>
+
+                <div class="summary-group">
+                    <h3>Dependent Details</h3>
+                    <p><strong>Number of Dependents:</strong> <?php echo htmlspecialchars($loan_data['number_of_dependents']); ?></p>
+                    <p><strong>Dependents in School:</strong> <?php echo htmlspecialchars($loan_data['dependents_in_school']); ?></p>
+                    <p><strong>Dependent 1:</strong> <?php echo htmlspecialchars($loan_data['dependent1_name'] . " (Age: " . $loan_data['dependent1_age'] . ", Grade: " . $loan_data['dependent1_grade_level'] . ")"); ?></p>
+                    <p><strong>Dependent 2:</strong> <?php echo htmlspecialchars($loan_data['dependent2_name'] . " (Age: " . $loan_data['dependent2_age'] . ", Grade: " . $loan_data['dependent2_grade_level'] . ")"); ?></p>
+                    <p><strong>Dependent 3:</strong> <?php echo htmlspecialchars($loan_data['dependent3_name'] . " (Age: " . $loan_data['dependent3_age'] . ", Grade: " . $loan_data['dependent3_grade_level'] . ")"); ?></p>
+                    <p><strong>Dependent 4:</strong> <?php echo htmlspecialchars($loan_data['dependent4_name'] . " (Age: " . $loan_data['dependent4_age'] . ", Grade: " . $loan_data['dependent4_grade_level'] . ")"); ?></p>
+                </div>
+
+                <div class="summary-group">
+                    <h3>Income and Expense Details</h3>
+                    <p><strong>Total Income:</strong> <?php echo htmlspecialchars($loan_data['total_income']); ?></p>
+                    <p><strong>Total Expenses:</strong> <?php echo htmlspecialchars($loan_data['total_expenses']); ?></p>
+                    <p><strong>Net Family Income:</strong> <?php echo htmlspecialchars($loan_data['net_family_income']); ?></p>
+                </div>
+
+                <div class="summary-group">
+                    <h3>Employment Information</h3>
+                    <p><strong>Employer Name:</strong> <?php echo htmlspecialchars($loan_data['employer_name']); ?></p>
+                    <p><strong>Present Position:</strong> <?php echo htmlspecialchars($loan_data['present_position']); ?></p>
+                    <p><strong>Monthly Income:</strong> <?php echo htmlspecialchars($loan_data['monthly_income']); ?></p>
+                </div>
+
+                <div class="summary-group">
+                    <h3>Assets and Liabilities</h3>
+                    <p><strong>Savings Account:</strong> <?php echo $loan_data['savings_account'] ? 'Yes' : 'No'; ?></p>
+                    <p><strong>Creditor 1 Name:</strong> <?php echo htmlspecialchars($loan_data['creditor1_name']); ?></p>
+                    <p><strong>Creditor 1 Present Balance:</strong> <?php echo htmlspecialchars($loan_data['creditor1_present_balance']); ?></p>
+                    <!-- Add more creditors as needed -->
+                </div>
+
+                <div class="summary-group">
+                    <h3>References</h3>
+                    <p><strong>Reference 1 Name:</strong> <?php echo htmlspecialchars($loan_data['reference1_name']); ?></p>
+                    <p><strong>Reference 2 Name:</strong> <?php echo htmlspecialchars($loan_data['reference2_name']); ?></p>
+                    <p><strong>Reference 3 Name:</strong> <?php echo htmlspecialchars($loan_data['reference3_name']); ?></p>
+                </div>
+
+                <div class="button-group">
+                    <a href="regular-loan-form1.php" class="button">Edit Application</a>
+                    <a href="submit-final.php" class="button">Submit Application</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -60,7 +60,7 @@ $result = $conn->query($sql);
             <ul class="sidebar-menu">
                 <li><a href="member-landing.php" class="active">Home</a></li>
                 <li><a href="member-dashboard.php">Dashboard</a></li>
-                <li><a href="member-services.html">Services</a></li>
+                <li><a href="member-services.php">Services</a></li>
                 <li><a href="member-inbox.html">Inbox</a></li>
                 <li><a href="member-about.html">About</a></li>
             </ul>

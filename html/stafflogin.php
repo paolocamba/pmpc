@@ -19,18 +19,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Include Composer's autoloader for Firebase SDK
-require 'C:\xampp\htdocs\pmpc\vendor\autoload.php'; // Ensure this path is correct
-
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Auth;
-
-// Initialize Firebase Admin SDK (for other features, if needed)
-$serviceAccount = 'C:\xampp\htdocs\pmpc\config\pmpc-5a32b-firebase-adminsdk-ztgea-3e21212791.json';
-$factory = (new Kreait\Firebase\Factory())
-    ->withServiceAccount($serviceAccount);
-$auth = $factory->createAuth();
-
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -93,25 +81,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Login - PASCHAL COOPERATIVE</title>
     <link rel="stylesheet" href="../css/stafflogin.css"> <!-- Linking the updated staff login CSS -->
-    <!-- Load Firebase SDKs (if needed for other features) -->
-    <script type="module">
-        // Import Firebase App (if needed)
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 
-        // Your Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB-d8h_aqQ7TimAfOygy-V-5MuLEPYNUaM",
-            authDomain: "pmpc-5a32b.firebaseapp.com",
-            projectId: "pmpc-5a32b",
-            storageBucket: "pmpc-5a32b.appspot.com",
-            messagingSenderId: "447169830772",
-            appId: "1:447169830772:web:4e91b00a166487fc9d5621",
-            measurementId: "G-EGQ4EZQ34T"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-    </script>
 </head>
 <body>
     <!-- Login Container -->

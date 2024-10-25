@@ -14,6 +14,10 @@
 session_start();
 session_regenerate_id(true);
 
+// Prevent caching to ensure secure access
+header("Cache-Control: no-cache, must-revalidate"); // HTTP 1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 // Check if the user is logged in
 if (!isset($_SESSION['MemberID'])) {
     header("Location: ../../html/index.html");
@@ -114,7 +118,7 @@ $conn->close();
         <ul class="sidebar-menu">
             <li><a href="member-landing.php">Home</a></li>
             <li><a href="member-dashboard.php" class="active">Dashboard</a></li>
-            <li><a href="member-services.html">Services</a></li>
+            <li><a href="member-services.php">Services</a></li>
             <li><a href="member-inbox.html">Inbox</a></li>
             <li><a href="member-about.html">About</a></li>
         </ul>
@@ -126,7 +130,7 @@ $conn->close();
     <div class="main-content">
         <header>
             <h1>Dashboard</h1>
-            <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+            <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
         </header>
 
         <section class="dashboard-info">
@@ -196,7 +200,7 @@ $conn->close();
 
 <script>
     function redirectToIndex() {
-        window.location.href = "../../html/index.html";
+        window.location.href = "../html/index.html";
     }
 </script>
 

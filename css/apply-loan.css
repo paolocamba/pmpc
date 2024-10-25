@@ -1,0 +1,46 @@
+
+.loan-application {
+    padding: 40px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    color: #2b8a3a;
+}
+
+h2 {
+    font-size: 30px;
+    margin: 20px 0;
+}
+
+.loan-type {
+    margin: 20px 0;
+    text-align: left;
+}
+
+h3 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+h3 span {
+    font-size: 14px;
+    color: #666;
+}
+
+.loan-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0F4332;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.loan-button:hover {
+    background-color: #219e6c;
+}

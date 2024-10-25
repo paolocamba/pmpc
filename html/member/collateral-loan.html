@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collateral Loan Application</title>
+    <link rel="stylesheet" href="../../css/styles.css"> <!-- Link to the updated CSS -->
+    <link rel="stylesheet" href="../../css/collateral-loan.css"> <!-- Link to the updated CSS -->
+</head>
+</head>
+<body>
+
+    <!-- Container for the sidebar and main content -->
+    <div class="container">
+        
+
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Collateral Loan Application</h1>
+            </header>
+
+    
+
+    <section class="loan-form">
+    
+        <h2>COLLATERAL ASSESSMENT</h2>
+
+        <div class="button-file">
+            <form>
+                <p class="note">Attach Image of Land Title<br>(CTC Copy from Registry of Deeds)</p>
+                <label for="file-upload" class="custom-file-upload"> Choose File</label>
+                <input type="file" id="file-upload" name="file-upload">
+                <p class="file-name" id="file-name">No file chosen</p>
+            </form>
+            
+        <script>
+        // Get the file input and file name display elements
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        // Event listener for when a file is selected
+        fileInput.addEventListener('change', function(event) {
+            const fileName = event.target.files[0] ? event.target.files[0].name : 'No file chosen';
+            fileNameDisplay.textContent = fileName; // Update the displayed file name
+        });
+        </script>
+    </section>
+
+        <section class="loan-form">
+            <h2>Fill up the necessary information regarding your land property</h2>
+            <form>
+                <div class="form-group">
+                    <label for="square-meters">Square Meters:</label>
+                    <input type="text" id="square-meters" name="square-meters">
+                </div>
+                <div class="form-group">
+                    <label for="type-of-land">Type of Land:</label>
+                    <select id="type-of-land" name="type-of-land">
+                        <option value=""disabled selected hidden>Select</option>
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="agricultural">Agricultural</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <select id="location" name="location">
+                        <option value=""disabled selected hidden>Select</option>
+                        <option value="bagbugin">Bagbugin</option>
+                        <option value="bagong-barrio">Bagong Barrio</option>
+                        <option value="baka-bakahan">Baka-bakahan</option>
+                        <option value="santo-niño">Santo Niño</option>
+                        <option value="bunsuran-i">Bunsuran I</option>
+                        <option value="bunsuran-ii">Bunsuran II</option>
+                        <option value="bunsuran-iii">Bunsuran III</option>
+                        <option value="cacarong-bata">Cacarong Bata</option>
+                        <option value="cacarong-matanda">Cacarong Matanda</option>
+                        <option value="cupang">Cupang</option>
+                        <option value="malibong-bata">Malibong Bata</option>
+                        <option value="malibong-matanda">Malibong Matanda</option>
+                        <option value="manatal">Manatal</option>
+                        <option value="mapulang-lupa">Mapulang Lupa</option>
+                        <option value="masagana">Masagana</option>
+                        <option value="masuso">Masuso</option>
+                        <option value="pinagkuartelan">Pinagkuartelan</option>
+                        <option value="poblacion">Poblacion</option>
+                        <option value="real-de-cacarong">Real de Cacarong</option>
+                        <option value="san-roqie">San Roque</option>
+                        <option value="siling-bata">Siling Bata</option>
+                        <option value="siling-matanda">Siling Matanda</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="right-of-way">Right of Way:</label>
+                    <select id="right-of-way" name="right-of-way">
+                        <option value=""disabled selected hidden>Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div class="vicinity">
+                    <p>Commodities within the Vicinity:</p>
+                    <p><i>(Check all that applies)<br><br></i></p>
+                    <form class="facilities-form">
+                        <!-- First row -->
+                        <div class="facility-option">
+                            <input type="checkbox" id="hospital" name="facility" value="hospital">
+                            <label for="hospital">Hospital</label>
+                        </div>
+                        <div class="facility-option">
+                            <input type="checkbox" id="market" name="facility" value="market">
+                            <label for="market">Market</label>
+                        </div>
+                        
+                        <!-- Second row -->
+                        <div class="facility-option">
+                            <input type="checkbox" id="clinic" name="facility" value="clinic">
+                            <label for="clinic">Clinic</label>
+                        </div>
+                        <div class="facility-option">
+                            <input type="checkbox" id="church" name="facility" value="church">
+                            <label for="church">Church</label>
+                        </div>
+                        
+                        <!-- Third row -->
+                        <div class="facility-option">
+                            <input type="checkbox" id="school" name="facility" value="school">
+                            <label for="school">School</label>
+                        </div>
+                        <div class="facility-option">
+                            <input type="checkbox" id="public-terminal" name="facility" value="public-terminal">
+                            <label for="public-terminal">Public Terminal</label>
+                        </div>
+                    </form>
+                </div>
+                
+                       
+                    </form>
+                <!-- Additional land details... -->
+
+
+
+    <div class="button-group">
+        <button type="submit" class="submit-button">Submit</button>
+    </div>
+</form>
+</section>
+</div>
+</div>
+                    
+</div>
+</div>
+
+</body>
+</html>
