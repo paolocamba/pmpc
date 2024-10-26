@@ -46,16 +46,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: ../html/admin/admin.php");
                     break;
                 case 'Loan Officer':
-                    header("Location: ../html/loan/loanofficer.html");
+                    header("Location: ../html/loan/loanofficer.php");
                     break;
                 case 'Membership Officer':
                     header("Location: ../html/membership/membership.php");
                     break;
                 case 'Medical Officer':
-                    header("Location: ../html/medical/medicalofficer.html");
+                    header("Location: ../html/medical/medicalofficer.php");
                     break;
                 case 'Liaison Officer':
-                    header("Location: ../html/liaison/liaison.html");
+                    header("Location: ../html/liaison/liaison.php");
                     break;
                 default:
                     echo "<script>alert('Unauthorized role.');</script>";

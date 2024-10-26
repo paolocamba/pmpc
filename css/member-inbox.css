@@ -1,49 +1,4 @@
 
-
-/* Main Content Styling */
-.main-content {
-    margin-left: 250px;
-    padding: 20px;
-    width: calc(100% - 250px);
-}
-
-/* Header Styling */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 60px; /* Copied from home page */
-    border-bottom: 1.5px solid #ffffff; /* Copied from home page */
-    margin-bottom: 20px; /* Optional: space below the heading */
-}
-
-header h1 {
-    font-size: 50px;
-    font-weight: 800;
-    color: #f6f6f6;
-}
-
-/* Logout Button */
-.logout-button {
-    background-color: #0F4332; /* New green color */
-    color: rgb(255, 255, 255); /* Black text */
-    border-radius: 8px;
-    margin-top: -150px;
-    font-size: 20px;
-    font-weight: bold;
-    width: 150px;
-    height: 50px;
-    padding: 15px 25px; /* Same padding as the apply-loan button */
-    border: none; /* Remove any default borders */
-    cursor: pointer; /* Pointer cursor to indicate it's clickable */
-    transition: background-color 0.3s ease; /* Smooth background color transition */
-}
-
-.logout-button:hover {
-    background-color: #10C98F;
-}
-
-
 /* Inbox Section */
 .inbox-section {
     margin-top: 40px;
@@ -84,3 +39,120 @@ header h1 {
     background-color: #f9f9f9;
 }
 
+/* Pagination styling */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #0F4332; /* Primary color for pagination links */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    display: inline-block; /* Ensure padding works correctly */
+}
+
+.pagination a.active {
+    background-color: #10C98F; /* Highlight color for active page */
+    font-weight: bold; /* Make active page bold */
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #10C98F; /* Highlight color on hover */
+}
+
+/* Add page design for pagination */
+.pagination a:after {
+    content: '';
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.pagination a:hover:after {
+    content: '➔'; /* Arrow indication for hover */
+    color: #fff; /* Change arrow color on hover */
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content styles */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+}
+
+/* Close button styles */
+.close-button {
+    cursor: pointer;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.close-button:hover {
+    color: black;
+}
+
+/* Additional styling for modal body */
+.modal-body h2 {
+    margin: 10px 0;
+}
+
+/* Option container style */
+.modal-body .loan-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Form styles */
+.modal-body form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Input and select styles */
+.modal-body select,
+.modal-body input {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Full width */
+}
+
+/* Submit button styles */
+.submit-button {
+    padding: 10px 20px;
+    background-color: #2f5d41;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #274d35;
+}

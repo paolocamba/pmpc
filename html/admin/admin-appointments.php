@@ -4,9 +4,9 @@ session_start();
 
 // Include database connection
 $servername = "localhost";
-$dbUsername = "root"; // Update if you have a different username
-$dbPassword = ""; // Update if you have a password
-$dbname = "pmpc"; // Your database name
+$dbUsername = "root";
+$dbPassword = "";
+$dbname = "pmpc";
 
 $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 
@@ -24,19 +24,33 @@ if (!$completedAppointmentsResult) {
 $completedAppointments = $completedAppointmentsResult->fetch_assoc()['total'];
 
 // Fetch appointment list with member details
+$searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
+
+// Modify the query to handle search, including Status
 $appointmentsQuery = "
-SELECT 
-    AppointmentID, 
-    LastName, 
-    FirstName, 
-    AppointmentDate, 
-    Description, 
-    Email 
-FROM 
-    appointments
-LIMIT 5
+    SELECT 
+        AppointmentID, 
+        LastName, 
+        FirstName, 
+        AppointmentDate, 
+        Description, 
+        Email,
+        Status  -- Added Status to the query
+    FROM 
+        appointments
+    WHERE 
+        LastName LIKE ? OR
+        FirstName LIKE ? OR
+        AppointmentDate LIKE ? OR
+        Description LIKE ? OR
+        Email LIKE ?
+    LIMIT 5
 ";
-$appointmentsResult = $conn->query($appointmentsQuery);
+$stmt = $conn->prepare($appointmentsQuery);
+$searchTerm = "%{$searchQuery}%";
+$stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+$stmt->execute();
+$appointmentsResult = $stmt->get_result();
 
 // Close the database connection
 $conn->close();
@@ -93,7 +107,11 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Appointment List</h3>
-                    <a href="manage-appointments.php" class="manage-link">Manage / View All</a>
+                    <!-- Search Form -->
+                    <form action="admin-appointments.php" method="GET">
+                        <input type="text" name="search" placeholder="Search by name, date, description, or email" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
                 <table>
                     <thead>
@@ -104,6 +122,8 @@ $conn->close();
                             <th>Date</th>
                             <th>Description</th>
                             <th>Email</th>
+                            <th>Status</th> <!-- Added Status column -->
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,10 +137,12 @@ $conn->close();
                                 echo "<td>" . htmlspecialchars($row['AppointmentDate']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Description']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>"; // Displaying the Status
+                                echo "<td><a href='admin-view-appointment.php?AppointmentID=" . htmlspecialchars($row['AppointmentID']) . "'>View</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No appointments found.</td></tr>";
+                            echo "<tr><td colspan='8'>No appointments found.</td></tr>";
                         }
                         ?>
                     </tbody>

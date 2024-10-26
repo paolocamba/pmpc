@@ -90,8 +90,8 @@ if (isset($_POST['delete'])) {
     }
 }
 
-// Fetch services for dropdown
-$servicesQuery = "SELECT ServiceID, ServiceName FROM service";
+// Fetch services for dropdown, excluding IDs 4, 5, 6, 7, and 8
+$servicesQuery = "SELECT ServiceID, ServiceName FROM service WHERE ServiceID NOT IN (4, 5, 6, 7, 8)";
 $servicesResult = $conn->query($servicesQuery);
 
 // Close the database connection

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 20, 2024 at 02:28 PM
+-- Generation Time: Oct 26, 2024 at 08:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,21 +65,31 @@ INSERT INTO `address` (`AddressID`, `Street`, `Barangay`, `Municipality`, `Provi
 (9, 'Ninth St', 'Barangay 9', 'City I', 'Province I'),
 (10, 'Tenth St', 'Barangay 10', 'City J', 'Province J'),
 (11, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
-(12, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
-(13, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
-(14, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
-(15, 'Lonktok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(15, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
 (16, '173', 'Siling Bata', 'Pandi', 'Bulacan'),
-(17, 'fafafaf', 'afagga', 'agagag', 'agaga'),
-(18, 'fafafaf', 'afagga', 'agagag', 'agaga'),
-(22, 'fafafaf', 'gbaa', 'babab', 'agaga'),
-(35, 'fafafaf', 'gbaa', 'babab', 'agaga'),
-(36, 'eqe', 'eqeq', 'qeq', 'qeq'),
 (37, 'eqe', 'eqeq', 'qeq', 'qeq'),
 (38, 'eqe', 'eqeq', 'qeq', 'qeq'),
 (39, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
 (42, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
-(43, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales');
+(43, 'Lontok', 'Sto.Rosario', 'Iba', 'Zambales'),
+(44, 'Saan', 'Siling Bata', 'Malolos', 'Bulacan'),
+(45, 'All', 'Blue', 'One', 'Piece'),
+(46, 'All', 'Blue', 'One', 'Piece'),
+(47, 'w', 'w', 'w', 'w'),
+(48, 'k', 'k', 'k', 'k'),
+(49, 'g', 'g', 'g', 'g'),
+(50, '173', '1', '1', '1'),
+(51, '1', '1', '1', '1'),
+(52, 'adada', 'dadad', 'dad', 'adad'),
+(53, 'ada', 'adad', 'fsgs', 'sgsg'),
+(54, 'gjhj', 'gjghj', 'gjhj', 'jgjh'),
+(55, 'Lontok', 'dadad', 'dad', 'adad'),
+(56, 'lklkl', 'klkkl', 'klkkl', 'klkl'),
+(57, '123 Main St', 'Downtown', 'Cityville', 'State'),
+(63, 'adsd', 'afafaf', 'afafaf', 'afafa'),
+(66, 'adsd', 'afafaf', 'afafaf', 'afafa'),
+(67, '14414', '4141', '51515', '1515'),
+(68, 'N/A', 'Siling Bata', 'Pandi', 'Bulacan');
 
 -- --------------------------------------------------------
 
@@ -122,38 +132,43 @@ CREATE TABLE `appointments` (
   `FirstName` varchar(50) NOT NULL,
   `AppointmentDate` date NOT NULL,
   `Description` text DEFAULT NULL,
-  `Email` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `beneficiaries`
---
-
-CREATE TABLE `beneficiaries` (
-  `BeneficiaryID` int(11) NOT NULL,
+  `Email` varchar(100) NOT NULL,
   `MemberID` int(11) DEFAULT NULL,
-  `Name` varchar(100) DEFAULT NULL,
-  `Birthday` date DEFAULT NULL,
-  `Relationship` varchar(50) DEFAULT NULL
+  `ServiceID` int(11) DEFAULT NULL,
+  `Status` enum('Pending','Approved','Disapproved') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `beneficiaries`
+-- Dumping data for table `appointments`
 --
 
-INSERT INTO `beneficiaries` (`BeneficiaryID`, `MemberID`, `Name`, `Birthday`, `Relationship`) VALUES
-(1, 1, 'Sarah Doe', '2010-05-12', 'Daughter'),
-(2, 1, 'Tom Doe', '2012-07-23', 'Son'),
-(3, 2, 'Lucy Smith', '2011-09-15', 'Daughter'),
-(4, 2, 'Mark Smith', '2013-11-30', 'Son'),
-(5, 3, 'Anna Brown', '2009-02-22', 'Daughter'),
-(6, 3, 'Ben Brown', '2014-04-05', 'Son'),
-(7, 4, 'Rachel Jones', '2008-08-18', 'Daughter'),
-(8, 4, 'Kyle Jones', '2015-10-10', 'Son'),
-(9, 5, 'Emma Davis', '2007-01-29', 'Daughter'),
-(10, 5, 'Ryan Davis', '2016-03-19', 'Son');
+INSERT INTO `appointments` (`AppointmentID`, `LastName`, `FirstName`, `AppointmentDate`, `Description`, `Email`, `MemberID`, `ServiceID`, `Status`) VALUES
+(26, 'Camba', 'Rick Paolo', '2024-10-23', 'Life Insurance', 'rickpaolocamba@gmail.com', 12, 1, 'Disapproved'),
+(27, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Approved'),
+(28, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Pending'),
+(29, 'Camba', 'Rick Paolo', '2024-10-31', 'Laboratory', 'rickpaolocamba@gmail.com', 12, 5, 'Approved');
+
+--
+-- Triggers `appointments`
+--
+DELIMITER $$
+CREATE TRIGGER `after_appointment_approval` AFTER UPDATE ON `appointments` FOR EACH ROW BEGIN
+    -- Check if the appointment status was updated to "Approved"
+    IF NEW.Status = 'Approved' AND OLD.Status <> 'Approved' THEN
+        -- Check if the description matches one of the values for medical services
+        IF NEW.Description IN ('Medical consultation', 'Laboratory', 'X-ray', 'Healom', 'Health Card') THEN
+            -- Insert into the medical table with NULL for Amount
+            INSERT INTO medical (MemberID, Date, ServiceID, Status, Amount)
+            VALUES (NEW.MemberID, NEW.AppointmentDate, NEW.ServiceID, 'In Progress', NULL);
+        ELSE
+            -- Insert into the transaction table with NULL for Amount
+            INSERT INTO transaction (MemberID, ServiceID, Date, Status, Amount)
+            VALUES (NEW.MemberID, NEW.ServiceID, NOW(), 'In Progress', NULL);
+        END IF;
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -193,30 +208,30 @@ INSERT INTO `collateral` (`CollateralID`, `LoanID`, `SquareMeter`, `LandType`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `emergencycontact`
+-- Table structure for table `collateral_info`
 --
 
-CREATE TABLE `emergencycontact` (
-  `EmergencyContactID` int(11) NOT NULL,
-  `Name` varchar(100) DEFAULT NULL,
-  `ContactNo` varchar(15) DEFAULT NULL
+CREATE TABLE `collateral_info` (
+  `LoanID` int(11) NOT NULL,
+  `square_meters` varchar(255) NOT NULL,
+  `type_of_land` enum('residential','commercial','agricultural') NOT NULL,
+  `location` enum('bagbugin','bagong-barrio','baka-bakahan','bunsuran-i','bunsuran-ii','bunsuran-iii','cacarong-bata','cacarong-matanda','cupang','malibong-bata','malibong-matanda','manatal','mapulang-lupa','masagana','masuso','pinagkuartelan','poblacion','real-de-cacarong','santo-niño','san-roque','siling-bata','siling-matanda') NOT NULL,
+  `right_of_way` enum('yes','no') NOT NULL,
+  `land_title_path` varchar(255) NOT NULL,
+  `hospital` enum('yes','no') DEFAULT 'no',
+  `clinic` enum('yes','no') DEFAULT 'no',
+  `school` enum('yes','no') DEFAULT 'no',
+  `market` enum('yes','no') DEFAULT 'no',
+  `church` enum('yes','no') DEFAULT 'no',
+  `public_terminal` enum('yes','no') DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `emergencycontact`
+-- Dumping data for table `collateral_info`
 --
 
-INSERT INTO `emergencycontact` (`EmergencyContactID`, `Name`, `ContactNo`) VALUES
-(1, 'Alice Green', '09123456789'),
-(2, 'Bob White', '09234567890'),
-(3, 'Charlie Black', '09345678901'),
-(4, 'Diana Yellow', '09456789012'),
-(5, 'Eve Purple', '09567890123'),
-(6, 'Frank Orange', '09678901234'),
-(7, 'Grace Pink', '09789012345'),
-(8, 'Hank Gray', '09890123456'),
-(9, 'Ivy Red', '09901234567'),
-(10, 'Jack Blue', '09012345678');
+INSERT INTO `collateral_info` (`LoanID`, `square_meters`, `type_of_land`, `location`, `right_of_way`, `land_title_path`, `hospital`, `clinic`, `school`, `market`, `church`, `public_terminal`) VALUES
+(15, '123', 'residential', 'poblacion', 'no', 'C:\\xampp\\htdocs\\pmpc\\html\\member/../../assets/uploads/collateral/12-671b25facd481.png', 'yes', 'no', 'no', 'no', 'no', 'no');
 
 -- --------------------------------------------------------
 
@@ -245,63 +260,31 @@ INSERT INTO `events` (`PostID`, `Title`, `Image`, `Event_Date`, `Event_Descripti
 -- --------------------------------------------------------
 
 --
--- Table structure for table `expensedetails`
+-- Table structure for table `inbox`
 --
 
-CREATE TABLE `expensedetails` (
-  `ExpenseDetailsID` int(11) NOT NULL,
-  `Food` decimal(15,2) DEFAULT NULL,
-  `Gas` decimal(15,2) DEFAULT NULL,
-  `Schooling` decimal(15,2) DEFAULT NULL,
-  `Lights` decimal(15,2) DEFAULT NULL,
-  `Miscellaneous` decimal(15,2) DEFAULT NULL
+CREATE TABLE `inbox` (
+  `MessageID` int(11) NOT NULL,
+  `MemberID` int(11) NOT NULL,
+  `Message` text NOT NULL,
+  `Date` datetime DEFAULT current_timestamp(),
+  `isRead` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `expensedetails`
+-- Dumping data for table `inbox`
 --
 
-INSERT INTO `expensedetails` (`ExpenseDetailsID`, `Food`, `Gas`, `Schooling`, `Lights`, `Miscellaneous`) VALUES
-(1, 8000.00, 2000.00, 3000.00, 1500.00, 500.00),
-(2, 9000.00, 2500.00, 2000.00, 1200.00, 600.00),
-(3, 10000.00, 3000.00, 2500.00, 1300.00, 700.00),
-(4, 7500.00, 1800.00, 2600.00, 1100.00, 550.00),
-(5, 8500.00, 2200.00, 2400.00, 1250.00, 650.00),
-(6, 9500.00, 2900.00, 2800.00, 1400.00, 800.00),
-(7, 7200.00, 2300.00, 2700.00, 1350.00, 450.00),
-(8, 8800.00, 2600.00, 2300.00, 1220.00, 570.00),
-(9, 9200.00, 2800.00, 3100.00, 1450.00, 750.00),
-(10, 7800.00, 2100.00, 2000.00, 1150.00, 430.00);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `incomedetails`
---
-
-CREATE TABLE `incomedetails` (
-  `IncomeDetailsID` int(11) NOT NULL,
-  `SelfIncome` decimal(15,2) DEFAULT NULL,
-  `OtherIncome` decimal(15,2) DEFAULT NULL,
-  `SpouseIncome` decimal(15,2) DEFAULT NULL,
-  `AdditionalIncome` decimal(15,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `incomedetails`
---
-
-INSERT INTO `incomedetails` (`IncomeDetailsID`, `SelfIncome`, `OtherIncome`, `SpouseIncome`, `AdditionalIncome`) VALUES
-(1, 20000.00, 5000.00, 15000.00, 2000.00),
-(2, 25000.00, 3000.00, 12000.00, 1000.00),
-(3, 30000.00, 4000.00, 18000.00, 2500.00),
-(4, 35000.00, 2500.00, 14000.00, 3000.00),
-(5, 40000.00, 6000.00, 16000.00, 500.00),
-(6, 22000.00, 7000.00, 13000.00, 1500.00),
-(7, 27000.00, 8000.00, 11000.00, 2000.00),
-(8, 32000.00, 2000.00, 17000.00, 1800.00),
-(9, 28000.00, 3000.00, 19000.00, 1600.00),
-(10, 21000.00, 5000.00, 15000.00, 2400.00);
+INSERT INTO `inbox` (`MessageID`, `MemberID`, `Message`, `Date`, `isRead`) VALUES
+(1, 12, 'Congratulations! Your loan application for a Collateral Loan is approved.', '2024-08-17 10:00:00', 1),
+(2, 12, 'Dear Member, you are invited to attend the Paschal Coop General Assembly.', '2024-08-18 11:30:00', 1),
+(3, 12, 'We are excited to announce that new medical services, including X-RAY, are available.', '2024-08-19 14:15:00', 1),
+(4, 12, 'This is a reminder that your savings balance has dropped below the minimum requirement.', '2024-08-20 09:00:00', 1),
+(5, 12, 'Join us as we celebrate the 8th Anniversary of Paschal\'s community outreach program.', '2024-08-21 16:45:00', 1),
+(6, 12, 'Your appointment is confirmed.', '2024-10-01 10:00:00', 1),
+(7, 12, 'Don\'t forget to complete your survey.', '2024-10-02 14:30:00', 1),
+(8, 12, 'Your loan application has been processed.', '2024-10-03 09:15:00', 1),
+(9, 12, 'fgagag', '2024-10-26 03:18:05', 1);
 
 -- --------------------------------------------------------
 
@@ -317,31 +300,140 @@ CREATE TABLE `loanapplication` (
   `LoanTerm` varchar(20) DEFAULT NULL,
   `Purpose` text DEFAULT NULL,
   `LoanType` enum('Regular','Collateral') DEFAULT NULL,
-  `PaymentFrequency` enum('Monthly','Weekly') DEFAULT NULL,
-  `ResidenceDetailsID` int(11) DEFAULT NULL,
-  `IncomeDetailsID` int(11) DEFAULT NULL,
-  `ExpenseDetailsID` int(11) DEFAULT NULL,
-  `EmploymentID` int(11) DEFAULT NULL,
-  `SavingsID` int(11) DEFAULT NULL,
-  `AssetsID` int(11) DEFAULT NULL,
-  `DebtsID` int(11) DEFAULT NULL
+  `ModeOfPayment` enum('Daily','Weekly','Bi-Monthly','Monthly','Quarterly','Semi-Anual') DEFAULT NULL,
+  `years_stay_present_address` int(11) DEFAULT NULL,
+  `own_house` tinyint(1) NOT NULL DEFAULT 0,
+  `renting` tinyint(1) NOT NULL DEFAULT 0,
+  `living_with_relative` tinyint(1) NOT NULL DEFAULT 0,
+  `status` enum('Single','Married','Separated','Widow/er','Live-in') NOT NULL,
+  `spouse_name` varchar(255) DEFAULT NULL,
+  `number_of_dependents` int(11) NOT NULL,
+  `dependents_in_school` int(11) NOT NULL,
+  `dependent1_name` varchar(255) DEFAULT NULL,
+  `dependent1_age` int(11) DEFAULT NULL,
+  `dependent1_grade_level` varchar(50) DEFAULT NULL,
+  `dependent2_name` varchar(255) DEFAULT NULL,
+  `dependent2_age` int(11) DEFAULT NULL,
+  `dependent2_grade_level` varchar(50) DEFAULT NULL,
+  `dependent3_name` varchar(255) DEFAULT NULL,
+  `dependent3_age` int(11) DEFAULT NULL,
+  `dependent3_grade_level` varchar(50) DEFAULT NULL,
+  `dependent4_name` varchar(255) DEFAULT NULL,
+  `dependent4_age` int(11) DEFAULT NULL,
+  `dependent4_grade_level` varchar(50) DEFAULT NULL,
+  `family_member_count` int(11) NOT NULL,
+  `self_income` varchar(255) NOT NULL,
+  `self_income_amount` decimal(10,2) NOT NULL,
+  `other_income` varchar(255) DEFAULT NULL,
+  `other_income_amount` decimal(10,2) DEFAULT NULL,
+  `spouse_income` varchar(255) DEFAULT NULL,
+  `spouse_income_amount` decimal(10,2) DEFAULT NULL,
+  `spouse_other_income` varchar(255) DEFAULT NULL,
+  `spouse_other_income_amount` decimal(10,2) DEFAULT NULL,
+  `total_income` decimal(10,2) NOT NULL,
+  `food_groceries_expense` decimal(10,2) NOT NULL,
+  `gas_oil_transportation_expense` decimal(10,2) NOT NULL,
+  `schooling_expense` decimal(10,2) NOT NULL,
+  `utilities_expense` decimal(10,2) NOT NULL,
+  `miscellaneous_expense` decimal(10,2) NOT NULL,
+  `total_expenses` decimal(10,2) NOT NULL,
+  `net_family_income` decimal(10,2) NOT NULL,
+  `employer_name` varchar(255) NOT NULL,
+  `employer_address` varchar(255) NOT NULL,
+  `present_position` varchar(255) NOT NULL,
+  `date_of_employment` date DEFAULT NULL,
+  `monthly_income` decimal(10,2) NOT NULL,
+  `contact_person` varchar(255) NOT NULL,
+  `contact_telephone_no` varchar(20) NOT NULL,
+  `self_employed_business_type` varchar(255) DEFAULT NULL,
+  `business_start_date` date DEFAULT NULL,
+  `savings_account` tinyint(1) NOT NULL DEFAULT 0,
+  `savings_bank` varchar(255) DEFAULT NULL,
+  `savings_branch` varchar(255) DEFAULT NULL,
+  `current_account` tinyint(1) NOT NULL DEFAULT 0,
+  `current_bank` varchar(255) DEFAULT NULL,
+  `current_branch` varchar(255) DEFAULT NULL,
+  `asset1` varchar(255) DEFAULT NULL,
+  `asset2` varchar(255) DEFAULT NULL,
+  `asset3` varchar(255) DEFAULT NULL,
+  `asset4` varchar(255) DEFAULT NULL,
+  `creditor1_name` varchar(255) DEFAULT NULL,
+  `creditor1_address` varchar(255) DEFAULT NULL,
+  `creditor1_original_amount` decimal(10,2) DEFAULT NULL,
+  `creditor1_present_balance` decimal(10,2) DEFAULT NULL,
+  `creditor2_name` varchar(255) DEFAULT NULL,
+  `creditor2_address` varchar(255) DEFAULT NULL,
+  `creditor2_original_amount` decimal(10,2) DEFAULT NULL,
+  `creditor2_present_balance` decimal(10,2) DEFAULT NULL,
+  `creditor3_name` varchar(255) DEFAULT NULL,
+  `creditor3_address` varchar(255) DEFAULT NULL,
+  `creditor3_original_amount` decimal(10,2) DEFAULT NULL,
+  `creditor3_present_balance` decimal(10,2) DEFAULT NULL,
+  `creditor4_name` varchar(255) DEFAULT NULL,
+  `creditor4_address` varchar(255) DEFAULT NULL,
+  `creditor4_original_amount` decimal(10,2) DEFAULT NULL,
+  `creditor4_present_balance` decimal(10,2) DEFAULT NULL,
+  `property_foreclosed_repossessed` tinyint(1) NOT NULL DEFAULT 0,
+  `co_maker_cosigner_guarantor` tinyint(1) NOT NULL DEFAULT 0,
+  `reference1_name` varchar(255) NOT NULL,
+  `reference1_address` varchar(255) NOT NULL,
+  `reference1_contact_no` varchar(20) NOT NULL,
+  `reference2_name` varchar(255) NOT NULL,
+  `reference2_address` varchar(255) NOT NULL,
+  `reference2_contact_no` varchar(20) NOT NULL,
+  `reference3_name` varchar(255) NOT NULL,
+  `reference3_address` varchar(255) NOT NULL,
+  `reference3_contact_no` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `loanapplication`
 --
 
-INSERT INTO `loanapplication` (`LoanID`, `MemberID`, `DateOfLoan`, `AmountRequested`, `LoanTerm`, `Purpose`, `LoanType`, `PaymentFrequency`, `ResidenceDetailsID`, `IncomeDetailsID`, `ExpenseDetailsID`, `EmploymentID`, `SavingsID`, `AssetsID`, `DebtsID`) VALUES
-(1, 1, '2024-01-15', 10000.00, '12 months', 'Personal Expenses', 'Regular', 'Monthly', 1, 1, 1, NULL, NULL, NULL, NULL),
-(2, 2, '2024-02-20', 15000.00, '24 months', 'Home Renovation', 'Collateral', 'Monthly', 2, 2, 2, NULL, NULL, NULL, NULL),
-(3, 3, '2024-03-10', 20000.00, '36 months', 'Education', 'Regular', 'Weekly', 3, 3, 3, NULL, NULL, NULL, NULL),
-(4, 4, '2024-04-05', 12000.00, '18 months', 'Medical Expenses', 'Regular', 'Monthly', 4, 4, 4, NULL, NULL, NULL, NULL),
-(5, 5, '2024-05-12', 25000.00, '60 months', 'Business Expansion', 'Collateral', 'Monthly', 5, 5, 5, NULL, NULL, NULL, NULL),
-(6, 6, '2024-06-15', 8000.00, '12 months', 'Debt Consolidation', 'Regular', 'Weekly', 6, 6, 6, NULL, NULL, NULL, NULL),
-(7, 7, '2024-07-20', 30000.00, '48 months', 'Car Purchase', 'Collateral', 'Monthly', 7, 7, 7, NULL, NULL, NULL, NULL),
-(8, 8, '2024-08-25', 10000.00, '6 months', 'Travel Expenses', 'Regular', 'Monthly', 8, 8, 8, NULL, NULL, NULL, NULL),
-(9, 9, '2024-09-30', 5000.00, '3 months', 'Emergency Fund', 'Regular', 'Weekly', 9, 9, 9, NULL, NULL, NULL, NULL),
-(10, 10, '2024-10-15', 15000.00, '36 months', 'Home Improvement', 'Collateral', 'Monthly', 10, 10, 10, NULL, NULL, NULL, NULL);
+INSERT INTO `loanapplication` (`LoanID`, `MemberID`, `DateOfLoan`, `AmountRequested`, `LoanTerm`, `Purpose`, `LoanType`, `ModeOfPayment`, `years_stay_present_address`, `own_house`, `renting`, `living_with_relative`, `status`, `spouse_name`, `number_of_dependents`, `dependents_in_school`, `dependent1_name`, `dependent1_age`, `dependent1_grade_level`, `dependent2_name`, `dependent2_age`, `dependent2_grade_level`, `dependent3_name`, `dependent3_age`, `dependent3_grade_level`, `dependent4_name`, `dependent4_age`, `dependent4_grade_level`, `family_member_count`, `self_income`, `self_income_amount`, `other_income`, `other_income_amount`, `spouse_income`, `spouse_income_amount`, `spouse_other_income`, `spouse_other_income_amount`, `total_income`, `food_groceries_expense`, `gas_oil_transportation_expense`, `schooling_expense`, `utilities_expense`, `miscellaneous_expense`, `total_expenses`, `net_family_income`, `employer_name`, `employer_address`, `present_position`, `date_of_employment`, `monthly_income`, `contact_person`, `contact_telephone_no`, `self_employed_business_type`, `business_start_date`, `savings_account`, `savings_bank`, `savings_branch`, `current_account`, `current_bank`, `current_branch`, `asset1`, `asset2`, `asset3`, `asset4`, `creditor1_name`, `creditor1_address`, `creditor1_original_amount`, `creditor1_present_balance`, `creditor2_name`, `creditor2_address`, `creditor2_original_amount`, `creditor2_present_balance`, `creditor3_name`, `creditor3_address`, `creditor3_original_amount`, `creditor3_present_balance`, `creditor4_name`, `creditor4_address`, `creditor4_original_amount`, `creditor4_present_balance`, `property_foreclosed_repossessed`, `co_maker_cosigner_guarantor`, `reference1_name`, `reference1_address`, `reference1_contact_no`, `reference2_name`, `reference2_address`, `reference2_contact_no`, `reference3_name`, `reference3_address`, `reference3_contact_no`) VALUES
+(1, 1, '2024-01-15', 10000.00, '12 months', 'Personal Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(2, 2, '2024-02-20', 15000.00, '24 months', 'Home Renovation', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(3, 3, '2024-03-10', 20000.00, '36 months', 'Education', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(4, 4, '2024-04-05', 12000.00, '18 months', 'Medical Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(5, 5, '2024-05-12', 25000.00, '60 months', 'Business Expansion', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(6, 6, '2024-06-15', 8000.00, '12 months', 'Debt Consolidation', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(7, 7, '2024-07-20', 30000.00, '48 months', 'Car Purchase', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(8, 8, '2024-08-25', 10000.00, '6 months', 'Travel Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(9, 9, '2024-09-30', 5000.00, '3 months', 'Emergency Fund', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(10, 10, '2024-10-15', 15000.00, '36 months', 'Home Improvement', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(11, 12, '2024-10-25', 12000.00, '6', 'Study', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(15, 12, '2024-10-18', 14000.00, '12', 'afaf', 'Collateral', 'Weekly', 3, 1, 0, 0, 'Single', NULL, 0, 0, 'affaf', 13, '13', '', 0, '', '', 0, '', '', 0, '0', 0, '3113', 141414.00, '13131', 1414.00, '0', 1414.00, 'af', 1414.00, 0.00, 4141.00, 414.00, 1414.00, 1414.00, 414.00, 414.00, 1414.00, 'afaf', 'afaf', 'agagag', '2024-10-09', 4441.00, 'gagagag', '0', '', '0000-00-00', 0, '', '', 0, '', '', 'afaf', 'faf', 'afa', 'afaf', 'afaf', 'fafaf', 41414.00, 1414.00, 'agagag', 'agagag', 1414.00, 14141.00, '', '', 0.00, 0.00, '', '', 0.00, 0.00, 0, 1, 'afafaf', 'afafa', '4141', 'afafaf', 'afafaf', '1515', 'fafaf', 'afafa', '15151');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loanapplication_status`
+--
+
+CREATE TABLE `loanapplication_status` (
+  `LoanID` int(11) NOT NULL,
+  `Eligibility` enum('Eligible','Not Eligible') NOT NULL,
+  `Status` enum('Pending','Completed','Rejected') NOT NULL,
+  `PredictedAmount` decimal(10,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loanapplication_status`
+--
+
+INSERT INTO `loanapplication_status` (`LoanID`, `Eligibility`, `Status`, `PredictedAmount`) VALUES
+(1, '', 'Pending', NULL),
+(2, 'Eligible', 'Pending', NULL),
+(3, 'Eligible', 'Pending', NULL),
+(4, 'Eligible', 'Pending', NULL),
+(5, 'Eligible', 'Pending', NULL),
+(6, 'Eligible', 'Pending', NULL),
+(7, 'Eligible', 'Pending', NULL),
+(8, 'Eligible', 'Pending', NULL),
+(9, 'Eligible', 'Pending', NULL),
+(10, 'Eligible', 'Pending', NULL),
+(11, 'Eligible', 'Pending', NULL),
+(15, 'Eligible', 'Pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -352,7 +444,6 @@ INSERT INTO `loanapplication` (`LoanID`, `MemberID`, `DateOfLoan`, `AmountReques
 CREATE TABLE `loan_admin` (
   `LoanID` int(11) NOT NULL,
   `MemberID` int(11) NOT NULL,
-  `Name` varchar(100) NOT NULL,
   `AmountOfLoan` decimal(10,2) NOT NULL,
   `TypeOfLoan` enum('Regular','Collateral') NOT NULL,
   `Term` int(11) NOT NULL,
@@ -360,7 +451,9 @@ CREATE TABLE `loan_admin` (
   `MaturityDate` date NOT NULL,
   `CoMaker` varchar(100) DEFAULT NULL,
   `Remarks` text DEFAULT NULL,
-  `LoanStatus` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress'
+  `LoanStatus` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress',
+  `AmountPayable` decimal(11,0) DEFAULT NULL,
+  `ModeOfPayment` enum('Daily','Bi-Weekly','Weekly','Bi-Monthly','Monthly') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -370,13 +463,22 @@ CREATE TABLE `loan_admin` (
 --
 
 CREATE TABLE `medical` (
-  `Id` int(11) NOT NULL,
-  `MemberId` int(11) NOT NULL,
-  `LastName` varchar(255) NOT NULL,
+  `TransactID` int(11) NOT NULL,
+  `MemberID` int(11) NOT NULL,
   `Date` date NOT NULL,
-  `ServiceID` varchar(255) NOT NULL,
-  `Status` enum('Completed','In Progress') NOT NULL
+  `ServiceID` int(11) NOT NULL,
+  `Status` enum('Completed','In Progress') NOT NULL DEFAULT 'In Progress',
+  `Amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `medical`
+--
+
+INSERT INTO `medical` (`TransactID`, `MemberID`, `Date`, `ServiceID`, `Status`, `Amount`) VALUES
+(3, 6, '2024-10-25', 5, 'In Progress', 0.00),
+(4, 12, '2024-10-25', 6, 'In Progress', NULL),
+(5, 12, '2024-10-31', 5, 'In Progress', NULL);
 
 -- --------------------------------------------------------
 
@@ -392,15 +494,9 @@ CREATE TABLE `member` (
   `MiddleName` varchar(50) DEFAULT NULL,
   `AddressID` int(11) DEFAULT NULL,
   `Birthday` date DEFAULT NULL,
-  `Age` int(11) DEFAULT NULL,
   `Sex` varchar(10) DEFAULT NULL,
-  `Status` varchar(20) DEFAULT NULL,
-  `BirthPlace` varchar(100) DEFAULT NULL,
-  `Occupation` varchar(100) DEFAULT NULL,
   `TINNumber` varchar(15) DEFAULT NULL,
   `ContactNo` varchar(15) DEFAULT NULL,
-  `SpouseID` int(11) DEFAULT NULL,
-  `EmergencyContactID` int(11) DEFAULT NULL,
   `DateCreated` date DEFAULT NULL,
   `Savings` decimal(10,2) DEFAULT 0.00,
   `TypeOfMember` enum('Regular','Associate') DEFAULT 'Regular'
@@ -410,20 +506,23 @@ CREATE TABLE `member` (
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Age`, `Sex`, `Status`, `BirthPlace`, `Occupation`, `TINNumber`, `ContactNo`, `SpouseID`, `EmergencyContactID`, `DateCreated`, `Savings`, `TypeOfMember`) VALUES
-('413@gmail.com', 35, '0', 'qeqe', 'qeqe', NULL, '2024-10-20', NULL, 'male', NULL, NULL, NULL, '123498766', '0909765234', NULL, NULL, NULL, 0.00, 'Regular'),
-('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 44, 'Male', 'Divorced', 'City E', 'Architect', '654789123', '09567890123', 5, 5, '2024-10-16', 0.00, 'Regular'),
-('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 36, 'Female', 'Single', 'City F', 'Designer', '159753486', '09678901234', 6, 6, '2024-10-16', 0.00, 'Regular'),
-('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 34, 'Female', 'Married', 'City B', 'Teacher', '987564321', '09234567890', 2, 2, '2024-10-16', 0.00, 'Regular'),
-('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 39, 'Male', 'Married', 'City G', 'Chef', '357951486', '09789012345', 7, 7, '2024-10-16', 40000.00, 'Regular'),
-('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 29, 'Female', 'Single', 'City J', 'Accountant', '753159852', '09012345678', 10, 10, '2024-10-16', 0.00, 'Regular'),
-('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 39, 'Male', 'Single', 'City A', 'Engineer', '123456789', '09123456789', 1, 1, '2024-10-16', 0.00, 'Regular'),
-('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 28, 'Female', 'Single', 'City D', 'Nurse', '321654987', '09456789012', 4, 4, '2024-10-16', 0.00, 'Regular'),
-('Martinez@gmail.com', 9, 'Martinez', 'Lucas', 'I', 9, '1975-09-05', 49, 'Male', 'Married', 'City I', 'Manager', '951357258', '09901234567', 9, 9, '2024-10-16', 0.00, 'Regular'),
-('ricardo1@gmail.com', 40, '0', 'Ricardo', 'Janda', NULL, '2003-03-09', NULL, 'male', NULL, NULL, NULL, '987651233', '09127599973', NULL, NULL, NULL, 0.00, 'Regular'),
-('rickpaolocamba@gmail.com', 12, 'Camba', 'Rick Paolo', 'Pampuan', 15, '2003-03-09', NULL, 'male', NULL, NULL, NULL, '121212123', '09466446039', NULL, NULL, NULL, 0.00, 'Regular'),
-('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 32, 'Female', 'Single', 'City H', 'Scientist', '852456123', '09890123456', 8, 8, '2024-10-16', 0.00, 'Regular'),
-('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 42, 'Male', 'Married', 'City C', 'Doctor', '456123789', '09345678901', 3, 3, '2024-10-16', 3000.00, 'Regular');
+INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Sex`, `TINNumber`, `ContactNo`, `DateCreated`, `Savings`, `TypeOfMember`) VALUES
+('11@gmail.com', 64, '0', 'Nami', 'Robin', 63, '2024-10-07', 'male', '3353535111', '73737111', NULL, 0.00, 'Regular'),
+('151515@egmail.com', 71, '0', 'Nami', 'Robin', 66, '2024-10-16', 'male', '3353111111', '9at1515', NULL, 0.00, 'Regular'),
+('bb@gmail.com', 72, 'Robin', 'Nami', 'Swan', 67, '2024-10-06', '0', '678678678', '7878', NULL, 0.00, 'Regular'),
+('bernardobenjaminjarom@gmail.com', 73, 'Bernardo', 'Benjamin Jarom', 'Mañebo', 68, '2024-10-17', '0', '040513682', '09129130560', NULL, 0.00, 'Regular'),
+('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 'Male', '654789123', '09567890123', '2024-10-16', 0.00, 'Regular'),
+('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 'Female', '159753486', '09678901234', '2024-10-16', 0.00, 'Regular'),
+('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 'Female', '987564321', '09234567890', '2024-10-16', 0.00, 'Regular'),
+('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 'Male', '357951486', '09789012345', '2024-10-16', 40000.00, 'Regular'),
+('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 'Female', '753159852', '09012345678', '2024-10-16', 0.00, 'Regular'),
+('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 'Male', '123456789', '09123456789', '2024-10-16', 0.00, 'Regular'),
+('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 'Female', '321654987', '09456789012', '2024-10-16', 0.00, 'Regular'),
+('Martinez@gmail.com', 9, 'Martinez', 'Lucas', 'I', 9, '1975-09-05', 'Male', '951357258', '09901234567', '2024-10-16', 0.00, 'Regular'),
+('rickpaolocamba@gmail.com', 12, 'Camba', 'Rick Paolo', 'Pampuan', 15, '2003-03-09', 'male', '123123123', '09466446039', NULL, 0.00, 'Regular'),
+('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 'Female', '852456123', '09890123456', '2024-10-16', 0.00, 'Regular'),
+('test@example.com', 69, 'usop', 'usop', 'middle', 1, '1990-01-01', 'male', '123444789', '09993456789', NULL, 0.00, 'Regular'),
+('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 'Male', '456123789', '09345678901', '2024-10-16', 3000.00, 'Regular');
 
 -- --------------------------------------------------------
 
@@ -436,16 +535,17 @@ CREATE TABLE `membership_application` (
   `FillUpForm` tinyint(1) NOT NULL,
   `WatchedVideoSeminar` tinyint(1) NOT NULL,
   `PaidRegistrationFee` tinyint(1) NOT NULL,
-  `Status` enum('Failed','In progress','Completed') NOT NULL
+  `Status` enum('Failed','In progress','Completed') NOT NULL,
+  `AppointmentDate` date DEFAULT NULL,
+  `MembershipFeePaidAmount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `membership_application`
 --
 
-INSERT INTO `membership_application` (`MemberID`, `FillUpForm`, `WatchedVideoSeminar`, `PaidRegistrationFee`, `Status`) VALUES
-(35, 0, 1, 100, ''),
-(40, 0, 1, 100, '');
+INSERT INTO `membership_application` (`MemberID`, `FillUpForm`, `WatchedVideoSeminar`, `PaidRegistrationFee`, `Status`, `AppointmentDate`, `MembershipFeePaidAmount`) VALUES
+(73, 1, 1, 1, 'Completed', '2024-10-25', 2000);
 
 -- --------------------------------------------------------
 
@@ -465,48 +565,21 @@ CREATE TABLE `member_credentials` (
 --
 
 INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`) VALUES
-(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$YhOdll4vQAF61IaVnc9Rm.RCUDdNqg39i0Z3Ke1SIBVe1Kq8YUeVG'),
-(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$Gw0cK/GQRm9SQ81ECASScuXWGUdn0sbYJpRcbB5ApYwTiH/zmJax2'),
-(3, 'Williams', 'Williams@gmail.com', '$2y$10$VHNmnE7igow0PKE.NGDuDen3utrqV6iKNPSGF3w4R4SBLOhbPHGue'),
-(4, 'Jones', 'Jones@gmail.com', '$2y$10$QoTu/uA.5.ex261BYqt2AuyGwMJ0N2NTxqmhzkxkEiAOYEadNtTC.'),
-(5, 'Brown', 'Brown@gmail.com', '$2y$10$c2VbDJGm9PeckLMDPeaEIuLOtwoZWYShxxELZlupk5TzabrhYW.x.'),
-(6, 'Davis', 'Davis@gmail.com', '$2y$10$yS6ro6EZtkTUrrBOxq/7n.K8TSQgxKESwZpTB6YDWgb/g/jbQvHey'),
-(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$vyTVwTgXQ9APkrSWjU4ttOZgwXNrJbNyICDav6tw7GKDwiNOWfb56'),
-(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$hkxFzryxhf1eTSqtMHucMOfSvUlfFbMguEHscqmAxsh96gikNR5HG'),
-(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$wbCGzoPw24jDBaBmWJTHlO1pZLHdx5DOzfUum6SprVojT7A8MMHuK'),
-(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$WAOb0jWV4XWLQWetQ42KK.ue9ac0sXDuZAzEkFH/x85hPpzt1sI0e'),
-(12, 'rickpaolo', 'rickpaolocamba@gmail.com', '$2y$10$u7V4IdeWlX35kSSAWdFMVuDdqwfPNnVCtHkCWyUwwKlNtN0I6VGza'),
-(35, 'huehuedd', '413@gmail.com', '$2y$10$nuy2Jk6A1iZs/w0eI26lOe/RzA/C47M7bBzeIDSA4KrptLSgOSWwS'),
-(40, 'ricardoo', 'ricardo1@gmail.com', '$2y$10$2hWOywa.a7cHzW0iUn3wk.e8IKN3peaU8onE6sfTBMS3FEn5uNSKO');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `residencedetails`
---
-
-CREATE TABLE `residencedetails` (
-  `ResidenceDetailsID` int(11) NOT NULL,
-  `YearsOfStay` int(11) DEFAULT NULL,
-  `Renting` tinyint(1) DEFAULT NULL,
-  `OwnHouse` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `residencedetails`
---
-
-INSERT INTO `residencedetails` (`ResidenceDetailsID`, `YearsOfStay`, `Renting`, `OwnHouse`) VALUES
-(1, 5, 1, 0),
-(2, 2, 0, 1),
-(3, 10, 1, 0),
-(4, 3, 1, 1),
-(5, 1, 0, 1),
-(6, 7, 1, 0),
-(7, 4, 0, 1),
-(8, 6, 1, 1),
-(9, 8, 0, 0),
-(10, 9, 1, 1);
+(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$My5X6g2sTF5l.xn6ujt2nOGSiAfF6lMbQnFEvZkV.S6OkL7rDUPjW'),
+(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$2vXf6Uz17L6UufTxEpNQbeR0D5kjuNTiqXg7p2Magoum.eF.dP4AO'),
+(3, 'Williams', 'Williams@gmail.com', '$2y$10$gsxPbw2Dbwzrqam33VfYc.LzlNcOc/pDND1A/o6cMhixRVeL71bZe'),
+(4, 'Jones', 'Jones@gmail.com', '$2y$10$lVNeNiS7UJsIesjsOQxpsOrI0X68pxFQwKwnPIo9Bs/f46AiGNlf2'),
+(5, 'Brown', 'Brown@gmail.com', '$2y$10$0NM6p.61NuT6U5QhbgWWgOcd6UzRpQQ1MIzPYnYx/i6E9heYfdN0u'),
+(6, 'Davis', 'Davis@gmail.com', '$2y$10$E2UD5z3qy9LyjtF8AWoCpOodoW47Ms9F9jc8zNHNyvy4PNcmUAFQ2'),
+(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$AAYK8pNq42QOFwjzo7LCV.vS7yzjK0lGjQmIs5GLRr5pubU1Wjy2e'),
+(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$yQpxNSLy5Vn6Z/SE/7kXle/A48Gkv6oZ8ereFpzthwpnn4eAbL7oG'),
+(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$jahor7DsvCjsPhe31GZ03ew/ZQs3rh351ltTq4RQhxpafB9wrQAS.'),
+(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$MKW11.s7k49Q4qqYBqIxB.8ec7ANOKMetP4uWRsdMr/8jxrsOKeDS'),
+(12, 'rickpaolo', 'rickpaolocamba@gmail.com', '$2y$10$xRHNaF/wywe.UwB6M.bCNe3LRtt57hrCHbGh0H4Z3T7NWAhpuW5u2'),
+(64, 'admaaadafin@gmail.com', '11@gmail.com', '$2y$10$KYs84.XHRikFNRHcK3Dfieqhf7gZkRRZypGQaNyDowkqcEC5lpoM.'),
+(71, '1415t', '151515@egmail.com', '$2y$10$FhT0rzyn9EogJ47.fp0/IeDZDfJ7CTBs9tiVySQMVX1eZmnpYGE6m'),
+(72, 'qwerty', 'bb@gmail.com', '$2y$10$fTecUaHhJ.u.Myde7G.AQuieqW.NgS0f0nw7Yirn6PJp8k7Xpt.7u'),
+(73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy');
 
 -- --------------------------------------------------------
 
@@ -533,7 +606,8 @@ INSERT INTO `service` (`ServiceID`, `ServiceName`) VALUES
 (7, 'Healom'),
 (8, 'Health Card'),
 (9, 'Regular loan'),
-(10, 'Collateral Loan');
+(10, 'Collateral Loan'),
+(11, 'Membership Application Payment');
 
 -- --------------------------------------------------------
 
@@ -558,37 +632,7 @@ CREATE TABLE `signupform` (
 --
 
 INSERT INTO `signupform` (`MemberID`, `FirstName`, `LastName`, `MiddleName`, `Sex`, `AddressID`, `TINNumber`, `Birthday`, `ContactNo`) VALUES
-(35, 'qeqe', 'qeqe', 'qeqe', 'Male', 38, '123498766', '2024-10-20', '0909765234'),
-(40, 'Ricardo', 'Camba', 'Janda', 'Male', 43, '987651233', '2003-03-09', '09127599973');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `spouse`
---
-
-CREATE TABLE `spouse` (
-  `SpouseID` int(11) NOT NULL,
-  `Name` varchar(100) DEFAULT NULL,
-  `Age` int(11) DEFAULT NULL,
-  `Occupation` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `spouse`
---
-
-INSERT INTO `spouse` (`SpouseID`, `Name`, `Age`, `Occupation`) VALUES
-(1, 'John Doe', 30, 'Engineer'),
-(2, 'Jane Smith', 28, 'Teacher'),
-(3, 'Michael Brown', 35, 'Doctor'),
-(4, 'Emily Davis', 32, 'Nurse'),
-(5, 'Daniel Wilson', 40, 'Architect'),
-(6, 'Sophia Johnson', 29, 'Designer'),
-(7, 'Lucas Lee', 37, 'Chef'),
-(8, 'Mia Garcia', 26, 'Scientist'),
-(9, 'James Martinez', 45, 'Manager'),
-(10, 'Olivia Rodriguez', 34, 'Accountant');
+(73, 'Benjamin Jarom', 'Bernardo', 'Mañebo', 'Male', 68, '040513682', '2024-10-17', '09129130560');
 
 -- --------------------------------------------------------
 
@@ -609,11 +653,11 @@ CREATE TABLE `staff_credentials` (
 --
 
 INSERT INTO `staff_credentials` (`StaffID`, `Username`, `Email`, `Password`, `Role`) VALUES
-(1, 'admin', 'admin@gmail.com', '$2y$10$E7s7TJzGFW3ocX4CKIWp6.Rb6IzA903FUQmwk5kqiQWd5Gg/1/oIK', 'Admin'),
-(2, 'loan', 'loan@gmail.com', '$2y$10$Ljxdf8EN16VBwkaKyrET/u7jFmcApW7A8tmlbVlhnjiu21bFz7p/6', 'Loan Officer'),
-(3, 'liaison', 'liaison@gmail.com', '$2y$10$22Gm7UYKltfpAP1TTmolpu3B8GCQdZdhvo5HKUkr9HwBE1RfK.ADC', 'Liaison Officer'),
-(4, 'member', 'member@gmail.com', '$2y$10$BtEAMNtktThlbKnLfVSPzutb1EDuAGKiltSKUKl9NeQ.m7uyCs2DO', 'Membership Officer'),
-(5, 'medical', 'medical@gmail.com', '$2y$10$DupV1wMY7SVYjsr101CmBORO9Naupgn6GkvUeQ1NkN9TKWVEwj1Ra', 'Medical Officer');
+(1, 'admin', 'admin@gmail.com', '$2y$10$cFijTqxBtupDdU7HZGO6feDn9ejRPiEBElziaY/CXtoIiIsWAgmBu', 'Admin'),
+(2, 'member', 'member@gmail.com', '$2y$10$njfyKaf.aWajwYoOlLu1peYgRg7uNWU3EENhtA0dquB3AZ1s62iLG', 'Membership Officer'),
+(3, 'loan', 'loan@gmail.com', '$2y$10$ZB0O7doTz.4X5h6GWIt8turtljzP7DqT.cOH..jt7KgtPHgpFedTK', 'Loan Officer'),
+(4, 'liaison', 'liaison@gmail.com', '$2y$10$JGnLwmnq2WiCBue3R5tPJ..q3flnT4lqqy4D.PUORsf84UrolbTb.', 'Liaison Officer'),
+(5, 'medical', 'medical@gmail.com', '$2y$10$wpgEy1f1B7Qw1nINm34IDepd2/gX1nMmm8u1OCMH44hoRsswqQO9u', 'Medical Officer');
 
 -- --------------------------------------------------------
 
@@ -627,7 +671,7 @@ CREATE TABLE `transaction` (
   `ServiceID` int(11) NOT NULL,
   `Date` datetime NOT NULL,
   `Amount` decimal(10,2) NOT NULL,
-  `Status` enum('In Progress','Completed') NOT NULL
+  `Status` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -635,8 +679,20 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`TransactID`, `MemberID`, `ServiceID`, `Date`, `Amount`, `Status`) VALUES
-(1, 7, 7, '2024-10-14 16:28:07', 200.00, 'In Progress'),
 (2, 12, 3, '2024-10-20 09:05:45', 4500.00, 'Completed');
+
+--
+-- Triggers `transaction`
+--
+DELIMITER $$
+CREATE TRIGGER `after_transaction_insert` AFTER INSERT ON `transaction` FOR EACH ROW BEGIN
+    IF NEW.ServiceID IN (4, 5, 6, 7, 8) THEN
+        INSERT INTO medical (TransactID, MemberID, ServiceID) 
+        VALUES (NEW.TransactID, NEW.MemberID, NEW.ServiceID);
+    END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -665,14 +721,8 @@ ALTER TABLE `announcement`
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`AppointmentID`);
-
---
--- Indexes for table `beneficiaries`
---
-ALTER TABLE `beneficiaries`
-  ADD PRIMARY KEY (`BeneficiaryID`),
-  ADD KEY `MemberID` (`MemberID`);
+  ADD PRIMARY KEY (`AppointmentID`),
+  ADD KEY `FK_MemberID` (`MemberID`);
 
 --
 -- Indexes for table `collateral`
@@ -682,10 +732,10 @@ ALTER TABLE `collateral`
   ADD KEY `LoanID` (`LoanID`);
 
 --
--- Indexes for table `emergencycontact`
+-- Indexes for table `collateral_info`
 --
-ALTER TABLE `emergencycontact`
-  ADD PRIMARY KEY (`EmergencyContactID`);
+ALTER TABLE `collateral_info`
+  ADD PRIMARY KEY (`LoanID`);
 
 --
 -- Indexes for table `events`
@@ -694,39 +744,39 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`PostID`);
 
 --
--- Indexes for table `expensedetails`
+-- Indexes for table `inbox`
 --
-ALTER TABLE `expensedetails`
-  ADD PRIMARY KEY (`ExpenseDetailsID`);
-
---
--- Indexes for table `incomedetails`
---
-ALTER TABLE `incomedetails`
-  ADD PRIMARY KEY (`IncomeDetailsID`);
+ALTER TABLE `inbox`
+  ADD PRIMARY KEY (`MessageID`),
+  ADD KEY `MemberID` (`MemberID`);
 
 --
 -- Indexes for table `loanapplication`
 --
 ALTER TABLE `loanapplication`
   ADD PRIMARY KEY (`LoanID`),
-  ADD KEY `MemberID` (`MemberID`),
-  ADD KEY `ResidenceDetailsID` (`ResidenceDetailsID`),
-  ADD KEY `IncomeDetailsID` (`IncomeDetailsID`),
-  ADD KEY `ExpenseDetailsID` (`ExpenseDetailsID`);
+  ADD KEY `MemberID` (`MemberID`);
+
+--
+-- Indexes for table `loanapplication_status`
+--
+ALTER TABLE `loanapplication_status`
+  ADD PRIMARY KEY (`LoanID`);
 
 --
 -- Indexes for table `loan_admin`
 --
 ALTER TABLE `loan_admin`
-  ADD PRIMARY KEY (`LoanID`);
+  ADD PRIMARY KEY (`LoanID`),
+  ADD KEY `MemberID` (`MemberID`);
 
 --
 -- Indexes for table `medical`
 --
 ALTER TABLE `medical`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `MemberId` (`MemberId`);
+  ADD PRIMARY KEY (`TransactID`),
+  ADD KEY `medical_ibfk_1` (`ServiceID`),
+  ADD KEY `medical_ibfk_2` (`MemberID`);
 
 --
 -- Indexes for table `member`
@@ -736,9 +786,7 @@ ALTER TABLE `member`
   ADD UNIQUE KEY `MemberID` (`MemberID`) USING BTREE,
   ADD UNIQUE KEY `unique_number` (`ContactNo`),
   ADD UNIQUE KEY `unique_tin` (`TINNumber`),
-  ADD KEY `AddressID` (`AddressID`),
-  ADD KEY `SpouseID` (`SpouseID`),
-  ADD KEY `EmergencyContactID` (`EmergencyContactID`);
+  ADD KEY `AddressID` (`AddressID`);
 
 --
 -- Indexes for table `membership_application`
@@ -756,12 +804,6 @@ ALTER TABLE `member_credentials`
   ADD UNIQUE KEY `unique_email` (`Email`);
 
 --
--- Indexes for table `residencedetails`
---
-ALTER TABLE `residencedetails`
-  ADD PRIMARY KEY (`ResidenceDetailsID`);
-
---
 -- Indexes for table `service`
 --
 ALTER TABLE `service`
@@ -773,12 +815,6 @@ ALTER TABLE `service`
 ALTER TABLE `signupform`
   ADD UNIQUE KEY `MemberID` (`MemberID`) USING BTREE,
   ADD KEY `AddressID` (`AddressID`);
-
---
--- Indexes for table `spouse`
---
-ALTER TABLE `spouse`
-  ADD PRIMARY KEY (`SpouseID`);
 
 --
 -- Indexes for table `staff_credentials`
@@ -810,7 +846,7 @@ ALTER TABLE `account_request`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `announcement`
@@ -822,13 +858,7 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `beneficiaries`
---
-ALTER TABLE `beneficiaries`
-  MODIFY `BeneficiaryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `collateral`
@@ -837,10 +867,10 @@ ALTER TABLE `collateral`
   MODIFY `CollateralID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `emergencycontact`
+-- AUTO_INCREMENT for table `collateral_info`
 --
-ALTER TABLE `emergencycontact`
-  MODIFY `EmergencyContactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+ALTER TABLE `collateral_info`
+  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -849,22 +879,16 @@ ALTER TABLE `events`
   MODIFY `PostID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT for table `expensedetails`
+-- AUTO_INCREMENT for table `inbox`
 --
-ALTER TABLE `expensedetails`
-  MODIFY `ExpenseDetailsID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `incomedetails`
---
-ALTER TABLE `incomedetails`
-  MODIFY `IncomeDetailsID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+ALTER TABLE `inbox`
+  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `loanapplication`
 --
 ALTER TABLE `loanapplication`
-  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `loan_admin`
@@ -876,43 +900,31 @@ ALTER TABLE `loan_admin`
 -- AUTO_INCREMENT for table `medical`
 --
 ALTER TABLE `medical`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT for table `residencedetails`
---
-ALTER TABLE `residencedetails`
-  MODIFY `ResidenceDetailsID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `signupform`
 --
 ALTER TABLE `signupform`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT for table `spouse`
---
-ALTER TABLE `spouse`
-  MODIFY `SpouseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `staff_credentials`
@@ -924,7 +936,7 @@ ALTER TABLE `staff_credentials`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -937,39 +949,53 @@ ALTER TABLE `account_request`
   ADD CONSTRAINT `account_request_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
 
 --
--- Constraints for table `beneficiaries`
---
-ALTER TABLE `beneficiaries`
-  ADD CONSTRAINT `beneficiaries_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`);
-
---
 -- Constraints for table `collateral`
 --
 ALTER TABLE `collateral`
   ADD CONSTRAINT `collateral_ibfk_1` FOREIGN KEY (`LoanID`) REFERENCES `loanapplication` (`LoanID`);
 
 --
+-- Constraints for table `collateral_info`
+--
+ALTER TABLE `collateral_info`
+  ADD CONSTRAINT `collateral_info_ibfk_1` FOREIGN KEY (`LoanID`) REFERENCES `loanapplication` (`LoanID`);
+
+--
+-- Constraints for table `inbox`
+--
+ALTER TABLE `inbox`
+  ADD CONSTRAINT `inbox_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `loanapplication`
 --
 ALTER TABLE `loanapplication`
-  ADD CONSTRAINT `loanapplication_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`),
-  ADD CONSTRAINT `loanapplication_ibfk_2` FOREIGN KEY (`ResidenceDetailsID`) REFERENCES `residencedetails` (`ResidenceDetailsID`),
-  ADD CONSTRAINT `loanapplication_ibfk_3` FOREIGN KEY (`IncomeDetailsID`) REFERENCES `incomedetails` (`IncomeDetailsID`),
-  ADD CONSTRAINT `loanapplication_ibfk_4` FOREIGN KEY (`ExpenseDetailsID`) REFERENCES `expensedetails` (`ExpenseDetailsID`);
+  ADD CONSTRAINT `loanapplication_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`);
+
+--
+-- Constraints for table `loanapplication_status`
+--
+ALTER TABLE `loanapplication_status`
+  ADD CONSTRAINT `loanapplication_status_ibfk_1` FOREIGN KEY (`LoanID`) REFERENCES `loanapplication` (`LoanID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `loan_admin`
+--
+ALTER TABLE `loan_admin`
+  ADD CONSTRAINT `loan_admin_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`);
 
 --
 -- Constraints for table `medical`
 --
 ALTER TABLE `medical`
-  ADD CONSTRAINT `medical_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `medical_ibfk_1` FOREIGN KEY (`ServiceID`) REFERENCES `service` (`ServiceID`),
+  ADD CONSTRAINT `medical_ibfk_2` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`);
 
 --
 -- Constraints for table `member`
 --
 ALTER TABLE `member`
-  ADD CONSTRAINT `member_ibfk_1` FOREIGN KEY (`AddressID`) REFERENCES `address` (`AddressID`),
-  ADD CONSTRAINT `member_ibfk_2` FOREIGN KEY (`SpouseID`) REFERENCES `spouse` (`SpouseID`),
-  ADD CONSTRAINT `member_ibfk_3` FOREIGN KEY (`EmergencyContactID`) REFERENCES `emergencycontact` (`EmergencyContactID`);
+  ADD CONSTRAINT `member_ibfk_1` FOREIGN KEY (`AddressID`) REFERENCES `address` (`AddressID`);
 
 --
 -- Constraints for table `membership_application`

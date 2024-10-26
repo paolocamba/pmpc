@@ -15,46 +15,67 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch completed transactions
-$completedTransactionsQuery = "SELECT COUNT(*) as total FROM transaction WHERE Status = 'Completed'";
-$completedTransactionsResult = $conn->query($completedTransactionsQuery);
-if (!$completedTransactionsResult) {
+// Pagination variables for Loan Applications
+$limit = 7; // Records per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page
+$offset = ($page - 1) * $limit; // Calculate offset
+
+// Fetch total number of pending statuses in loanapplication_status table
+$pendingStatusQuery = "SELECT COUNT(*) as total FROM loanapplication_status WHERE Status = 'Pending'";
+$pendingStatusResult = $conn->query($pendingStatusQuery);
+if (!$pendingStatusResult) {
     die("Query failed: " . $conn->error);
 }
-$completedTransactions = $completedTransactionsResult->fetch_assoc()['total'];
+$totalPendingStatus = $pendingStatusResult->fetch_assoc()['total'];
 
-// Fetch active Loans
-$activeLoansQuery = "SELECT COUNT(*) as total FROM loan_admin";
-$activeLoansResult = $conn->query($activeLoansQuery); // Fixed line
-if (!$activeLoansResult) {
+// Fetch active loans count for pagination
+$activeLoansCountQuery = "SELECT COUNT(*) as total FROM loan_admin";
+$activeLoansCountResult = $conn->query($activeLoansCountQuery);
+if (!$activeLoansCountResult) {
     die("Query failed: " . $conn->error);
 }
-$activeLoans = $activeLoansResult->fetch_assoc()['total'];
+$activeLoansCount = $activeLoansCountResult->fetch_assoc()['total'];
 
-// Fetch transaction list with member and service details
-$transactionsQuery = "
+// Fetch total loan applications
+$totalLoanApplicationsQuery = "SELECT COUNT(*) as total FROM loanapplication";
+$totalLoanApplicationsResult = $conn->query($totalLoanApplicationsQuery);
+if (!$totalLoanApplicationsResult) {
+    die("Query failed: " . $conn->error);
+}
+$totalLoanApplications = $totalLoanApplicationsResult->fetch_assoc()['total'];
+
+// Fetch loan application records from loanapplication table
+$searchLoanAppQuery = isset($_GET['search_loan_app']) ? $_GET['search_loan_app'] : "";
+
+// SQL query for loan applications
+$loanApplicationsQuery = "
 SELECT 
-    t.TransactID, 
-    t.MemberID, 
+    la.LoanID, 
+    la.MemberID, 
     m.LastName, 
-    DATE(t.Date) as Date,  -- Extract only the date 
-    s.ServiceName, 
-    t.Status 
+    DATE(la.DateOfLoan) AS DateOfLoan, 
+    la.AmountRequested AS AmountOfLoan, 
+    la.LoanType AS TypeOfLoan,
+    las.Status AS LoanStatus  
 FROM 
-    transaction t
+    loanapplication la
 JOIN 
-    member m 
-ON 
-    t.MemberID = m.MemberID
+    member m ON la.MemberID = m.MemberID
 JOIN 
-    service s
-ON 
-    t.ServiceID = s.ServiceID
-LIMIT 5
-";
-$transactionsResult = $conn->query($transactionsQuery);
+    loanapplication_status las ON la.LoanID = las.LoanID  
+WHERE 
+    m.LastName LIKE ? OR
+    la.MemberID LIKE ?
+LIMIT ?, ?";
 
-// Fetch loan details from loan_admin and member tables
+$stmtLoanApplications = $conn->prepare($loanApplicationsQuery);
+$searchTermLoanApp = "%{$searchLoanAppQuery}%";
+$stmtLoanApplications->bind_param("ssii", $searchTermLoanApp, $searchTermLoanApp, $offset, $limit);
+$stmtLoanApplications->execute();
+$loanApplicationsResult = $stmtLoanApplications->get_result();
+
+// Fetch active loans with pagination
+$searchActiveLoansQuery = isset($_GET['search_active_loans']) ? $_GET['search_active_loans'] : "";
 $activeLoansQuery = "
 SELECT 
     la.MemberID, 
@@ -62,18 +83,21 @@ SELECT
     m.FirstName, 
     la.TypeOfLoan, 
     la.AmountOfLoan, 
-    DATE(la.MaturityDate) as MaturityDate,  -- Extract only the date
-    la.AmountPayable
+    DATE(la.MaturityDate) as MaturityDate 
 FROM 
     loan_admin la
 JOIN 
-    member m 
-ON 
-    la.MemberID = m.MemberID
-LIMIT 5
-";
-$activeLoansResult = $conn->query($activeLoansQuery);
+    member m ON la.MemberID = m.MemberID
+WHERE 
+    m.LastName LIKE ? OR
+    la.MemberID LIKE ?
+LIMIT ?, ?";
 
+$stmtActiveLoans = $conn->prepare($activeLoansQuery);
+$searchTermActiveLoans = "%{$searchActiveLoansQuery}%";
+$stmtActiveLoans->bind_param("ssii", $searchTermActiveLoans, $searchTermActiveLoans, $offset, $limit);
+$stmtActiveLoans->execute();
+$activeLoansResult = $stmtActiveLoans->get_result();
 
 // Close the database connection
 $conn->close();
@@ -102,7 +126,7 @@ $conn->close();
                 <li><a href="admin.php">Dashboard</a></li>
                 <li><a href="admin-members.php">Members</a></li>
                 <li><a href="admin-loans.php" class="active">Loans</a></li>
-                <li><a href="admin-transactions.php" >Transactions</a></li>
+                <li><a href="admin-transactions.php">Transactions</a></li>
                 <li><a href="admin-appointments.php">Appointments</a></li>
             </ul>
 
@@ -121,65 +145,86 @@ $conn->close();
             <!-- Summary Cards -->
             <section class="summary-cards">
                 <div class="card">
-                    <h2><?php echo $completedTransactions; ?></h2>
-                    <p>Loan Application</p>
+                    <h2><?php echo $totalLoanApplications; ?></h2>
+                    <p>Total Loan Applications</p>
                 </div>
                 <div class="card">
-                    <h2><?php echo $activeLoans; ?></h2>
+                    <h2><?php echo $activeLoansCount; ?></h2>
                     <p>Active Loans</p>
                 </div>
-            </section>
-
-            <!-- Transaction List Table -->
-            <section class="member-list">
-                <div class="table-header">
-                    <h3>Loan Application</h3>
-                    <a href="admin-manage-trans.php" class="manage-link">Manage / View All</a>
+                <div class="card">
+                    <h2><?php echo $totalPendingStatus; ?></h2>
+                    <p>Pending Loan Applications</p>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>MemberID</th>
-                            <th>Last Name</th>
-                            <th>Date</th>
-                            <th>Service</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($transactionsResult->num_rows > 0) {
-                            while ($row = $transactionsResult->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['TransactID']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['MemberID']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Date']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['ServiceName']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='6'>No transactions found.</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
             </section>
 
-            <!-- Active Loans Table -->
+            <!-- Loan Applications Table -->
             <section class="member-list">
                 <div class="table-header">
-                    <h3>Active Loans</h3>
-                    <a href="admin-manage-medical.php" class="manage-link">Manage / View All</a>
+                    <h3>Loan Applications</h3>
+                    <form action="admin-loans.php" method="GET">
+                        <input type="text" name="search_loan_app" placeholder="Search by Member ID or Last Name" value="<?php echo htmlspecialchars($searchLoanAppQuery); ?>">
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Member ID</th>
                             <th>Last Name</th>
+                            <th>Date Of Loan</th>
+                            <th>Type Of Loan</th>
+                            <th>Amount Of Loan</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($loanApplicationsResult->num_rows > 0) {
+                            while ($row = $loanApplicationsResult->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['MemberID']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['DateOfLoan']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['TypeOfLoan']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['AmountOfLoan']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['LoanStatus']) . "</td>";
+                                echo "<td><a href='view_loan_application.php?id=" . htmlspecialchars($row['LoanID']) . "' class='view-button'>View</a></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='7'>No loan applications found.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <!-- Pagination for Loan Applications -->
+                <div class="pagination">
+                    <?php
+                    $totalPages = ceil($totalLoanApplications / $limit);
+                    for ($i = 1; $i <= $totalPages; $i++) {
+                        echo '<a href="admin-loans.php?page=' . $i . '&search_loan_app=' . urlencode($searchLoanAppQuery) . '">' . $i . '</a> ';
+                    }
+                    ?>
+                </div>
+            </section>
+
+            <!-- Active Loans Table -->
+            <section class="member-list">
+                <div class="table-header">
+                    <h3>Active Loans</h3>
+                    <form action="admin-loans.php" method="GET">
+                        <input type="text" name="search_active_loans" placeholder="Search by Member ID or Last Name" value="<?php echo htmlspecialchars($searchActiveLoansQuery); ?>">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
                             <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Type Of Loan</th>
                             <th>Amount Of Loan</th>
                             <th>Maturity Date</th>
@@ -191,27 +236,35 @@ $conn->close();
                             while ($row = $activeLoansResult->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . htmlspecialchars($row['MemberID']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['FirstName']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['LastName']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['TypeOfLoan']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['AmountOfLoan']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['MaturityDate']) . "</td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='7'>No active loans found.</td></tr>";
+                            echo "<tr><td colspan='6'>No active loans found.</td></tr>";
                         }
                         ?>
                     </tbody>
                 </table>
+                <!-- Pagination for Active Loans -->
+                <div class="pagination">
+                    <?php
+                    $totalPagesActiveLoans = ceil($activeLoansCount / $limit);
+                    for ($i = 1; $i <= $totalPagesActiveLoans; $i++) {
+                        echo '<a href="admin-loans.php?page=' . $i . '&search_active_loans=' . urlencode($searchActiveLoansQuery) . '">' . $i . '</a> ';
+                    }
+                    ?>
+                </div>
             </section>
-
         </div>
     </div>
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = '../index.php';
         }
     </script>
 </body>
