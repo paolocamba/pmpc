@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Connect to the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pmpc";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,21 +64,26 @@
 <section class="events-section">
     <h2>Events and Latest News</h2>
     <div class="events-container">
-        <div class="event">
-            <img src="../assets/image-2.png" alt="Paschal Event 1">
-            <h3>Paschal Coop Year End Get Together</h3>
-            <p>Celebrated the holiday season with a touch of Boho elegance.</p>
-        </div>
-        <div class="event">
-            <img src="../assets/image-3.png" alt="Paschal Event 2">
-            <h3>12th PFCCO Central Luzon Get Together 2023</h3>
-            <p>Held at San Pablo, Malolos, Bulacan with the theme Unleash your Inner K-Pop Star.</p>
-        </div>
-        <div class="event">
-            <img src="../assets/image-4.png" alt="Paschal Event 3">
-            <h3>Celebrating 6 Years in Healthcare</h3>
-            <p>On our anniversary, we extend heartfelt gratitude to the doctors who have made a difference.</p>
-        </div>
+        <?php
+        // Fetch events from the database
+        $sql = "SELECT title, event_date, event_description, image FROM events ORDER BY event_date DESC LIMIT 5";
+        $result = $conn->query($sql);
+
+        // Check if events are available
+        if ($result->num_rows > 0) {
+            // Loop through each event
+            while ($row = $result->fetch_assoc()) {
+                echo '<div class="event-card">';
+                echo '<img src="/pmpc/assets/uploads/' . htmlspecialchars($row["image"]) . '" alt="' . htmlspecialchars($row["title"]) . '" class="event-image">';
+                echo '<h3>' . htmlspecialchars($row["title"]) . '</h3>';
+                echo '<p class="event-date">Date: ' . htmlspecialchars($row["event_date"]) . '</p>';
+                echo '<p>' . htmlspecialchars($row["event_description"]) . '</p>';
+                echo '</div>';
+            }
+        } else {
+            echo '<p>No events available.</p>';
+        }
+        ?>
     </div>
 </section>
 
@@ -76,8 +98,15 @@
 <section class="map-section">
     <h2>Find Us Here</h2>
     <div class="map-container">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-    </div>
+    <iframe 
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3856.3068439400313!2d120.94440701035256!3d14.86411088559424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ac7f512d6cb9%3A0xfbb772793f32d2b6!2sPaschal%20Multipurpose%20Cooperative!5e0!3m2!1sen!2sph!4v1730049819193!5m2!1sen!2sph" 
+  width="600" 
+  height="450" 
+  style="border:0;" 
+  allowfullscreen="" 
+  loading="lazy">
+</iframe>
+
 </section>
 
 <!-- Footer -->

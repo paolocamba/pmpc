@@ -54,48 +54,56 @@ if ($memberID) {
         exit; // Exit to avoid rendering the HTML below
     }
 
-    // Handle message read and delete
-    if (isset($_GET['message_id'])) {
-        $messageId = (int)$_GET['message_id'];
-        
-        // Mark message as read
-        $updateQuery = "UPDATE inbox SET isRead = 1 WHERE MessageID = ?";
-        $updateStmt = $conn->prepare($updateQuery);
-        $updateStmt->bind_param("i", $messageId);
-        $updateStmt->execute();
-        
-        // Fetch the message details
-        $messageQuery = "SELECT Message, Date FROM inbox WHERE MessageID = ?";
-        $messageStmt = $conn->prepare($messageQuery);
-        $messageStmt->bind_param("i", $messageId);
-        $messageStmt->execute();
-        $messageResult = $messageStmt->get_result()->fetch_assoc();
-        
-        echo json_encode($messageResult);
-        exit;
+    // Handle fetching a specific message details
+if (isset($_GET['message_id'])) {
+    $messageId = (int)$_GET['message_id'];
+    
+    // Fetch the message details
+    $messageQuery = "SELECT Message, Date, related_message_id FROM inbox WHERE MessageID = ?";
+    $messageStmt = $conn->prepare($messageQuery);
+    $messageStmt->bind_param("i", $messageId);
+    $messageStmt->execute();
+    $messageResult = $messageStmt->get_result()->fetch_assoc();
+
+    // Check if there is a related_message_id
+    if ($messageResult['related_message_id']) {
+        // Fetch the corresponding admin message
+        $adminMessageQuery = "SELECT MessageContent, DateSent FROM admin_messages WHERE MessageID = ?";
+        $adminMessageStmt = $conn->prepare($adminMessageQuery);
+        $adminMessageStmt->bind_param("i", $messageResult['related_message_id']);
+        $adminMessageStmt->execute();
+        $adminMessageResult = $adminMessageStmt->get_result()->fetch_assoc();
+
+        // Add admin message details to the response
+        $messageResult['AdminMessage'] = $adminMessageResult['MessageContent'];
+        $messageResult['AdminMessageDate'] = $adminMessageResult['DateSent'];
     }
 
+    echo json_encode($messageResult);
+    exit;
+}
+
+
     // Handle message deletion
-        if (isset($_POST['delete_id'])) {
-            $deleteId = (int)$_POST['delete_id'];
-            
-            if ($deleteId) { // Ensure delete ID is valid
-                $deleteQuery = "DELETE FROM inbox WHERE MessageID = ?";
-                $deleteStmt = $conn->prepare($deleteQuery);
-                $deleteStmt->bind_param("i", $deleteId);
-                $deleteStmt->execute();
+    if (isset($_POST['delete_id'])) {
+        $deleteId = (int)$_POST['delete_id'];
+        
+        if ($deleteId) { // Ensure delete ID is valid
+            $deleteQuery = "DELETE FROM inbox WHERE MessageID = ?";
+            $deleteStmt = $conn->prepare($deleteQuery);
+            $deleteStmt->bind_param("i", $deleteId);
+            $deleteStmt->execute();
 
-                if ($deleteStmt->affected_rows > 0) {
-                    echo json_encode(['success' => true]); // Successfully deleted
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Message could not be deleted.']);
-                }
+            if ($deleteStmt->affected_rows > 0) {
+                echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['success' => false, 'error' => 'Invalid message ID.']);
+                echo json_encode(['success' => false, 'error' => 'Message could not be deleted.']);
             }
-            exit;
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Invalid message ID.']);
         }
-
+        exit;
+    }
 } else {
     $messages = [];
     $totalMessages = 0;
@@ -172,10 +180,11 @@ $conn->close();
                         <tr>
                             <th>Message</th>
                             <th>Date</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="inboxMessages">
-                        <tr><td colspan="2">Loading messages...</td></tr>
+                        <tr><td colspan="3">Loading messages...</td></tr>
                     </tbody>
                 </table>
                 <div id="pagination" class="pagination">
@@ -222,145 +231,173 @@ $conn->close();
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadMessages(1);
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    loadMessages(1); // Load the first page of messages when the document is ready.
 
-        function redirectToIndex() {
-            window.location.href = "../../html/index.html";
-        }
+    // Function to redirect to the index page
+    function redirectToIndex() {
+        window.location.href = "../../html/index.html";
+    }
 
-        function loadMessages(page) {
-            fetch('member-inbox.php?page=' + page + '&ajax=true')
-                .then(response => response.json())
-                .then(data => {
-                    const inboxMessages = document.getElementById('inboxMessages');
-                    const pagination = document.getElementById('pagination');
-
-                    inboxMessages.innerHTML = '';
-
-                    if (data.messages.length === 0) {
-                        inboxMessages.innerHTML = '<tr><td colspan="2">No messages found.</td></tr>';
-                    } else {
-                        data.messages.forEach(message => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td style="font-weight: ${message.isRead ? 'normal' : 'bold'};" onclick="showViewMessageModal(${message.MessageID})">${message.Message}</td>
-                                <td>${new Date(message.Date).toLocaleDateString()}</td>
-                            `;
-                            inboxMessages.appendChild(row);
-                        });
-                    }
-
-                    const totalPages = Math.ceil(data.total / data.limit);
-                    pagination.innerHTML = '';
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const link = document.createElement('a');
-                        link.href = '#';
-                        link.textContent = i;
-                        link.className = (i === data.page) ? 'active' : '';
-                        link.onclick = (function(page) {
-                            return function() {
-                                loadMessages(page);
-                            };
-                        })(i);
-                        pagination.appendChild(link);
-                    }
-                })
-                .catch(error => console.error('Error fetching messages:', error));
-        }
-
-        function showViewMessageModal(messageId) {
-                fetch('member-inbox.php?message_id=' + messageId)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('modalMessageTitle').innerText = 'Message Details';
-                        document.getElementById('modalMessageContent').innerText = data.Message;
-                        document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
-                        document.getElementById('deleteMessageButton').setAttribute('data-id', messageId); // Set the message ID here
-                        document.getElementById('viewMessageModal').style.display = 'flex';
-                        document.getElementById('modalBackground').style.display = 'block'; // Show dim background
-                    })
-                    .catch(error => console.error('Error fetching message:', error));
-            }
-
-
-        function closeViewMessageModal() {
-            document.getElementById('viewMessageModal').style.display = 'none';
-            document.getElementById('modalBackground').style.display = 'none'; // Hide dim background
-        }
-
-        function openSendMessageModal() {
-            document.getElementById('sendMessageModal').style.display = 'flex';
-            document.getElementById('modalBackground').style.display = 'block'; // Show dim background
-        }
-
-        function closeSendMessageModal() {
-            document.getElementById('sendMessageModal').style.display = 'none';
-            document.getElementById('modalBackground').style.display = 'none'; // Hide dim background
-        }
-
-        function deleteMessage() {
-            const messageId = document.getElementById('deleteMessageButton').getAttribute('data-id'); // Get the message ID
-            if (!messageId) {
-                alert('No message selected for deletion.');
-                return;
-            }
-
-            fetch('member-inbox.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    delete_id: messageId // Pass the message ID for deletion
-                })
-            })
+    // Function to load messages with pagination
+    function loadMessages(page) {
+        fetch('member-inbox.php?page=' + page + '&ajax=true')
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert('Message deleted successfully.');
-                    closeViewMessageModal(); // Close the modal
-                    loadMessages(1); // Reload messages after deletion
+                const inboxMessages = document.getElementById('inboxMessages');
+                const pagination = document.getElementById('pagination');
+
+                inboxMessages.innerHTML = '';
+
+                if (data.messages.length === 0) {
+                    inboxMessages.innerHTML = '<tr><td colspan="3">No messages found.</td></tr>';
                 } else {
-                    alert(data.error || 'Failed to delete message.');
+                    data.messages.forEach(message => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td style="font-weight: ${message.isRead ? 'normal' : 'bold'};">${message.Message}</td>
+                            <td>${new Date(message.Date).toLocaleDateString()}</td>
+                            <td><button class="view-btn" onclick="showViewMessageModal(${message.MessageID})">View</button></td>
+                        `;
+                        inboxMessages.appendChild(row);
+                    });
+                }
+
+                const totalPages = Math.ceil(data.total / data.limit);
+                pagination.innerHTML = '';
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = i;
+                    link.className = (i === data.page) ? 'active' : '';
+                    link.onclick = (function(page) {
+                        return function() {
+                            loadMessages(page);
+                        };
+                    })(i);
+                    pagination.appendChild(link);
                 }
             })
-            .catch(error => console.error('Error deleting message:', error));
-        }
+            .catch(error => console.error('Error fetching messages:', error));
+    }
 
-
-        function sendMessage() {
-            const category = document.getElementById('messageCategory').value;
-            const content = document.getElementById('messageContent').value;
-
-            if (!category || !content) {
-                alert('Please fill out all fields.');
-                return;
-            }
-
-            fetch('member-inbox.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    message_category: category,
-                    message_content: content
-                })
-            })
+    // Function to show the view message modal
+    function showViewMessageModal(messageId) {
+        fetch('member-inbox.php?message_id=' + messageId)
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert('Message sent successfully.');
-                    closeSendMessageModal();
-                } else {
-                    alert(data.error || 'Failed to send message.');
+                document.getElementById('modalMessageTitle').innerText = 'Message Details';
+                document.getElementById('modalMessageContent').innerText = data.Message;
+                document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
+
+                // Check if there is an admin message to display
+                if (data.related_message_id) {
+                    const adminMessageContent = data.AdminMessage || 'No reply found.';
+                    const adminMessageDate = new Date(data.AdminMessageDate).toLocaleString() || '';
+
+                    // Display the admin message details
+                    document.getElementById('modalMessageContent').innerText += `\n\nAdmin Replied to:\n${adminMessageContent} \n`;
                 }
+
+                document.getElementById('deleteMessageButton').setAttribute('data-id', messageId); // Set the message ID here
+                document.getElementById('viewMessageModal').style.display = 'flex';
+                document.getElementById('modalBackground').style.display = 'block'; // Show dim background
             })
-            .catch(error => console.error('Error sending message:', error));
+            .catch(error => console.error('Error fetching message:', error));
+    }
+
+    // Function to close the view message modal
+    function closeViewMessageModal() {
+        document.getElementById('viewMessageModal').style.display = 'none'; // Hide the modal
+        document.getElementById('modalBackground').style.display = 'none'; // Hide the dim background
+    }
+
+    // Function to open the send message modal
+    function openSendMessageModal() {
+        document.getElementById('sendMessageModal').style.display = 'flex';
+        document.getElementById('modalBackground').style.display = 'block'; // Show dim background
+    }
+
+    // Function to close the send message modal
+    function closeSendMessageModal() {
+        document.getElementById('sendMessageModal').style.display = 'none';
+        document.getElementById('modalBackground').style.display = 'none'; // Hide dim background
+    }
+
+    // Function to confirm deletion of a message
+    function confirmDelete(messageId) {
+        const confirmation = confirm("Are you sure you want to delete this message?");
+        if (confirmation) {
+            deleteMessage(messageId);
         }
+    }
+
+    // Function to delete a message
+    function deleteMessage(messageId) {
+        fetch('member-inbox.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                delete_id: messageId // Pass the message ID for deletion
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Message deleted successfully.');
+                loadMessages(1); // Reload messages after deletion
+            } else {
+                alert(data.error || 'Failed to delete message.');
+            }
+        })
+        .catch(error => console.error('Error deleting message:', error));
+    }
+
+    // Function to send a message
+    function sendMessage() {
+        const category = document.getElementById('messageCategory').value;
+        const content = document.getElementById('messageContent').value;
+
+        if (!category || !content) {
+            alert('Please fill out all fields.');
+            return;
+        }
+
+        fetch('member-inbox.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                message_category: category,
+                message_content: content
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Message sent successfully.');
+                closeSendMessageModal();
+            } else {
+                alert(data.error || 'Failed to send message.');
+            }
+        })
+        .catch(error => console.error('Error sending message:', error));
+    }
+
+    // Attach functions to the global scope for HTML elements
+    window.openSendMessageModal = openSendMessageModal;
+    window.closeSendMessageModal = closeSendMessageModal;
+    window.showViewMessageModal = showViewMessageModal;
+    window.closeViewMessageModal = closeViewMessageModal;
+    window.confirmDelete = confirmDelete;
+    window.deleteMessage = deleteMessage;
+    window.sendMessage = sendMessage;
+});
+
     </script>
 </body>
 </html>

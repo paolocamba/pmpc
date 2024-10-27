@@ -74,9 +74,14 @@
     z-index: 900; /* Below modal content */
 }
 
+/* Show modal background when active */
+.modal-background.active {
+    display: block;
+}
+
 /* View Message Modal (Center) */
 .view-message-modal {
-    display: none;
+    display: none; /* Initially hidden */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -84,6 +89,11 @@
     z-index: 1000; /* Above the background */
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .view-message-modal .modal-content {
@@ -94,15 +104,38 @@
     text-align: center;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
     position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Delete Button */
+#deleteMessageButton {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+#deleteMessageButton:hover {
+    background-color: #cc0000;
 }
 
 /* Send Message Modal (Bottom Right) */
 .send-message-modal {
-    display: none;
+    display: none; /* Initially hidden */
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000; /* Above the background */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.send-message-modal.active {
+    display: block;
 }
 
 .send-message-modal .modal-content {
@@ -112,6 +145,7 @@
     width: 300px;
     text-align: center;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
 }
 
 /* Close button styles */
@@ -136,6 +170,8 @@
     cursor: pointer;
     margin-bottom: 20px;
 }
+
+
 
 .send-message-button:hover {
     background-color: #274d35;
@@ -162,5 +198,19 @@
 }
 
 .submit-button:hover {
+    background-color: #274d35;
+}
+
+/* View Button */
+.view-btn, .reply-btn {
+    background-color: #2f5d41;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.view-btn:hover, .reply-btn:hover {
     background-color: #274d35;
 }

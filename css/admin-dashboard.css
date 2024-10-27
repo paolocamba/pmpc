@@ -1,0 +1,232 @@
+/* Inbox Section */
+.inbox-section {
+    margin-top: 40px;
+}
+
+.inbox-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.inbox-table thead {
+    background-color: #0F4332;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.inbox-table th, .inbox-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.inbox-table td {
+    font-size: 16px;
+    color: #333;
+}
+
+.inbox-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect for rows */
+.inbox-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Pagination styling */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #0F4332;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.pagination a.active {
+    background-color: #10C98F;
+    font-weight: bold;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #10C98F;
+}
+
+/* General modal background styling */
+.modal-background {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim effect */
+    z-index: 900; /* Below modal content */
+}
+
+/* Show modal background when active */
+.modal-background.active {
+    display: block;
+}
+
+/* View Message Modal (Center) */
+.view-message-modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Above the background */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.view-message-modal.active {
+    display: flex;
+}
+
+.view-message-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Send Message Modal (Bottom Right) */
+.send-message-modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Above the background */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.send-message-modal.active {
+    display: block;
+}
+
+.send-message-modal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Close button styles */
+.close-button {
+    cursor: pointer;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.close-button:hover {
+    color: black;
+}
+
+/* View Button */
+.view-btn, .reply-btn {
+    background-color: #2f5d41;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.view-btn:hover, .reply-btn:hover {
+    background-color: #274d35;
+}
+
+/* Delete Button */
+#deleteMessageButton {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+#deleteMessageButton:hover {
+    background-color: #cc0000;
+}
+
+/* Send Message Button */
+.send-message-button {
+    background-color: #2f5d41;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.send-message-button:hover {
+    background-color: #274d35;
+}
+
+/* Input fields for forms */
+#sendMessageModal select,
+#sendMessageModal textarea,
+#replyMessageModal textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Submit button styles */
+.submit-button {
+    padding: 10px 20px;
+    background-color: #2f5d41;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #274d35;
+}
+
+/* Fade-in animation for modals */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
