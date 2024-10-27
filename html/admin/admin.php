@@ -45,6 +45,14 @@ $appointmentsQuery = "SELECT COUNT(*) as total FROM appointments";
 $appointmentsResult = $conn->query($appointmentsQuery);
 $appointments = $appointmentsResult->fetch_assoc()['total'];
 
+// Fetch messages from members
+$messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
+                         a.MessageContent, a.DateSent, a.MessageID 
+                  FROM admin_messages a 
+                  JOIN member m ON a.MemberID = m.MemberID 
+                  ORDER BY a.DateSent DESC";
+$messagesResult = $conn->query($messagesQuery);
+
 // Close the database connection
 $conn->close();
 ?>
@@ -57,6 +65,7 @@ $conn->close();
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../css/admin.css"> <!-- Linking CSS -->
     <link rel="stylesheet" href="../../css/admin-general.css">
+    <link rel="stylesheet" href="../../css/member-inbox.css">
 </head>
 <body>
     <!-- Container for the sidebar and main content -->
@@ -116,12 +125,166 @@ $conn->close();
                     <p>Appointments</p>
                 </div>
             </section>
+
+            <!-- Message Inbox Section -->
+            <section class="inbox-section">
+                <h2>Member Messages</h2>
+                <table class="inbox-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Message</th>
+                            <th>Date Sent</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inboxMessages">
+                        <?php
+                        if ($messagesResult->num_rows > 0) {
+                            while ($message = $messagesResult->fetch_assoc()) {
+                                echo "<tr>
+                                    <td>{$message['MemberName']}</td>
+                                    <td>{$message['MessageContent']}</td>
+                                    <td>" . date('F j, Y, g:i a', strtotime($message['DateSent'])) . "</td>
+                                    <td>
+                                        <button class='view-btn' onclick='showViewMessageModal({$message['MessageID']})'>View</button>
+                                    </td>
+                                </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No messages found.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </section>
+
         </div>
     </div>
+
+    <!-- Modal for Viewing and Replying to Messages -->
+    <div id="viewMessageModal" class="modal view-message-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeViewMessageModal()">&times;</span>
+            <h2 id="modalMessageTitle">Message Details</h2>
+            <p id="modalMessageContent">Message content goes here...</p>
+            <p id="modalMessageDate"></p>
+            <button id="deleteMessageButton" onclick="deleteMessage()">Delete</button>
+            <button class="reply-btn" onclick="openReplyModal()">Reply</button>
+        </div>
+    </div>
+
+    <!-- Modal for Sending Replies -->
+    <div id="replyMessageModal" class="modal send-message-modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeReplyModal()">&times;</span>
+            <h2>Reply to Member</h2>
+            <form id="replyMessageForm">
+                <input type="hidden" id="messageId" name="message_id">
+                <label for="replyContent">Your Reply</label>
+                <textarea id="replyContent" name="reply_content" rows="4" required></textarea>
+                <button type="button" onclick="sendReply()">Send Reply</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dim Background Overlay -->
+    <div id="modalBackground" class="modal-background"></div>
 
     <script>
         function redirectToIndex() {
             window.location.href = "../../html/index.html";
+        }
+
+        function showViewMessageModal(messageId) {
+            fetch('admin-fetch-message.php?message_id=' + messageId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('modalMessageTitle').innerText = 'Message Details';
+                    document.getElementById('modalMessageContent').innerText = data.Message;
+                    document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
+                    document.getElementById('deleteMessageButton').setAttribute('data-id', messageId); // Set the message ID here
+                    document.getElementById('viewMessageModal').style.display = 'flex';
+                    document.getElementById('modalBackground').style.display = 'block'; // Show dim background
+                })
+                .catch(error => console.error('Error fetching message:', error));
+        }
+
+        function closeViewMessageModal() {
+            document.getElementById('viewMessageModal').style.display = 'none';
+            document.getElementById('modalBackground').style.display = 'none'; // Hide dim background
+        }
+
+        function openReplyModal() {
+            const messageId = document.getElementById('deleteMessageButton').getAttribute('data-id'); // Get message ID from current modal
+            document.getElementById('messageId').value = messageId;
+            document.getElementById('replyMessageModal').style.display = 'flex';
+            document.getElementById('viewMessageModal').style.display = 'none'; // Hide view message modal
+        }
+
+        function closeReplyModal() {
+            document.getElementById('replyMessageModal').style.display = 'none';
+            document.getElementById('modalBackground').style.display = 'none'; // Hide dim background
+        }
+
+        function deleteMessage() {
+            const messageId = document.getElementById('deleteMessageButton').getAttribute('data-id'); // Get the message ID
+            if (!messageId) {
+                alert('No message selected for deletion.');
+                return;
+            }
+
+            fetch('admin-delete-message.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    delete_id: messageId // Pass the message ID for deletion
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Message deleted successfully.');
+                    closeViewMessageModal(); // Close the modal
+                    location.reload(); // Reload the page to update messages
+                } else {
+                    alert(data.error || 'Failed to delete message.');
+                }
+            })
+            .catch(error => console.error('Error deleting message:', error));
+        }
+
+        function sendReply() {
+            const messageId = document.getElementById('messageId').value;
+            const replyContent = document.getElementById('replyContent').value;
+
+            if (!replyContent) {
+                alert('Please enter a reply.');
+                return;
+            }
+
+            fetch('admin-reply.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    message_id: messageId,
+                    reply_content: replyContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reply sent successfully.');
+                    closeReplyModal();
+                } else {
+                    alert(data.error || 'Failed to send reply.');
+                }
+            })
+            .catch(error => console.error('Error sending reply:', error));
         }
     </script>
 </body>
