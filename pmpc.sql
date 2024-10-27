@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2024 at 08:26 AM
+-- Generation Time: Oct 27, 2024 at 06:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -89,7 +89,35 @@ INSERT INTO `address` (`AddressID`, `Street`, `Barangay`, `Municipality`, `Provi
 (63, 'adsd', 'afafaf', 'afafaf', 'afafa'),
 (66, 'adsd', 'afafaf', 'afafaf', 'afafa'),
 (67, '14414', '4141', '51515', '1515'),
-(68, 'N/A', 'Siling Bata', 'Pandi', 'Bulacan');
+(68, 'N/A', 'Siling Bata', 'Pandi', 'Bulacan'),
+(70, 'Malibu', 'Cacarong Matanda', 'Pandi', 'Bulacan');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_messages`
+--
+
+CREATE TABLE `admin_messages` (
+  `MessageID` int(11) NOT NULL,
+  `MemberID` int(11) DEFAULT NULL,
+  `Category` varchar(255) DEFAULT NULL,
+  `MessageContent` text DEFAULT NULL,
+  `DateSent` datetime DEFAULT NULL,
+  `isReplied` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin_messages`
+--
+
+INSERT INTO `admin_messages` (`MessageID`, `MemberID`, `Category`, `MessageContent`, `DateSent`, `isReplied`) VALUES
+(1, 12, 'General Query', 'Pano po mag withdraw?', '2024-10-27 08:35:57', 0),
+(2, 12, 'Loan', 'How much for this?\n', '2024-10-27 10:05:41', 0),
+(3, 12, 'Medical', 'Ano po blood type ko?', '2024-10-27 10:10:53', 1),
+(12, NULL, 'Loan', 'hi', '2024-10-27 21:41:28', 0),
+(13, NULL, 'Loan', 'hi', '2024-10-27 21:41:45', 0),
+(17, 12, 'Medical', 'Magkano po ulo ng manok?', '2024-10-27 22:09:59', 1);
 
 -- --------------------------------------------------------
 
@@ -118,7 +146,9 @@ INSERT INTO `announcement` (`AnnouncementID`, `Ann_Name`, `Ann_Date`, `Ann_Day`)
 (13, 'Annual General Assembly', '2024-10-31', NULL),
 (14, 'Subsidy', '2024-10-17', NULL),
 (15, 'Subsidy', '2024-10-17', NULL),
-(16, 'Subsidy', '2024-10-17', NULL);
+(16, 'Subsidy', '2024-10-17', NULL),
+(17, 'Meeting Meetingan', '2024-10-10', NULL),
+(18, 'Meeting Meetingan', '2024-10-10', NULL);
 
 -- --------------------------------------------------------
 
@@ -146,7 +176,8 @@ INSERT INTO `appointments` (`AppointmentID`, `LastName`, `FirstName`, `Appointme
 (26, 'Camba', 'Rick Paolo', '2024-10-23', 'Life Insurance', 'rickpaolocamba@gmail.com', 12, 1, 'Disapproved'),
 (27, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Approved'),
 (28, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Pending'),
-(29, 'Camba', 'Rick Paolo', '2024-10-31', 'Laboratory', 'rickpaolocamba@gmail.com', 12, 5, 'Approved');
+(29, 'Camba', 'Rick Paolo', '2024-10-31', 'Laboratory', 'rickpaolocamba@gmail.com', 12, 5, 'Approved'),
+(30, '', '', '2024-11-04', NULL, '', 75, NULL, 'Pending');
 
 --
 -- Triggers `appointments`
@@ -268,23 +299,30 @@ CREATE TABLE `inbox` (
   `MemberID` int(11) NOT NULL,
   `Message` text NOT NULL,
   `Date` datetime DEFAULT current_timestamp(),
-  `isRead` tinyint(1) DEFAULT 0
+  `isRead` tinyint(1) DEFAULT 0,
+  `related_message_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inbox`
 --
 
-INSERT INTO `inbox` (`MessageID`, `MemberID`, `Message`, `Date`, `isRead`) VALUES
-(1, 12, 'Congratulations! Your loan application for a Collateral Loan is approved.', '2024-08-17 10:00:00', 1),
-(2, 12, 'Dear Member, you are invited to attend the Paschal Coop General Assembly.', '2024-08-18 11:30:00', 1),
-(3, 12, 'We are excited to announce that new medical services, including X-RAY, are available.', '2024-08-19 14:15:00', 1),
-(4, 12, 'This is a reminder that your savings balance has dropped below the minimum requirement.', '2024-08-20 09:00:00', 1),
-(5, 12, 'Join us as we celebrate the 8th Anniversary of Paschal\'s community outreach program.', '2024-08-21 16:45:00', 1),
-(6, 12, 'Your appointment is confirmed.', '2024-10-01 10:00:00', 1),
-(7, 12, 'Don\'t forget to complete your survey.', '2024-10-02 14:30:00', 1),
-(8, 12, 'Your loan application has been processed.', '2024-10-03 09:15:00', 1),
-(9, 12, 'fgagag', '2024-10-26 03:18:05', 1);
+INSERT INTO `inbox` (`MessageID`, `MemberID`, `Message`, `Date`, `isRead`, `related_message_id`) VALUES
+(5, 12, 'Join us as we celebrate the 8th Anniversary of Paschal\'s community outreach program.', '2024-08-21 16:45:00', 1, NULL),
+(7, 12, 'Don\'t forget to complete your survey.', '2024-10-02 14:30:00', 1, NULL),
+(8, 12, 'Your loan application has been processed.', '2024-10-03 09:15:00', 1, NULL),
+(47, 5, '12', '2024-10-27 19:38:56', 0, NULL),
+(48, 6, '12', '2024-10-27 19:38:56', 0, NULL),
+(49, 7, '12', '2024-10-27 19:38:56', 0, NULL),
+(50, 8, '12', '2024-10-27 19:38:56', 0, NULL),
+(51, 9, '12', '2024-10-27 19:38:56', 0, NULL),
+(52, 10, '12', '2024-10-27 19:38:56', 0, NULL),
+(54, 64, '12', '2024-10-27 19:38:56', 0, NULL),
+(55, 69, '12', '2024-10-27 19:38:56', 0, NULL),
+(56, 71, '12', '2024-10-27 19:38:56', 0, NULL),
+(57, 72, '12', '2024-10-27 19:38:56', 0, NULL),
+(58, 73, '12', '2024-10-27 19:38:56', 0, NULL),
+(86, 12, 'secret', '2024-10-28 00:34:04', 0, 17);
 
 -- --------------------------------------------------------
 
@@ -510,6 +548,7 @@ INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`
 ('11@gmail.com', 64, '0', 'Nami', 'Robin', 63, '2024-10-07', 'male', '3353535111', '73737111', NULL, 0.00, 'Regular'),
 ('151515@egmail.com', 71, '0', 'Nami', 'Robin', 66, '2024-10-16', 'male', '3353111111', '9at1515', NULL, 0.00, 'Regular'),
 ('bb@gmail.com', 72, 'Robin', 'Nami', 'Swan', 67, '2024-10-06', '0', '678678678', '7878', NULL, 0.00, 'Regular'),
+('benjaminjarombernardo0815@gmail.com', 75, 'Logan', 'Mark', 'V', 70, '2001-11-15', '0', '567-421-896-213', '09947307033', NULL, 0.00, 'Regular'),
 ('bernardobenjaminjarom@gmail.com', 73, 'Bernardo', 'Benjamin Jarom', 'Mañebo', 68, '2024-10-17', '0', '040513682', '09129130560', NULL, 0.00, 'Regular'),
 ('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 'Male', '654789123', '09567890123', '2024-10-16', 0.00, 'Regular'),
 ('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 'Female', '159753486', '09678901234', '2024-10-16', 0.00, 'Regular'),
@@ -545,7 +584,8 @@ CREATE TABLE `membership_application` (
 --
 
 INSERT INTO `membership_application` (`MemberID`, `FillUpForm`, `WatchedVideoSeminar`, `PaidRegistrationFee`, `Status`, `AppointmentDate`, `MembershipFeePaidAmount`) VALUES
-(73, 1, 1, 1, 'Completed', '2024-10-25', 2000);
+(73, 1, 1, 1, 'Completed', '2024-10-25', 2000),
+(75, 1, 1, 0, 'In progress', '2024-11-04', NULL);
 
 -- --------------------------------------------------------
 
@@ -579,7 +619,8 @@ INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`) V
 (64, 'admaaadafin@gmail.com', '11@gmail.com', '$2y$10$KYs84.XHRikFNRHcK3Dfieqhf7gZkRRZypGQaNyDowkqcEC5lpoM.'),
 (71, '1415t', '151515@egmail.com', '$2y$10$FhT0rzyn9EogJ47.fp0/IeDZDfJ7CTBs9tiVySQMVX1eZmnpYGE6m'),
 (72, 'qwerty', 'bb@gmail.com', '$2y$10$fTecUaHhJ.u.Myde7G.AQuieqW.NgS0f0nw7Yirn6PJp8k7Xpt.7u'),
-(73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy');
+(73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy'),
+(75, 'sauge21', 'benjaminjarombernardo0815@gmail.com', '$2y$10$GK9IrqCaJDuc3bjqlnKdOOH.zjhGGZifYn/C/YUKpSyWb1mt2/J2K');
 
 -- --------------------------------------------------------
 
@@ -632,7 +673,8 @@ CREATE TABLE `signupform` (
 --
 
 INSERT INTO `signupform` (`MemberID`, `FirstName`, `LastName`, `MiddleName`, `Sex`, `AddressID`, `TINNumber`, `Birthday`, `ContactNo`) VALUES
-(73, 'Benjamin Jarom', 'Bernardo', 'Mañebo', 'Male', 68, '040513682', '2024-10-17', '09129130560');
+(73, 'Benjamin Jarom', 'Bernardo', 'Mañebo', 'Male', 68, '040513682', '2024-10-17', '09129130560'),
+(75, 'Mark', 'Logan', 'V', 'Male', 70, '567-421-896-213', '2001-11-15', '09947307033');
 
 -- --------------------------------------------------------
 
@@ -712,6 +754,13 @@ ALTER TABLE `address`
   ADD PRIMARY KEY (`AddressID`);
 
 --
+-- Indexes for table `admin_messages`
+--
+ALTER TABLE `admin_messages`
+  ADD PRIMARY KEY (`MessageID`),
+  ADD KEY `MemberID` (`MemberID`);
+
+--
 -- Indexes for table `announcement`
 --
 ALTER TABLE `announcement`
@@ -748,7 +797,8 @@ ALTER TABLE `events`
 --
 ALTER TABLE `inbox`
   ADD PRIMARY KEY (`MessageID`),
-  ADD KEY `MemberID` (`MemberID`);
+  ADD KEY `MemberID` (`MemberID`),
+  ADD KEY `inbox_ibfk_2` (`related_message_id`);
 
 --
 -- Indexes for table `loanapplication`
@@ -846,19 +896,25 @@ ALTER TABLE `account_request`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+
+--
+-- AUTO_INCREMENT for table `admin_messages`
+--
+ALTER TABLE `admin_messages`
+  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `AnnouncementID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `AnnouncementID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `collateral`
@@ -882,7 +938,7 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `inbox`
 --
 ALTER TABLE `inbox`
-  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `loanapplication`
@@ -906,13 +962,13 @@ ALTER TABLE `medical`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `service`
@@ -924,7 +980,7 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT for table `signupform`
 --
 ALTER TABLE `signupform`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `staff_credentials`
@@ -949,6 +1005,12 @@ ALTER TABLE `account_request`
   ADD CONSTRAINT `account_request_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `admin_messages`
+--
+ALTER TABLE `admin_messages`
+  ADD CONSTRAINT `admin_messages_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`);
+
+--
 -- Constraints for table `collateral`
 --
 ALTER TABLE `collateral`
@@ -964,7 +1026,8 @@ ALTER TABLE `collateral_info`
 -- Constraints for table `inbox`
 --
 ALTER TABLE `inbox`
-  ADD CONSTRAINT `inbox_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `inbox_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `inbox_ibfk_2` FOREIGN KEY (`related_message_id`) REFERENCES `admin_messages` (`MessageID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `loanapplication`
