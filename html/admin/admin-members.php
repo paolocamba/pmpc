@@ -128,6 +128,9 @@ $conn->close();
                         ?>
                     </tbody>
                 </table>
+
+                <a href="../admin/generate-report.php">Generate Membership Report</a>
+
             </section>
         </div>
     </div>
