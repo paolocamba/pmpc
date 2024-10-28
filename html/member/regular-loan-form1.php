@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <ul class="sidebar-menu">
                 <li><a href="member-landing.php">Home</a></li>
                 <li><a href="member-dashboard.php">Dashboard</a></li>
-                <li><a href="member-services.html" class="active">Services</a></li>
+                <li><a href="member-services.php" class="active">Services</a></li>
                 <li><a href="member-inbox.html">Inbox</a></li>
                 <li><a href="member-about.html">About</a></li>
             </ul>
@@ -123,14 +123,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
                     <div class="input-row">
-                        <div class="input-group">
-                            <label for="loan-term">Loan Term</label>
-                            <select id="loan-term" name="loan-term" required>
-                                <option value="" disabled selected hidden>Select Term</option>
-                                <option value="6">6 months</option>
-                                <option value="12">12 months</option>
-                            </select>
-                        </div>
+                    <div class="input-group">
+                        <label for="loan-term">Loan Term</label>
+                        <select id="loan-term" name="loan-term" required>
+                            <option value="" disabled selected hidden>Select Term</option>
+                            <option value="3 Months">3 Months</option>
+                            <option value="6 Months">6 Months</option>
+                            <option value="9 Months">9 Months</option>
+                            <option value="12 Months">12 Months</option>
+                            <option value="15 Months">15 Months</option>
+                            <option value="18 Months">18 Months</option>
+                            <option value="21 Months">21 Months</option>
+                            <option value="24 Months">24 Months</option>
+                        </select>
+                    </div>
+
                         <div class="input-group">
                             <label for="payment">Mode of Payment</label>
                             <select id="payment" name="payment" required>

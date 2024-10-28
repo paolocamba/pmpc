@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <ul class="sidebar-menu">
                 <li><a href="member-landing.php">Home</a></li>
                 <li><a href="member-dashboard.php">Dashboard</a></li>
-                <li><a href="member-services.html" class="active">Services</a></li>
+                <li><a href="member-services.php" class="active">Services</a></li>
                 <li><a href="member-inbox.html">Inbox</a></li>
                 <li><a href="member-about.html">About</a></li>
             </ul>
