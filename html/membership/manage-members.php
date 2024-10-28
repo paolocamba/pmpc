@@ -23,7 +23,7 @@ $offset = ($page - 1) * $limit;
 // Check if a search query exists
 $searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
 
-// Modify the query to handle search
+// Modify the query to handle search and only show active members
 if (!empty($searchQuery)) {
     // If search is performed
     $allMembersQuery = "
@@ -37,9 +37,10 @@ if (!empty($searchQuery)) {
         FROM 
             member
         WHERE 
-            LastName LIKE ? OR
+            (LastName LIKE ? OR
             FirstName LIKE ? OR
-            Email LIKE ?
+            Email LIKE ?) AND
+            Status = 'Active'  -- Filter for active members
         LIMIT ?, ?
     ";
     $searchTerm = "%" . $searchQuery . "%";
@@ -57,6 +58,8 @@ if (!empty($searchQuery)) {
             Savings
         FROM 
             member
+        WHERE 
+            MembershipStatus = 'Active'  -- Filter for active members
         LIMIT ?, ?
     ";
     $stmt = $conn->prepare($allMembersQuery);
@@ -66,10 +69,10 @@ if (!empty($searchQuery)) {
 $stmt->execute();
 $allMembersResult = $stmt->get_result();
 
-// Count total members for pagination (considering search)
-$countQuery = "SELECT COUNT(*) as total FROM member";
+// Count total active members for pagination (considering search)
+$countQuery = "SELECT COUNT(*) as total FROM member WHERE MembershipStatus = 'Active'"; // Count only active members
 if (!empty($searchQuery)) {
-    $countQuery .= " WHERE LastName LIKE '%$searchQuery%' OR FirstName LIKE '%$searchQuery%' OR Email LIKE '%$searchQuery%'";
+    $countQuery .= " AND (LastName LIKE '%$searchQuery%' OR FirstName LIKE '%$searchQuery%' OR Email LIKE '%$searchQuery%')";
 }
 $countResult = $conn->query($countQuery);
 $totalMembers = $countResult->fetch_assoc()['total'];
@@ -99,7 +102,7 @@ $conn->close();
 
             <ul class="sidebar-menu">
                 <li><a href="membership.php" class="active">Members</a></li>
-                <li><a href="membership-inbox.php" >Inbox</a></li>
+                <li><a href="membership-inbox.php">Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -117,7 +120,7 @@ $conn->close();
             <!-- Member List Table -->
             <section class="member-list">
                 <div class="table-header">
-                    <h3>Members</h3>
+                    <h3>Active Members</h3>
                     <!-- Search Form -->
                     <form action="manage-members.php" method="GET">
                         <input type="text" name="search" placeholder="Search by name or email" value="<?php echo htmlspecialchars($searchQuery); ?>">
@@ -151,7 +154,7 @@ $conn->close();
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='7'>No members found.</td></tr>";
+                            echo "<tr><td colspan='7'>No active members found.</td></tr>";
                         }
                         ?>
                     </tbody>

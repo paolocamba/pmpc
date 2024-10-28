@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2024 at 06:59 PM
+-- Generation Time: Oct 28, 2024 at 08:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -90,7 +90,11 @@ INSERT INTO `address` (`AddressID`, `Street`, `Barangay`, `Municipality`, `Provi
 (66, 'adsd', 'afafaf', 'afafaf', 'afafa'),
 (67, '14414', '4141', '51515', '1515'),
 (68, 'N/A', 'Siling Bata', 'Pandi', 'Bulacan'),
-(70, 'Malibu', 'Cacarong Matanda', 'Pandi', 'Bulacan');
+(70, 'Malibu', 'Cacarong Matanda', 'Pandi', 'Bulacan'),
+(71, 'balete', 'Sta Mesa', 'Manila', 'Manila'),
+(72, 'Dapitan', 'Unli', 'Wings', 'Manila'),
+(73, 'afaf', 'faf', 'fafa', 'faf'),
+(74, 'hahaha', 'hahaha', 'hahaha', 'hehehe');
 
 -- --------------------------------------------------------
 
@@ -117,7 +121,8 @@ INSERT INTO `admin_messages` (`MessageID`, `MemberID`, `Category`, `MessageConte
 (3, 12, 'Medical', 'Ano po blood type ko?', '2024-10-27 10:10:53', 1),
 (12, NULL, 'Loan', 'hi', '2024-10-27 21:41:28', 0),
 (13, NULL, 'Loan', 'hi', '2024-10-27 21:41:45', 0),
-(17, 12, 'Medical', 'Magkano po ulo ng manok?', '2024-10-27 22:09:59', 1);
+(17, 12, 'Medical', 'Magkano po ulo ng manok?', '2024-10-27 22:09:59', 1),
+(21, 12, 'Membership', 'Bakit po ang tagal ng approval sa membership fee?', '2024-10-28 22:19:33', 1);
 
 -- --------------------------------------------------------
 
@@ -177,7 +182,13 @@ INSERT INTO `appointments` (`AppointmentID`, `LastName`, `FirstName`, `Appointme
 (27, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Approved'),
 (28, 'Camba', 'Rick Paolo', '2024-10-25', 'X-RAY', 'rickpaolocamba@gmail.com', 12, 6, 'Pending'),
 (29, 'Camba', 'Rick Paolo', '2024-10-31', 'Laboratory', 'rickpaolocamba@gmail.com', 12, 5, 'Approved'),
-(30, '', '', '2024-11-04', NULL, '', 75, NULL, 'Pending');
+(31, 'Camba', 'Rick Paolo', '2024-10-29', 'Space for Rent', 'rickpaolocamba@gmail.com', 12, 3, 'Pending'),
+(32, 'Camba', 'Rick Paolo', '2024-10-31', 'Hilot Healom', 'rickpaolocamba@gmail.com', 12, 7, 'Pending'),
+(33, 'Camba', 'Rick Paolo', '2024-10-28', 'Hilot Healom', 'rickpaolocamba@gmail.com', 12, 7, 'Pending'),
+(35, 'Santiago', 'Polikarpio', '2024-10-23', 'Membership Application Payment', 'Polikarpio@gmail.com', 76, 11, 'Approved'),
+(36, 'Rizal', 'Jose', '2024-10-24', 'Membership Application Payment', 'Rizal@gmail.com', 77, 11, 'Pending'),
+(37, 'fhafhfa', 'Jimber', '2024-10-19', 'Membership Application Payment', 'Jimbei@gmail.com', 78, 11, 'Pending'),
+(38, 'hihihi', 'hahaha', '2024-10-25', 'Membership Application Payment', 'hahaha@gmail.com', 79, 11, 'Pending');
 
 --
 -- Triggers `appointments`
@@ -322,7 +333,8 @@ INSERT INTO `inbox` (`MessageID`, `MemberID`, `Message`, `Date`, `isRead`, `rela
 (56, 71, '12', '2024-10-27 19:38:56', 0, NULL),
 (57, 72, '12', '2024-10-27 19:38:56', 0, NULL),
 (58, 73, '12', '2024-10-27 19:38:56', 0, NULL),
-(86, 12, 'secret', '2024-10-28 00:34:04', 0, 17);
+(86, 12, 'secret', '2024-10-28 00:34:04', 0, 17),
+(87, 12, 'ayaw ko', '2024-10-28 22:26:24', 0, 21);
 
 -- --------------------------------------------------------
 
@@ -335,7 +347,7 @@ CREATE TABLE `loanapplication` (
   `MemberID` int(11) DEFAULT NULL,
   `DateOfLoan` date DEFAULT NULL,
   `AmountRequested` decimal(15,2) DEFAULT NULL,
-  `LoanTerm` varchar(20) DEFAULT NULL,
+  `LoanTerm` enum('3 Months','6 Months','9 Months','12 Months','15 Months','18 Months','21 Months','24 Months') DEFAULT NULL,
   `Purpose` text DEFAULT NULL,
   `LoanType` enum('Regular','Collateral') DEFAULT NULL,
   `ModeOfPayment` enum('Daily','Weekly','Bi-Monthly','Monthly','Quarterly','Semi-Anual') DEFAULT NULL,
@@ -429,18 +441,18 @@ CREATE TABLE `loanapplication` (
 --
 
 INSERT INTO `loanapplication` (`LoanID`, `MemberID`, `DateOfLoan`, `AmountRequested`, `LoanTerm`, `Purpose`, `LoanType`, `ModeOfPayment`, `years_stay_present_address`, `own_house`, `renting`, `living_with_relative`, `status`, `spouse_name`, `number_of_dependents`, `dependents_in_school`, `dependent1_name`, `dependent1_age`, `dependent1_grade_level`, `dependent2_name`, `dependent2_age`, `dependent2_grade_level`, `dependent3_name`, `dependent3_age`, `dependent3_grade_level`, `dependent4_name`, `dependent4_age`, `dependent4_grade_level`, `family_member_count`, `self_income`, `self_income_amount`, `other_income`, `other_income_amount`, `spouse_income`, `spouse_income_amount`, `spouse_other_income`, `spouse_other_income_amount`, `total_income`, `food_groceries_expense`, `gas_oil_transportation_expense`, `schooling_expense`, `utilities_expense`, `miscellaneous_expense`, `total_expenses`, `net_family_income`, `employer_name`, `employer_address`, `present_position`, `date_of_employment`, `monthly_income`, `contact_person`, `contact_telephone_no`, `self_employed_business_type`, `business_start_date`, `savings_account`, `savings_bank`, `savings_branch`, `current_account`, `current_bank`, `current_branch`, `asset1`, `asset2`, `asset3`, `asset4`, `creditor1_name`, `creditor1_address`, `creditor1_original_amount`, `creditor1_present_balance`, `creditor2_name`, `creditor2_address`, `creditor2_original_amount`, `creditor2_present_balance`, `creditor3_name`, `creditor3_address`, `creditor3_original_amount`, `creditor3_present_balance`, `creditor4_name`, `creditor4_address`, `creditor4_original_amount`, `creditor4_present_balance`, `property_foreclosed_repossessed`, `co_maker_cosigner_guarantor`, `reference1_name`, `reference1_address`, `reference1_contact_no`, `reference2_name`, `reference2_address`, `reference2_contact_no`, `reference3_name`, `reference3_address`, `reference3_contact_no`) VALUES
-(1, 1, '2024-01-15', 10000.00, '12 months', 'Personal Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(2, 2, '2024-02-20', 15000.00, '24 months', 'Home Renovation', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(3, 3, '2024-03-10', 20000.00, '36 months', 'Education', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(4, 4, '2024-04-05', 12000.00, '18 months', 'Medical Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(5, 5, '2024-05-12', 25000.00, '60 months', 'Business Expansion', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(6, 6, '2024-06-15', 8000.00, '12 months', 'Debt Consolidation', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(7, 7, '2024-07-20', 30000.00, '48 months', 'Car Purchase', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(8, 8, '2024-08-25', 10000.00, '6 months', 'Travel Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(9, 9, '2024-09-30', 5000.00, '3 months', 'Emergency Fund', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(10, 10, '2024-10-15', 15000.00, '36 months', 'Home Improvement', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(11, 12, '2024-10-25', 12000.00, '6', 'Study', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
-(15, 12, '2024-10-18', 14000.00, '12', 'afaf', 'Collateral', 'Weekly', 3, 1, 0, 0, 'Single', NULL, 0, 0, 'affaf', 13, '13', '', 0, '', '', 0, '', '', 0, '0', 0, '3113', 141414.00, '13131', 1414.00, '0', 1414.00, 'af', 1414.00, 0.00, 4141.00, 414.00, 1414.00, 1414.00, 414.00, 414.00, 1414.00, 'afaf', 'afaf', 'agagag', '2024-10-09', 4441.00, 'gagagag', '0', '', '0000-00-00', 0, '', '', 0, '', '', 'afaf', 'faf', 'afa', 'afaf', 'afaf', 'fafaf', 41414.00, 1414.00, 'agagag', 'agagag', 1414.00, 14141.00, '', '', 0.00, 0.00, '', '', 0.00, 0.00, 0, 1, 'afafaf', 'afafa', '4141', 'afafaf', 'afafaf', '1515', 'fafaf', 'afafa', '15151');
+(1, 1, '2024-01-15', 10000.00, '12 Months', 'Personal Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(2, 2, '2024-02-20', 15000.00, '24 Months', 'Home Renovation', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(3, 3, '2024-03-10', 20000.00, '', 'Education', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(4, 4, '2024-04-05', 12000.00, '18 Months', 'Medical Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(5, 5, '2024-05-12', 25000.00, '', 'Business Expansion', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(6, 6, '2024-06-15', 8000.00, '12 Months', 'Debt Consolidation', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(7, 7, '2024-07-20', 30000.00, '', 'Car Purchase', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(8, 8, '2024-08-25', 10000.00, '6 Months', 'Travel Expenses', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(9, 9, '2024-09-30', 5000.00, '3 Months', 'Emergency Fund', 'Regular', 'Weekly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(10, 10, '2024-10-15', 15000.00, '', 'Home Improvement', 'Collateral', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(11, 12, '2024-10-25', 12000.00, '18 Months', 'Study', 'Regular', 'Monthly', NULL, 0, 0, 0, 'Single', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '0.00', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', ''),
+(15, 12, '2024-10-18', 14000.00, '', 'afaf', 'Collateral', 'Weekly', 3, 1, 0, 0, 'Single', NULL, 0, 0, 'affaf', 13, '13', '', 0, '', '', 0, '', '', 0, '0', 0, '3113', 141414.00, '13131', 1414.00, '0', 1414.00, 'af', 1414.00, 0.00, 4141.00, 414.00, 1414.00, 1414.00, 414.00, 414.00, 1414.00, 'afaf', 'afaf', 'agagag', '2024-10-09', 4441.00, 'gagagag', '0', '', '0000-00-00', 0, '', '', 0, '', '', 'afaf', 'faf', 'afa', 'afaf', 'afaf', 'fafaf', 41414.00, 1414.00, 'agagag', 'agagag', 1414.00, 14141.00, '', '', 0.00, 0.00, '', '', 0.00, 0.00, 0, 1, 'afafaf', 'afafa', '4141', 'afafaf', 'afafaf', '1515', 'fafaf', 'afafa', '15151');
 
 -- --------------------------------------------------------
 
@@ -514,7 +526,7 @@ CREATE TABLE `medical` (
 --
 
 INSERT INTO `medical` (`TransactID`, `MemberID`, `Date`, `ServiceID`, `Status`, `Amount`) VALUES
-(3, 6, '2024-10-25', 5, 'In Progress', 0.00),
+(3, 6, '2024-10-25', 5, 'In Progress', 1200.00),
 (4, 12, '2024-10-25', 6, 'In Progress', NULL),
 (5, 12, '2024-10-31', 5, 'In Progress', NULL);
 
@@ -537,31 +549,36 @@ CREATE TABLE `member` (
   `ContactNo` varchar(15) DEFAULT NULL,
   `DateCreated` date DEFAULT NULL,
   `Savings` decimal(10,2) DEFAULT 0.00,
-  `TypeOfMember` enum('Regular','Associate') DEFAULT 'Regular'
+  `TypeOfMember` enum('Regular','Associate') DEFAULT 'Regular',
+  `MembershipStatus` enum('Pending','Active') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Sex`, `TINNumber`, `ContactNo`, `DateCreated`, `Savings`, `TypeOfMember`) VALUES
-('11@gmail.com', 64, '0', 'Nami', 'Robin', 63, '2024-10-07', 'male', '3353535111', '73737111', NULL, 0.00, 'Regular'),
-('151515@egmail.com', 71, '0', 'Nami', 'Robin', 66, '2024-10-16', 'male', '3353111111', '9at1515', NULL, 0.00, 'Regular'),
-('bb@gmail.com', 72, 'Robin', 'Nami', 'Swan', 67, '2024-10-06', '0', '678678678', '7878', NULL, 0.00, 'Regular'),
-('benjaminjarombernardo0815@gmail.com', 75, 'Logan', 'Mark', 'V', 70, '2001-11-15', '0', '567-421-896-213', '09947307033', NULL, 0.00, 'Regular'),
-('bernardobenjaminjarom@gmail.com', 73, 'Bernardo', 'Benjamin Jarom', 'Mañebo', 68, '2024-10-17', '0', '040513682', '09129130560', NULL, 0.00, 'Regular'),
-('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 'Male', '654789123', '09567890123', '2024-10-16', 0.00, 'Regular'),
-('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 'Female', '159753486', '09678901234', '2024-10-16', 0.00, 'Regular'),
-('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 'Female', '987564321', '09234567890', '2024-10-16', 0.00, 'Regular'),
-('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 'Male', '357951486', '09789012345', '2024-10-16', 40000.00, 'Regular'),
-('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 'Female', '753159852', '09012345678', '2024-10-16', 0.00, 'Regular'),
-('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 'Male', '123456789', '09123456789', '2024-10-16', 0.00, 'Regular'),
-('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 'Female', '321654987', '09456789012', '2024-10-16', 0.00, 'Regular'),
-('Martinez@gmail.com', 9, 'Martinez', 'Lucas', 'I', 9, '1975-09-05', 'Male', '951357258', '09901234567', '2024-10-16', 0.00, 'Regular'),
-('rickpaolocamba@gmail.com', 12, 'Camba', 'Rick Paolo', 'Pampuan', 15, '2003-03-09', 'male', '123123123', '09466446039', NULL, 0.00, 'Regular'),
-('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 'Female', '852456123', '09890123456', '2024-10-16', 0.00, 'Regular'),
-('test@example.com', 69, 'usop', 'usop', 'middle', 1, '1990-01-01', 'male', '123444789', '09993456789', NULL, 0.00, 'Regular'),
-('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 'Male', '456123789', '09345678901', '2024-10-16', 3000.00, 'Regular');
+INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Sex`, `TINNumber`, `ContactNo`, `DateCreated`, `Savings`, `TypeOfMember`, `MembershipStatus`) VALUES
+('11@gmail.com', 64, '0', 'Nami', 'Robin', 63, '2024-10-07', 'male', '3353535111', '73737111', NULL, 0.00, 'Regular', 'Active'),
+('151515@egmail.com', 71, '0', 'Nami', 'Robin', 66, '2024-10-16', 'male', '3353111111', '9at1515', NULL, 0.00, 'Regular', 'Active'),
+('bb@gmail.com', 72, 'Robin', 'Nami', 'Swan', 67, '2024-10-06', '0', '678678678', '7878', NULL, 0.00, 'Regular', 'Active'),
+('benjaminjarombernardo0815@gmail.com', 75, 'Logan', 'Mark', 'V', 70, '2001-11-15', '0', '567-421-896-213', '09947307033', NULL, 0.00, 'Regular', 'Pending'),
+('bernardobenjaminjarom@gmail.com', 73, 'Bernardo', 'Benjamin Jarom', 'Mañebo', 68, '2024-10-17', '0', '040513682', '09129130560', NULL, 0.00, 'Regular', 'Pending'),
+('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 'Male', '654789123', '09567890123', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 'Female', '159753486', '09678901234', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 'Female', '987564321', '09234567890', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 'Male', '357951486', '09789012345', '2024-10-16', 40000.00, 'Regular', 'Active'),
+('hahaha@gmail.com', 79, 'hihihi', 'hahaha', 'hehehe', 74, '2024-10-17', '0', '6266226', '626161', NULL, 4000.00, 'Associate', 'Active'),
+('Hernandez@gmail.com', 10, 'Hernandez', 'Mia', 'J', 10, '1995-07-15', 'Female', '753159852', '09012345678', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Jimbei@gmail.com', 78, 'fhafhfa', 'Jimber', 'hadhahd', 73, '2024-10-18', '0', '26627', '161616', NULL, 0.00, 'Regular', 'Active'),
+('Johnsmith@gmail.com', 1, 'Smith', 'John', 'A', 1, '1985-06-15', 'Male', '123456789', '09123456789', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Jones@gmail.com', 4, 'Jones', 'Sophia', 'D', 4, '1995-12-05', 'Female', '321654987', '09456789012', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Martinez@gmail.com', 9, 'Martinez', 'Lucas', 'I', 9, '1975-09-05', 'Male', '951357258', '09901234567', '2024-10-16', 0.00, 'Regular', 'Active'),
+('Polikarpio@gmail.com', 76, 'Santiago', 'Polikarpio', 'De Jesus', 71, '2024-10-16', '0', '8', '567', NULL, 40000.00, 'Regular', 'Active'),
+('rickpaolocamba@gmail.com', 12, 'Camba', 'Rick Paolo', 'Pampuan', 15, '2003-03-09', 'male', '123123123', '09466446039', NULL, 0.00, 'Regular', 'Active'),
+('Rizal@gmail.com', 77, 'Rizal', 'Jose', 'Protacio', 72, '2024-10-29', '0', '88', '63636', NULL, 0.00, 'Regular', 'Active'),
+('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 'Female', '852456123', '09890123456', '2024-10-16', 0.00, 'Regular', 'Active'),
+('test@example.com', 69, 'usop', 'usop', 'middle', 1, '1990-01-01', 'male', '123444789', '09993456789', NULL, 0.00, 'Regular', 'Active'),
+('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 'Male', '456123789', '09345678901', '2024-10-16', 3000.00, 'Regular', 'Active');
 
 -- --------------------------------------------------------
 
@@ -585,7 +602,50 @@ CREATE TABLE `membership_application` (
 
 INSERT INTO `membership_application` (`MemberID`, `FillUpForm`, `WatchedVideoSeminar`, `PaidRegistrationFee`, `Status`, `AppointmentDate`, `MembershipFeePaidAmount`) VALUES
 (73, 1, 1, 1, 'Completed', '2024-10-25', 2000),
-(75, 1, 1, 0, 'In progress', '2024-11-04', NULL);
+(76, 1, 1, 1, 'Completed', '2024-10-23', 40000),
+(77, 1, 1, 1, 'Completed', '2024-10-24', 6000),
+(78, 1, 1, 1, 'Completed', '2024-10-19', 6000),
+(79, 1, 1, 1, 'Completed', '2024-10-25', 4000);
+
+--
+-- Triggers `membership_application`
+--
+DELIMITER $$
+CREATE TRIGGER `after_membership_application_update` AFTER UPDATE ON `membership_application` FOR EACH ROW BEGIN
+    -- Check if the status is updated to 'Completed' and all requirements are met
+    IF NEW.Status = 'Completed' AND NEW.FillUpForm = 1 AND NEW.WatchedVideoSeminar = 1 AND NEW.PaidRegistrationFee = 1 THEN
+        -- Update the MembershipStatus in the member table to 'Active'
+        UPDATE member 
+        SET MembershipStatus = 'Active' 
+        WHERE MemberID = NEW.MemberID;
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `update_member_status` AFTER INSERT ON `membership_application` FOR EACH ROW BEGIN
+    DECLARE membership_fee_paid_amount DECIMAL(10, 2);
+    DECLARE member_type VARCHAR(20);
+
+    -- Fetch the MembershipFeePaidAmount for the new application
+    SET membership_fee_paid_amount = NEW.MembershipFeePaidAmount;
+
+    -- Determine the TypeOfMember based on the MembershipFeePaidAmount
+    IF membership_fee_paid_amount < 5000 THEN
+        SET member_type = 'Associate';
+    ELSE
+        SET member_type = 'Regular';
+    END IF;
+
+    -- Update the corresponding member's record
+    UPDATE member
+    SET MembershipStatus = 'Active',
+        Savings = membership_fee_paid_amount,
+        TypeOfMember = member_type
+    WHERE MemberID = NEW.MemberID;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -620,7 +680,11 @@ INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`) V
 (71, '1415t', '151515@egmail.com', '$2y$10$FhT0rzyn9EogJ47.fp0/IeDZDfJ7CTBs9tiVySQMVX1eZmnpYGE6m'),
 (72, 'qwerty', 'bb@gmail.com', '$2y$10$fTecUaHhJ.u.Myde7G.AQuieqW.NgS0f0nw7Yirn6PJp8k7Xpt.7u'),
 (73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy'),
-(75, 'sauge21', 'benjaminjarombernardo0815@gmail.com', '$2y$10$GK9IrqCaJDuc3bjqlnKdOOH.zjhGGZifYn/C/YUKpSyWb1mt2/J2K');
+(75, 'sauge21', 'benjaminjarombernardo0815@gmail.com', '$2y$10$GK9IrqCaJDuc3bjqlnKdOOH.zjhGGZifYn/C/YUKpSyWb1mt2/J2K'),
+(76, 'Polikarpio', 'Polikarpio@gmail.com', '$2y$10$7q0jReGDWRzZ5tzSlB6IVOWIceWykH4evGarQUx5i.BxiEuA7ONqC'),
+(77, 'Rizal1234', 'Rizal@gmail.com', '$2y$10$NgKk01DEmx.w2hOe28zZ9e1pGZwEuJjT5aVYBNv8sylUolXtLAPY.'),
+(78, 'jimbei', 'Jimbei@gmail.com', '$2y$10$5YpPBnFV9KjfB8te0WbGuOS7bIPfm5FJtWZv4O3tL.6v/FIpHUVci'),
+(79, 'hahaha', 'hahaha@gmail.com', '$2y$10$ki3yR.yaq1p5gV9i6qXwE.cRMEh3PW0oo3SVmiWIUL8/810h8uwNe');
 
 -- --------------------------------------------------------
 
@@ -674,7 +738,10 @@ CREATE TABLE `signupform` (
 
 INSERT INTO `signupform` (`MemberID`, `FirstName`, `LastName`, `MiddleName`, `Sex`, `AddressID`, `TINNumber`, `Birthday`, `ContactNo`) VALUES
 (73, 'Benjamin Jarom', 'Bernardo', 'Mañebo', 'Male', 68, '040513682', '2024-10-17', '09129130560'),
-(75, 'Mark', 'Logan', 'V', 'Male', 70, '567-421-896-213', '2001-11-15', '09947307033');
+(76, 'Polikarpio', 'Santiago', 'De Jesus', 'Male', 71, '8', '2024-10-16', '567'),
+(77, 'Jose', 'Rizal', 'Protacio', 'Male', 72, '88', '2024-10-29', '63636'),
+(78, 'Jimber', 'fhafhfa', 'hadhahd', 'Male', 73, '26627', '2024-10-18', '161616'),
+(79, 'hahaha', 'hihihi', 'hehehe', 'Male', 74, '6266226', '2024-10-17', '626161');
 
 -- --------------------------------------------------------
 
@@ -712,7 +779,7 @@ CREATE TABLE `transaction` (
   `MemberID` int(11) NOT NULL,
   `ServiceID` int(11) NOT NULL,
   `Date` datetime NOT NULL,
-  `Amount` decimal(10,2) NOT NULL,
+  `Amount` decimal(10,2) DEFAULT NULL,
   `Status` enum('In Progress','Completed') NOT NULL DEFAULT 'In Progress'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -721,7 +788,8 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`TransactID`, `MemberID`, `ServiceID`, `Date`, `Amount`, `Status`) VALUES
-(2, 12, 3, '2024-10-20 09:05:45', 4500.00, 'Completed');
+(2, 12, 3, '2024-10-20 09:05:45', 4500.00, 'In Progress'),
+(4, 76, 11, '2024-10-29 01:30:04', NULL, 'In Progress');
 
 --
 -- Triggers `transaction`
@@ -896,13 +964,13 @@ ALTER TABLE `account_request`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `AddressID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `admin_messages`
 --
 ALTER TABLE `admin_messages`
-  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `announcement`
@@ -914,7 +982,7 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `AppointmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `collateral`
@@ -938,13 +1006,13 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `inbox`
 --
 ALTER TABLE `inbox`
-  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `MessageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `loanapplication`
 --
 ALTER TABLE `loanapplication`
-  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `loan_admin`
@@ -962,13 +1030,13 @@ ALTER TABLE `medical`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `membership_application`
 --
 ALTER TABLE `membership_application`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `service`
@@ -980,7 +1048,7 @@ ALTER TABLE `service`
 -- AUTO_INCREMENT for table `signupform`
 --
 ALTER TABLE `signupform`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `staff_credentials`
@@ -992,7 +1060,7 @@ ALTER TABLE `staff_credentials`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `TransactID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

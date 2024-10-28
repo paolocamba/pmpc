@@ -71,7 +71,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $updateStmt->bind_param("iisisi", $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $membershipFeePaidAmount, $status, $memberID);
     
     if ($updateStmt->execute()) {
-        echo "Membership application updated successfully!";
+        // Update Savings and TypeOfMember in member table
+        $memberType = ($membershipFeePaidAmount < 5000) ? 'Associate' : 'Regular';
+
+        // Update the member's savings and type of member
+        $updateMemberQuery = "
+            UPDATE member
+            SET Savings = ?, TypeOfMember = ?
+            WHERE MemberID = ?
+        ";
+        $updateMemberStmt = $conn->prepare($updateMemberQuery);
+        $updateMemberStmt->bind_param("ssi", $membershipFeePaidAmount, $memberType, $memberID);
+        
+        if ($updateMemberStmt->execute()) {
+            echo "Membership application and member details updated successfully!";
+        } else {
+            echo "Error updating member details: " . $conn->error;
+        }
+
+        $updateMemberStmt->close();
     } else {
         echo "Error updating membership application: " . $conn->error;
     }

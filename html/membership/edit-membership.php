@@ -71,7 +71,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $updateStmt->bind_param("iisisi", $fillUpForm, $watchedVideoSeminar, $paidRegistrationFee, $membershipFeePaidAmount, $status, $memberID);
     
     if ($updateStmt->execute()) {
-        echo "Membership application updated successfully!";
+        // Update Savings and TypeOfMember in member table
+        $memberType = ($membershipFeePaidAmount < 5000) ? 'Associate' : 'Regular';
+
+        // Update the member's savings and type of member
+        $updateMemberQuery = "
+            UPDATE member
+            SET Savings = ?, TypeOfMember = ?
+            WHERE MemberID = ?
+        ";
+        $updateMemberStmt = $conn->prepare($updateMemberQuery);
+        $updateMemberStmt->bind_param("ssi", $membershipFeePaidAmount, $memberType, $memberID);
+        
+        if ($updateMemberStmt->execute()) {
+            echo "Membership application and member details updated successfully!";
+        } else {
+            echo "Error updating member details: " . $conn->error;
+        }
+
+        $updateMemberStmt->close();
     } else {
         echo "Error updating membership application: " . $conn->error;
     }
@@ -96,13 +114,14 @@ if (isset($_POST['delete'])) {
 $conn->close();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Membership Application</title>
-    <link rel="stylesheet" href="../../css/admin-edit-member.css">
+    <title>Admin Dashboard - Members</title>
+    <link rel="stylesheet" href="../../css/admin-edit-membership.css">
     <link rel="stylesheet" href="../../css/admin-general.css">
 </head>
 <body>
@@ -118,6 +137,10 @@ $conn->close();
             <ul class="sidebar-menu">
                 <li><a href="membership.php" class="active">Members</a></li>
                 <li><a href="membership-inbox.php" >Inbox</a></li>
+            </ul>
+
+            <ul class="sidebar-settings">
+                <li><a href="admin-settings.html">Settings</a></li>
             </ul>
         </div>
 

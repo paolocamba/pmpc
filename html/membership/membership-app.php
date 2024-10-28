@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch total members
-$totalMembersQuery = "SELECT COUNT(*) as total FROM member";
+$totalMembersQuery = "SELECT COUNT(*) as total FROM member WHERE MembershipStatus = 'Active'";
 $totalMembersResult = $conn->query($totalMembersQuery);
 if (!$totalMembersResult) {
     die("Query failed: " . $conn->error);

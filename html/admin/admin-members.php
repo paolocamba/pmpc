@@ -15,8 +15,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch total members
-$totalMembersQuery = "SELECT COUNT(*) as total FROM member";
+// Fetch total active members
+$totalMembersQuery = "SELECT COUNT(*) as total FROM member WHERE MembershipStatus = 'Active'";
 $totalMembersResult = $conn->query($totalMembersQuery);
 if (!$totalMembersResult) {
     die("Query failed: " . $conn->error);
@@ -31,9 +31,8 @@ if (!$activeMemberApplicationsResult) {
 }
 $activeMemberApplications = $activeMemberApplicationsResult->fetch_assoc()['total'];
 
-
-// Fetch members list
-$membersQuery = "SELECT MemberID, LastName, FirstName, MiddleName, ContactNo, Email FROM member LIMIT 5";
+// Fetch active members list
+$membersQuery = "SELECT MemberID, LastName, FirstName, MiddleName, ContactNo, Email FROM member WHERE MembershipStatus = 'Active' LIMIT 5";
 $membersResult = $conn->query($membersQuery);
 
 // Close the database connection
@@ -81,23 +80,22 @@ $conn->close();
 
             <!-- Summary Cards -->
             <section class="summary-cards">
-            <div class="card" onclick="window.location.href='admin-members.php'">
-                <h2><?php echo $totalMembers; ?></h2>
-                <p>Members</p>
-            </div>
+                <div class="card" onclick="window.location.href='admin-members.php'">
+                    <h2><?php echo $totalMembers; ?></h2>
+                    <p>Active Members</p>
+                </div>
                 <a href="admin-membership-app.php" class="card-link">
-                <div class="card">
-                <h2><?php echo $activeMemberApplications; ?></h2>
-                <p>Member Application</p>
-            </div>
-        </a>
+                    <div class="card">
+                        <h2><?php echo $activeMemberApplications; ?></h2>
+                        <p>Member Application</p>
+                    </div>
+                </a>
             </section>
-
 
             <!-- Member List Table -->
             <section class="member-list">
                 <div class="table-header">
-                    <h3>Member</h3>
+                    <h3>Active Members</h3>
                     <a href="admin-manage-members.php" class="manage-link">Manage / View All</a>
                 </div>
                 <table>
@@ -125,7 +123,7 @@ $conn->close();
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No members found.</td></tr>";
+                            echo "<tr><td colspan='6'>No active members found.</td></tr>";
                         }
                         ?>
                     </tbody>

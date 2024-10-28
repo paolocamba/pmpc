@@ -116,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Close the database connection
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,7 +145,7 @@ $conn->close();
                 <li><a href="admin-settings.html">Settings</a></li>
             </ul>
         </div>
-
+        
         <main class="main-content">
             <header>
                 <h1>Manage Member Information</h1>
