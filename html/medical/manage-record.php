@@ -100,7 +100,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Medical Records</title>
+    <title>Medical Records</title>
     <link rel="stylesheet" href="../../css/admin-manage-trans.css">
     <link rel="stylesheet" href="../../css/admin-general.css">
 </head>
@@ -115,11 +115,8 @@ $conn->close();
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin.php">Dashboard</a></li>
-                <li><a href="admin-members.php">Members</a></li>
-                <li><a href="admin-loans.php">Loans</a></li>
-                <li><a href="admin-transactions.php" class="active">Transactions</a></li>
-                <li><a href="admin-appointments.php">Appointments</a></li>
+            <li><a href="medicalofficer.php" class="active">Medical</a></li>
+            <li><a href="medical-inbox.php" >Inbox</a></li>
 
             </ul>
 

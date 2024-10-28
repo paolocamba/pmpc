@@ -163,11 +163,8 @@ $formattedDate = $dateValue->format('Y-m-d');
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin.php">Dashboard</a></li>
-                <li><a href="admin-members.php">Members</a></li>
-                <li><a href="admin-loans.php">Loans</a></li>
-                <li><a href="admin-transactions.php" class="active">Transactions</a></li>
-                <li><a href="admin-appointments.php">Appointments</a></li>
+            <li><a href="medicalofficer.php" class="active">Medical</a></li>
+            <li><a href="medical-inbox.php" >Inbox</a></li>
             </ul>
         </div>
 

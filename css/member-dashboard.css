@@ -1,94 +1,180 @@
 
-
-/* Dashboard Info */
-.dashboard-info {
+/* Flexbox for summary cards */
+.summary-cards {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    gap: 20px;
 }
 
-.dashboard-card {
-    background-color: #fff;
+.summary-card {
+    flex: 1;
     padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 48%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
 }
 
-.dashboard-card h3 {
+.summary-card h3 {
+    font-size: 26px;
     margin-bottom: 10px;
-    font-size: 20px;
+    color: #006400;
 }
 
-.dashboard-card p {
+.summary-card p {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: bold;
 }
 
-.status.in-progress {
-    color: #00FFAF;
+.summary-card ul {
+    list-style: none;
+    padding: 0;
 }
 
-/* Active Services and Health Records */
-.dashboard-services {
+.summary-card ul li {
+    font-size: 26px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.summary-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+/* Full-width table styling */
+.full-width-table {
+    margin-top: 20px;
+    background-color: #ffffff; /* Light green background for the section */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+
+/* Search bar styling */
+input[type="text"] {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button[type="submit"] {
+    padding: 8px 12px;
+    background-color: #006400;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #004d00;
+}
+
+/* Pagination styling */
+.pagination ul {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    list-style: none;
+    padding: 0;
 }
 
-.active-services, .health-records {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 48%;
+.pagination ul li {
+    margin-right: 10px;
 }
 
-.service-status {
-    font-size: 20px;
-    font-weight: 700;
-    color: #00FFAF;
+.pagination ul li a {
+    padding: 8px 12px;
+    background-color: #006400;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
 }
 
-/* Transaction History */
-.transaction-history {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+.pagination ul li a.active {
+    background-color: #004d00;
+    font-weight: bold;
 }
 
-.transaction-history h3 {
-    margin-bottom: 20px;
-    font-size: 20px;
+.pagination ul li a:hover {
+    background-color: #004d00;
 }
 
-.transaction-history table {
+
+/* Table inside the green container */
+table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-.transaction-history th, .transaction-history td {
+table th, table td {
     text-align: left;
-    padding: 8px;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-family: Arial, sans-serif;
 }
 
-.transaction-history th {
-    background-color: #f0f0f0;
+/* Table header styling */
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
 }
 
-.transaction-history tbody tr:nth-child(even) {
+/* Alternating row background color */
+table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.transaction-history a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #00FFAF;
+/* Hover effect on rows */
+table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Table data cell styling */
+table td {
+    font-size: 18px;
+    color: #333;
+}
+
+/* Manage/View All link styling */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.table-header h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.table-header a {
+    color: #006400;
     text-decoration: none;
     font-weight: bold;
 }
 
-.transaction-history a:hover {
+.table-header a:hover {
     text-decoration: underline;
+}
+
+/* Additional green border for the container */
+.full-width-table {
+    border: 2px solid #006400; /* Dark green border to match the look */
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    table, th, td {
+        font-size: 14px;
+    }
 }

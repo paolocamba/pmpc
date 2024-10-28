@@ -6,6 +6,9 @@
     <title>Member Dashboard Page</title>
     <link rel="stylesheet" href="../../css/member-dashboard.css">
     <link rel="stylesheet" href="../../css/member-general.css">
+    
+
+   
 </head>
 <body>
 
@@ -14,9 +17,9 @@
 session_start();
 session_regenerate_id(true);
 
-// Prevent caching to ensure secure access
-header("Cache-Control: no-cache, must-revalidate"); // HTTP 1.1
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
 // Check if the user is logged in
 if (!isset($_SESSION['MemberID'])) {
@@ -24,13 +27,12 @@ if (!isset($_SESSION['MemberID'])) {
     exit();
 }
 
-// Database connection settings
+// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "pmpc";
 
-// Connect to the database with error handling
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -43,27 +45,26 @@ $member_id = $_SESSION['MemberID'];
 $savings_balance = 0;
 $savings_query = "SELECT Savings FROM member WHERE MemberID = ?";
 $stmt = $conn->prepare($savings_query);
-if ($stmt) {
-    $stmt->bind_param("i", $member_id);
-    if ($stmt->execute()) {
-        $stmt->bind_result($savings_balance);
-        $stmt->fetch();
-    }
-    $stmt->close();
-}
+$stmt->bind_param("i", $member_id);
+$stmt->execute();
+$stmt->bind_result($savings_balance);
+$stmt->fetch();
+$stmt->close();
 
-// Fetch loan status
-$loan_status = "No loan status";
-$loan_query = "SELECT LoanStatus FROM loan_admin WHERE MemberID = ?";
-$stmt = $conn->prepare($loan_query);
-if ($stmt) {
-    $stmt->bind_param("i", $member_id);
-    if ($stmt->execute()) {
-        $stmt->bind_result($loan_status);
-        $stmt->fetch();
-    }
-    $stmt->close();
-}
+// Fetch loan application status and eligibility
+$loan_application_status = "N/A";
+$loan_eligibility = "N/A";
+$loan_app_query = "
+    SELECT las.Eligibility, las.Status 
+    FROM loanapplication_status las 
+    JOIN loan_admin la ON las.LoanID = la.LoanID 
+    WHERE la.MemberID = ?";
+$stmt = $conn->prepare($loan_app_query);
+$stmt->bind_param("i", $member_id);
+$stmt->execute();
+$stmt->bind_result($loan_eligibility, $loan_application_status);
+$stmt->fetch();
+$stmt->close();
 
 // Fetch active services
 $active_services = [];
@@ -73,35 +74,49 @@ $services_query = "
     JOIN transaction t ON s.ServiceID = t.ServiceID 
     WHERE t.MemberID = ? AND t.Status = 'In Progress'";
 $stmt = $conn->prepare($services_query);
-if ($stmt) {
-    $stmt->bind_param("i", $member_id);
-    if ($stmt->execute()) {
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $active_services[] = htmlspecialchars($row['ServiceName'], ENT_QUOTES, 'UTF-8');
-        }
-    }
-    $stmt->close();
+$stmt->bind_param("i", $member_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $active_services[] = htmlspecialchars($row['ServiceName'], ENT_QUOTES, 'UTF-8');
 }
+$stmt->close();
 
-// Fetch transaction history
+// Fetch transaction history (merged with medical)
 $transaction_history = [];
 $transactions_query = "
     SELECT t.TransactID, s.ServiceName, t.Date, t.Amount, t.Status 
     FROM transaction t 
     JOIN service s ON t.ServiceID = s.ServiceID 
-    WHERE t.MemberID = ?";
+    WHERE t.MemberID = ?
+    UNION
+    SELECT m.TransactID, s.ServiceName, m.Date, m.Amount, m.Status 
+    FROM medical m 
+    JOIN service s ON m.ServiceID = s.ServiceID 
+    WHERE m.MemberID = ?";
 $stmt = $conn->prepare($transactions_query);
-if ($stmt) {
-    $stmt->bind_param("i", $member_id);
-    if ($stmt->execute()) {
-        $transactions_result = $stmt->get_result();
-        while ($row = $transactions_result->fetch_assoc()) {
-            $transaction_history[] = $row;
-        }
-    }
-    $stmt->close();
+$stmt->bind_param("ii", $member_id, $member_id);
+$stmt->execute();
+$transactions_result = $stmt->get_result();
+while ($row = $transactions_result->fetch_assoc()) {
+    $transaction_history[] = $row;
 }
+$stmt->close();
+
+// Fetch loan status from loan_admin
+$loan_status_list = [];
+$loan_status_query = "
+    SELECT LoanID, AmountOfLoan, TypeOfLoan, Term, MaturityDate, AmountPayable, LoanStatus 
+    FROM loan_admin 
+    WHERE MemberID = ?";
+$stmt = $conn->prepare($loan_status_query);
+$stmt->bind_param("i", $member_id);
+$stmt->execute();
+$loan_status_result = $stmt->get_result();
+while ($row = $loan_status_result->fetch_assoc()) {
+    $loan_status_list[] = $row;
+}
+$stmt->close();
 
 // Close connection
 $conn->close();
@@ -133,19 +148,13 @@ $conn->close();
             <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
         </header>
 
-        <section class="dashboard-info">
-            <div class="dashboard-card">
+        <!-- Summary Cards Section -->
+        <section class="summary-cards">
+            <div class="summary-card">
                 <h3>Savings Balance</h3>
                 <p><?php echo number_format($savings_balance, 2); ?> PHP</p>
             </div>
-            <div class="dashboard-card">
-                <h3>Loan Status</h3>
-                <p class="status <?php echo strtolower(str_replace(' ', '-', $loan_status)); ?>">Status: <?php echo htmlspecialchars($loan_status); ?></p>
-            </div>
-        </section>
-
-        <section class="dashboard-services">
-            <div class="active-services">
+            <div class="summary-card">
                 <h3>Active Services</h3>
                 <ul>
                     <?php if (!empty($active_services)): ?>
@@ -157,13 +166,15 @@ $conn->close();
                     <?php endif; ?>
                 </ul>
             </div>
-            <div class="health-records">
-                <h3>Health Records</h3>
-                <p>No records available</p>
+            <div class="summary-card">
+                <h3>Loan Application Status</h3>
+                <p>Eligibility: <?php echo htmlspecialchars($loan_eligibility); ?></p>
+                <p>Status: <?php echo htmlspecialchars($loan_application_status); ?></p>
             </div>
         </section>
 
-        <section class="transaction-history">
+        <!-- Transaction History Table -->
+        <section class="full-width-table">
             <h3>Transaction History</h3>
             <table>
                 <thead>
@@ -193,16 +204,46 @@ $conn->close();
                     <?php endif; ?>
                 </tbody>
             </table>
-            <button onclick="alert('Feature not implemented yet!')">View More</button>
+        </section>
+
+        <!-- Loan Status Table -->
+        <section class="full-width-table">
+            <h3>Loan Status</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Amount of Loan</th>
+                        <th>Type of Loan</th>
+                        <th>Term</th>
+                        <th>Maturity Date</th>
+                        <th>Amount Payable</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($loan_status_list)): ?>
+                        <?php foreach ($loan_status_list as $loan): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($loan['LoanID']); ?></td>
+                                <td><?php echo number_format($loan['AmountOfLoan'], 2); ?> PHP</td>
+                                <td><?php echo htmlspecialchars($loan['TypeOfLoan']); ?></td>
+                                <td><?php echo htmlspecialchars($loan['Term']); ?></td>
+                                <td><?php echo date('m/d/Y', strtotime($loan['MaturityDate'])); ?></td>
+                                <td><?php echo number_format($loan['AmountPayable'], 2); ?> PHP</td>
+                                <td><?php echo htmlspecialchars($loan['LoanStatus']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7">No loan records found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </section>
     </div>
 </div>
-
-<script>
-    function redirectToIndex() {
-        window.location.href = "../html/index.php";
-    }
-</script>
 
 </body>
 </html>
