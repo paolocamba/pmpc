@@ -4,7 +4,7 @@ session_start();
 
 // Check if the user is logged in and if LoanID exists
 if (!isset($_SESSION['MemberID']) || !isset($_SESSION['loan_application_id'])) {
-    header("Location: ../../html/index.html");
+    header("Location: ../../html/index.php");
     exit();
 }
 

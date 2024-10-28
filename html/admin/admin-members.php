@@ -31,13 +31,6 @@ if (!$activeMemberApplicationsResult) {
 }
 $activeMemberApplications = $activeMemberApplicationsResult->fetch_assoc()['total'];
 
-// Fetch account requests
-$accountRequestsQuery = "SELECT COUNT(*) as total FROM Account_request";
-$accountRequestsResult = $conn->query($accountRequestsQuery);
-if (!$accountRequestsResult) {
-    die("Query failed: " . $conn->error);
-}
-$accountRequests = $accountRequestsResult->fetch_assoc()['total'];
 
 // Fetch members list
 $membersQuery = "SELECT MemberID, LastName, FirstName, MiddleName, ContactNo, Email FROM member LIMIT 5";
@@ -89,19 +82,15 @@ $conn->close();
             <!-- Summary Cards -->
             <section class="summary-cards">
             <div class="card" onclick="window.location.href='admin-members.php'">
-            <h2><?php echo $totalMembers; ?></h2>
-            <p>Members</p>
-        </div>
-        <a href="admin-membership-app.php" class="card-link">
-            <div class="card">
+                <h2><?php echo $totalMembers; ?></h2>
+                <p>Members</p>
+            </div>
+                <a href="admin-membership-app.php" class="card-link">
+                <div class="card">
                 <h2><?php echo $activeMemberApplications; ?></h2>
                 <p>Member Application</p>
             </div>
         </a>
-        <div class="card" onclick="window.location.href='admin-account-req.php'">
-            <h2><?php echo $accountRequests; ?></h2>
-            <p>Account Request</p>
-        </div>
             </section>
 
 
@@ -147,7 +136,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = "../../html/index.php";
         }
     </script>
 </body>

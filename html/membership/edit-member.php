@@ -137,6 +137,7 @@ $conn->close();
 
             <ul class="sidebar-menu">
                 <li><a href="membership.php" class="active">Members</a></li>
+                <li><a href="membership-inbox.php" >Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">

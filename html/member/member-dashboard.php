@@ -20,7 +20,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 // Check if the user is logged in
 if (!isset($_SESSION['MemberID'])) {
-    header("Location: ../../html/index.html");
+    header("Location: ../../html/index.php");
     exit();
 }
 
@@ -200,7 +200,7 @@ $conn->close();
 
 <script>
     function redirectToIndex() {
-        window.location.href = "../html/index.html";
+        window.location.href = "../html/index.php";
     }
 </script>
 

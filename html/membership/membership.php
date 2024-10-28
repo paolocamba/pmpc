@@ -68,6 +68,7 @@ $conn->close();
 
             <ul class="sidebar-menu">
                 <li><a href="membership.php" class="active">Members</a></li>
+                <li><a href="membership-inbox.php" >Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -143,7 +144,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = "../../html/index.php";
         }
     </script>
 </body>

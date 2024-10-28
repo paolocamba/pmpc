@@ -20,7 +20,7 @@
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin.html" class="active">Dashboard</a></li>
+                <li><a class="active">Dashboard</a></li>
             </ul>
 
             <ul class="sidebar-settings">

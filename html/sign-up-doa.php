@@ -89,10 +89,10 @@ if (empty($memberID)) {
     <div class="topnav">
         <div class="logo-container">
             <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="logo">
-            <a href="index.html" class="logo-text">PASCHAL</a>
+            <a href="index.php" class="logo-text">PASCHAL</a>
         </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
+            <a href="index.php">Home</a>
             <a href="services.html">Services</a>
             <a href="benefits.html">Benefits</a>
             <a href="about.html">About</a>

@@ -79,7 +79,8 @@ $conn->close();
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin-transactions.php" class="active">Medical</a></li>
+                <li><a href="medicalofficer.php" class="active">Medical</a></li>
+                <li><a href="medical-inbox.php" >Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -150,7 +151,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = "../../html/index.php";
         }
     </script>
 </body>

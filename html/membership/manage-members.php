@@ -83,7 +83,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Members</title>
+    <title>Membership Officer Dashboard</title>
     <link rel="stylesheet" href="../../css/admin-manage-members.css">
     <link rel="stylesheet" href="../../css/admin-general.css">
 </head>
@@ -99,6 +99,7 @@ $conn->close();
 
             <ul class="sidebar-menu">
                 <li><a href="membership.php" class="active">Members</a></li>
+                <li><a href="membership-inbox.php" >Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -172,7 +173,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = "../../html/index.php";
         }
     </script>
 </body>

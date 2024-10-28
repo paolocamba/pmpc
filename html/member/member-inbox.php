@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to redirect to the index page
     function redirectToIndex() {
-        window.location.href = "../../html/index.html";
+        window.location.href = "../../html/index.php";
     }
 
     // Function to load messages with pagination

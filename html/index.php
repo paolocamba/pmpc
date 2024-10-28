@@ -33,12 +33,12 @@ if ($conn->connect_error) {
     <!-- Logo and PASCHAL Text -->
     <div class="logo-container">
         <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="logo">
-        <a href="index.html" class="logo-text">PASCHAL</a>
+        <a href="index.php" class="logo-text">PASCHAL</a>
     </div>
   
     <!-- Navigation Links -->
     <div class="nav-links">
-        <a href="index.html" class="active">Home</a>
+        <a href="index.php" class="active">Home</a>
         <a href="services.html">Services</a>
         <a href="benefits.html">Benefits</a>
         <a href="about.html">About</a>

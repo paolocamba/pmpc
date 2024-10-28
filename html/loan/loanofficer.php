@@ -99,7 +99,8 @@ $conn->close();
             </div>
 
             <ul class="sidebar-menu">
-                <li><a href="admin-loans.php" class="active">Loans</a></li>
+                <li><a href="loanofficer.php" class="active">Loans</a></li>
+                <li><a href="loan-inbox.php" >Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -207,7 +208,7 @@ $conn->close();
 
     <script>
         function redirectToIndex() {
-            window.location.href = "../../html/index.html";
+            window.location.href = "../../html/index.php";
         }
     </script>
 </body>
