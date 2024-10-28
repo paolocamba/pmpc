@@ -16,54 +16,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $memberID = $_POST['member-id'];
 
     if (isset($_POST['seminar-completed'])) {
-        $seminarCompleted = isset($_POST['seminar-completed']) ? 1 : 0;
+        // Existing seminar-completion logic...
 
-        // Update WatchedVideoSeminar
-        $stmt = $conn->prepare("UPDATE membership_application SET WatchedVideoSeminar = ? WHERE MemberID = ?");
-        $stmt->bind_param('ii', $seminarCompleted, $memberID);
-        $stmt->execute();
-
-        // Check the status of the application
-        $statusSql = "SELECT FillUpForm, WatchedVideoSeminar, PaidRegistrationFee FROM membership_application WHERE MemberID = ?";
-        $stmtStatus = $conn->prepare($statusSql);
-        $stmtStatus->bind_param('i', $memberID);
-        $stmtStatus->execute();
-        $result = $stmtStatus->get_result();
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            // Determine the application status
-            if ($row['FillUpForm'] && $row['WatchedVideoSeminar'] && $row['PaidRegistrationFee']) {
-                $status = "Approved";
-            } else {
-                $status = "In Progress"; // Change to "Failed" if necessary
-            }
-
-            // Update the status
-            $updateStatusSql = "UPDATE membership_application SET Status = ? WHERE MemberID = ?";
-            $stmtUpdateStatus = $conn->prepare($updateStatusSql);
-            $stmtUpdateStatus->bind_param('si', $status, $memberID);
-            $stmtUpdateStatus->execute();
-        }
-
-        header("Location: sign-up-doa.php?member-id=" . $memberID); // Redirect to the next step
-        exit();
     } elseif (isset($_POST['appointment-date'])) {
         $appointmentDate = $_POST['appointment-date'];
 
-        // Insert the appointment into the appointment table
-        $stmt = $conn->prepare("INSERT INTO appointments (MemberID, AppointmentDate) VALUES (?, ?)");
-        $stmt->bind_param('is', $memberID, $appointmentDate);
-        $stmt->execute();
+        // Fetch member details for LastName, FirstName, and Email
+        $memberQuery = $conn->prepare("SELECT FirstName, LastName, Email FROM member WHERE MemberID = ?");
+        $memberQuery->bind_param('i', $memberID);
+        $memberQuery->execute();
+        $memberResult = $memberQuery->get_result();
 
-        // Update AppointmentDate in membership_application
-        $updateStmt = $conn->prepare("UPDATE membership_application SET AppointmentDate = ? WHERE MemberID = ?");
-        $updateStmt->bind_param('si', $appointmentDate, $memberID);
-        $updateStmt->execute();
+        if ($memberResult->num_rows > 0) {
+            $memberData = $memberResult->fetch_assoc();
+            $firstName = $memberData['FirstName'];
+            $lastName = $memberData['LastName'];
+            $email = $memberData['Email'];
+            $description = "Membership Application Payment";
+            $serviceID = 11;
 
-        // Redirect to sign-up-submit.php for captcha
-        header("Location: sign-up-submit.html?member-id=" . $memberID);
-        exit();
+            // Insert the appointment into the appointment table
+            $stmt = $conn->prepare("INSERT INTO appointments (MemberID, AppointmentDate, LastName, FirstName, Email, Description, ServiceID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param('isssssi', $memberID, $appointmentDate, $lastName, $firstName, $email, $description, $serviceID);
+            $stmt->execute();
+
+            // Update AppointmentDate in membership_application
+            $updateStmt = $conn->prepare("UPDATE membership_application SET AppointmentDate = ? WHERE MemberID = ?");
+            $updateStmt->bind_param('si', $appointmentDate, $memberID);
+            $updateStmt->execute();
+
+            // Redirect to sign-up-submit.php for captcha
+            header("Location: sign-up-submit.html?member-id=" . $memberID);
+            exit();
+        } else {
+            die("Error: Member details not found.");
+        }
     }
 }
 
@@ -73,6 +60,7 @@ if (empty($memberID)) {
     die("Error: Member ID is missing.");
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
