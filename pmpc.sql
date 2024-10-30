@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 28, 2024 at 08:16 PM
+-- Generation Time: Oct 31, 2024 at 12:40 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,12 +28,22 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `account_request` (
-  `Id` int(11) NOT NULL,
-  `MemberId` int(11) NOT NULL,
-  `RequestDate` date NOT NULL,
-  `RequestType` varchar(255) NOT NULL,
-  `Status` enum('Pending','Approved','Rejected') NOT NULL
+  `RequestID` int(11) NOT NULL,
+  `MemberID` int(11) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `Username` varchar(255) NOT NULL,
+  `GeneratedPassword` varchar(255) NOT NULL,
+  `RequestDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `PasswordExpiration` timestamp NOT NULL DEFAULT current_timestamp(),
+  `IsPasswordUsed` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `account_request`
+--
+
+INSERT INTO `account_request` (`RequestID`, `MemberID`, `Email`, `Username`, `GeneratedPassword`, `RequestDate`, `PasswordExpiration`, `IsPasswordUsed`) VALUES
+(1, 15, 'cristinamanuson5@gmail.com', 'one', '$2y$10$qi3QbeYhHXlI3zXwP/zR6.jvs34MGdav1WzDrNUMag.FCPj1/h79S', '2024-10-30 13:31:44', '2024-10-30 07:31:44', 0);
 
 -- --------------------------------------------------------
 
@@ -564,6 +574,7 @@ INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`
 ('benjaminjarombernardo0815@gmail.com', 75, 'Logan', 'Mark', 'V', 70, '2001-11-15', '0', '567-421-896-213', '09947307033', NULL, 0.00, 'Regular', 'Pending'),
 ('bernardobenjaminjarom@gmail.com', 73, 'Bernardo', 'Benjamin Jarom', 'Mañebo', 68, '2024-10-17', '0', '040513682', '09129130560', NULL, 0.00, 'Regular', 'Pending'),
 ('Brown@gmail.com', 5, 'Brown', 'David', 'E', 5, '1980-04-18', 'Male', '654789123', '09567890123', '2024-10-16', 0.00, 'Regular', 'Active'),
+('cristinamanuson5@gmail.com', 74, 'Manuson', 'Tin', 'Francisco', 3, '2005-09-07', 'Female', '3567835245', '09397312091', NULL, 0.00, 'Regular', 'Active'),
 ('Davis@gmail.com', 6, 'Davis', 'Olivia', 'F', 6, '1988-03-25', 'Female', '159753486', '09678901234', '2024-10-16', 0.00, 'Regular', 'Active'),
 ('Emilyjohnson@gmail.com', 2, 'Johnson', 'Emily', 'B', 2, '1990-08-20', 'Female', '987564321', '09234567890', '2024-10-16', 0.00, 'Regular', 'Active'),
 ('Garcia@gmail.com', 7, 'Garcia', 'Daniel', 'G', 7, '1984-11-15', 'Male', '357951486', '09789012345', '2024-10-16', 40000.00, 'Regular', 'Active'),
@@ -578,6 +589,7 @@ INSERT INTO `member` (`Email`, `MemberID`, `LastName`, `FirstName`, `MiddleName`
 ('Rizal@gmail.com', 77, 'Rizal', 'Jose', 'Protacio', 72, '2024-10-29', '0', '88', '63636', NULL, 0.00, 'Regular', 'Active'),
 ('Rodriguez@gmail.com', 8, 'Rodriguez', 'Ava', 'H', 8, '1992-01-30', 'Female', '852456123', '09890123456', '2024-10-16', 0.00, 'Regular', 'Active'),
 ('test@example.com', 69, 'usop', 'usop', 'middle', 1, '1990-01-01', 'male', '123444789', '09993456789', NULL, 0.00, 'Regular', 'Active'),
+('tin080603@gmail.com', 81, 'Santos', 'Tin', 'Lopez', 44, '2003-03-08', 'Female', '6723956124', '09273409512', NULL, 0.00, 'Regular', 'Active'),
 ('Williams@gmail.com', 3, 'Williams', 'Michael', 'C', 3, '1982-02-10', 'Male', '456123789', '09345678901', '2024-10-16', 3000.00, 'Regular', 'Active');
 
 -- --------------------------------------------------------
@@ -657,34 +669,85 @@ CREATE TABLE `member_credentials` (
   `MemberID` int(11) NOT NULL,
   `Username` varchar(50) NOT NULL,
   `Email` varchar(100) NOT NULL,
-  `Password` varchar(255) NOT NULL
+  `Password` varchar(255) NOT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `token_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `member_credentials`
 --
 
-INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`) VALUES
-(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$My5X6g2sTF5l.xn6ujt2nOGSiAfF6lMbQnFEvZkV.S6OkL7rDUPjW'),
-(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$2vXf6Uz17L6UufTxEpNQbeR0D5kjuNTiqXg7p2Magoum.eF.dP4AO'),
-(3, 'Williams', 'Williams@gmail.com', '$2y$10$gsxPbw2Dbwzrqam33VfYc.LzlNcOc/pDND1A/o6cMhixRVeL71bZe'),
-(4, 'Jones', 'Jones@gmail.com', '$2y$10$lVNeNiS7UJsIesjsOQxpsOrI0X68pxFQwKwnPIo9Bs/f46AiGNlf2'),
-(5, 'Brown', 'Brown@gmail.com', '$2y$10$0NM6p.61NuT6U5QhbgWWgOcd6UzRpQQ1MIzPYnYx/i6E9heYfdN0u'),
-(6, 'Davis', 'Davis@gmail.com', '$2y$10$E2UD5z3qy9LyjtF8AWoCpOodoW47Ms9F9jc8zNHNyvy4PNcmUAFQ2'),
-(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$AAYK8pNq42QOFwjzo7LCV.vS7yzjK0lGjQmIs5GLRr5pubU1Wjy2e'),
-(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$yQpxNSLy5Vn6Z/SE/7kXle/A48Gkv6oZ8ereFpzthwpnn4eAbL7oG'),
-(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$jahor7DsvCjsPhe31GZ03ew/ZQs3rh351ltTq4RQhxpafB9wrQAS.'),
-(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$MKW11.s7k49Q4qqYBqIxB.8ec7ANOKMetP4uWRsdMr/8jxrsOKeDS'),
-(12, 'rickpaolo', 'rickpaolocamba@gmail.com', '$2y$10$xRHNaF/wywe.UwB6M.bCNe3LRtt57hrCHbGh0H4Z3T7NWAhpuW5u2'),
-(64, 'admaaadafin@gmail.com', '11@gmail.com', '$2y$10$KYs84.XHRikFNRHcK3Dfieqhf7gZkRRZypGQaNyDowkqcEC5lpoM.'),
-(71, '1415t', '151515@egmail.com', '$2y$10$FhT0rzyn9EogJ47.fp0/IeDZDfJ7CTBs9tiVySQMVX1eZmnpYGE6m'),
-(72, 'qwerty', 'bb@gmail.com', '$2y$10$fTecUaHhJ.u.Myde7G.AQuieqW.NgS0f0nw7Yirn6PJp8k7Xpt.7u'),
-(73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy'),
-(75, 'sauge21', 'benjaminjarombernardo0815@gmail.com', '$2y$10$GK9IrqCaJDuc3bjqlnKdOOH.zjhGGZifYn/C/YUKpSyWb1mt2/J2K'),
-(76, 'Polikarpio', 'Polikarpio@gmail.com', '$2y$10$7q0jReGDWRzZ5tzSlB6IVOWIceWykH4evGarQUx5i.BxiEuA7ONqC'),
-(77, 'Rizal1234', 'Rizal@gmail.com', '$2y$10$NgKk01DEmx.w2hOe28zZ9e1pGZwEuJjT5aVYBNv8sylUolXtLAPY.'),
-(78, 'jimbei', 'Jimbei@gmail.com', '$2y$10$5YpPBnFV9KjfB8te0WbGuOS7bIPfm5FJtWZv4O3tL.6v/FIpHUVci'),
-(79, 'hahaha', 'hahaha@gmail.com', '$2y$10$ki3yR.yaq1p5gV9i6qXwE.cRMEh3PW0oo3SVmiWIUL8/810h8uwNe');
+INSERT INTO `member_credentials` (`MemberID`, `Username`, `Email`, `Password`, `reset_token`, `token_expiry`) VALUES
+(1, 'Johnsmith', 'Johnsmith@gmail.com', '$2y$10$My5X6g2sTF5l.xn6ujt2nOGSiAfF6lMbQnFEvZkV.S6OkL7rDUPjW', NULL, NULL),
+(2, 'Emilyjohnson', 'Emilyjohnson@gmail.com', '$2y$10$2vXf6Uz17L6UufTxEpNQbeR0D5kjuNTiqXg7p2Magoum.eF.dP4AO', NULL, NULL),
+(3, 'Williams', 'Williams@gmail.com', '$2y$10$gsxPbw2Dbwzrqam33VfYc.LzlNcOc/pDND1A/o6cMhixRVeL71bZe', NULL, NULL),
+(4, 'Jones', 'Jones@gmail.com', '$2y$10$lVNeNiS7UJsIesjsOQxpsOrI0X68pxFQwKwnPIo9Bs/f46AiGNlf2', NULL, NULL),
+(5, 'Brown', 'Brown@gmail.com', '$2y$10$0NM6p.61NuT6U5QhbgWWgOcd6UzRpQQ1MIzPYnYx/i6E9heYfdN0u', NULL, NULL),
+(6, 'Davis', 'Davis@gmail.com', '$2y$10$E2UD5z3qy9LyjtF8AWoCpOodoW47Ms9F9jc8zNHNyvy4PNcmUAFQ2', NULL, NULL),
+(7, 'Garcia', 'Garcia@gmail.com', '$2y$10$AAYK8pNq42QOFwjzo7LCV.vS7yzjK0lGjQmIs5GLRr5pubU1Wjy2e', NULL, NULL),
+(8, 'Rodriguez', 'Rodriguez@gmail.com', '$2y$10$yQpxNSLy5Vn6Z/SE/7kXle/A48Gkv6oZ8ereFpzthwpnn4eAbL7oG', NULL, NULL),
+(9, 'Martinez', 'Martinez@gmail.com', '$2y$10$jahor7DsvCjsPhe31GZ03ew/ZQs3rh351ltTq4RQhxpafB9wrQAS.', NULL, NULL),
+(10, 'Hernandez', 'Hernandez@gmail.com', '$2y$10$MKW11.s7k49Q4qqYBqIxB.8ec7ANOKMetP4uWRsdMr/8jxrsOKeDS', NULL, NULL),
+(12, 'rickpaolo', 'rickpaolocamba@gmail.com', '$2y$10$xRHNaF/wywe.UwB6M.bCNe3LRtt57hrCHbGh0H4Z3T7NWAhpuW5u2', NULL, NULL),
+(64, 'admaaadafin@gmail.com', '11@gmail.com', '$2y$10$KYs84.XHRikFNRHcK3Dfieqhf7gZkRRZypGQaNyDowkqcEC5lpoM.', NULL, NULL),
+(71, '1415t', '151515@egmail.com', '$2y$10$FhT0rzyn9EogJ47.fp0/IeDZDfJ7CTBs9tiVySQMVX1eZmnpYGE6m', NULL, NULL),
+(72, 'qwerty', 'bb@gmail.com', '$2y$10$fTecUaHhJ.u.Myde7G.AQuieqW.NgS0f0nw7Yirn6PJp8k7Xpt.7u', NULL, NULL),
+(73, 'benj', 'bernardobenjaminjarom@gmail.com', '$2y$10$.Kg1bXo7/B1dfZaMyu9qbeW2SLQsKYr7VBPFkL9.2gyeSFMPhK/Cy', NULL, NULL),
+(74, 'cris', 'cristinamanuson5@gmail.com', '$2y$10$X34.Ii8m.YdNq68Bomo4jux.svQEcFR/Ye0VAyikUC8J5B0yyA2im', 'a7f813e9b3f64046ce25d54dd61dc158', '2024-10-30 14:48:01'),
+(75, 'sauge21', 'benjaminjarombernardo0815@gmail.com', '$2y$10$GK9IrqCaJDuc3bjqlnKdOOH.zjhGGZifYn/C/YUKpSyWb1mt2/J2K', NULL, NULL),
+(76, 'Polikarpio', 'Polikarpio@gmail.com', '$2y$10$7q0jReGDWRzZ5tzSlB6IVOWIceWykH4evGarQUx5i.BxiEuA7ONqC', NULL, NULL),
+(77, 'Rizal1234', 'Rizal@gmail.com', '$2y$10$NgKk01DEmx.w2hOe28zZ9e1pGZwEuJjT5aVYBNv8sylUolXtLAPY.', NULL, NULL),
+(78, 'jimbei', 'Jimbei@gmail.com', '$2y$10$5YpPBnFV9KjfB8te0WbGuOS7bIPfm5FJtWZv4O3tL.6v/FIpHUVci', NULL, NULL),
+(79, 'hahaha', 'hahaha@gmail.com', '$2y$10$ki3yR.yaq1p5gV9i6qXwE.cRMEh3PW0oo3SVmiWIUL8/810h8uwNe', NULL, NULL),
+(81, 'qwe', 'tin080603@gmail.com', 'Asdf_098', '34e58d867407369e74ccb9d926139c2c', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `old_members`
+--
+
+CREATE TABLE `old_members` (
+  `MemberID` int(11) NOT NULL,
+  `LastName` varchar(50) DEFAULT NULL,
+  `FirstName` varchar(50) DEFAULT NULL,
+  `MiddleName` varchar(50) DEFAULT NULL,
+  `AddressID` int(11) DEFAULT NULL,
+  `Birthday` date DEFAULT NULL,
+  `Sex` enum('Female','Male') DEFAULT NULL,
+  `TINNumber` varchar(15) DEFAULT NULL,
+  `ContactNo` varchar(11) DEFAULT NULL,
+  `Savings` decimal(10,2) DEFAULT NULL,
+  `TypeofMember` enum('Regular','Associate') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `old_members`
+--
+
+INSERT INTO `old_members` (`MemberID`, `LastName`, `FirstName`, `MiddleName`, `AddressID`, `Birthday`, `Sex`, `TINNumber`, `ContactNo`, `Savings`, `TypeofMember`) VALUES
+(11, 'Perez', 'Annie', NULL, 23, '1996-03-14', 'Female', '1456781234', '09991912341', 17000.50, 'Regular'),
+(13, 'Garcia', 'Maria', 'Santos', 23, '1990-02-14', 'Female', '1234567890', '09171234567', 15000.50, 'Regular'),
+(15, 'Reyes', 'Juan', 'Lopez', 45, '1985-05-30', 'Male', '2345678901', '09182345678', 20000.00, 'Regular'),
+(16, 'Cruz', 'Ana', 'Morales', 17, '1992-07-10', 'Female', '3456789012', '09193456789', 18000.75, 'Regular'),
+(18, 'Torres', 'Carlos', 'Marquez', 12, '1988-11-25', 'Male', '4567890123', '09203456789', 22000.00, 'Regular'),
+(19, 'Diaz', 'Elena', 'Gonzalez', 8, '1993-01-18', 'Female', '5678901234', '09214567890', 19000.00, 'Regular'),
+(20, 'Santos', 'Luis', 'Ramos', 30, '1990-06-05', 'Male', '6789012345', '09345678901', 25000.00, 'Regular'),
+(21, 'Flores', 'Carmen', 'Bautista', 11, '1987-09-14', 'Female', '7890123456', '09456789012', 17000.25, 'Regular'),
+(22, 'Hernandez', 'Pedro', 'Aquino', 29, '1985-12-22', 'Male', '8901234567', '09567890123', 16000.00, 'Regular'),
+(23, 'Gomez', 'Lucia', 'De la Cruz', 38, '1986-03-08', 'Female', '9012345678', '09678901234', 21000.50, 'Regular'),
+(25, 'Romero', 'Miguel', 'Torres', 51, '1991-08-12', 'Male', '0123456789', '09789012345', 20000.00, 'Regular'),
+(26, 'Alvarez', 'Julia', 'Navarro', 33, '1989-10-21', 'Female', '1123456789', '09890123456', 23000.00, 'Regular'),
+(27, 'Gutierrez', 'Jose', 'Lazaro', 24, '1990-04-04', 'Male', '2123456789', '09901234567', 18000.00, 'Regular'),
+(28, 'Mendoza', 'Sofia', 'Padilla', 55, '1988-02-28', 'Female', '3123456789', '09111234567', 15000.00, 'Regular'),
+(29, 'Ramos', 'Manuel', 'Espinosa', 61, '1987-07-13', 'Male', '4123456789', '09221234567', 17500.00, 'Regular'),
+(30, 'Aguilar', 'Rosa', 'Villanueva', 37, '1986-11-03', 'Female', '5123456789', '09331234567', 16000.00, 'Regular'),
+(31, 'Morales', 'Fernando', 'Castro', 44, '1989-05-23', 'Male', '6123456789', '09441234567', 22000.00, 'Regular'),
+(32, 'Martinez', 'Laura', 'Mendoza', 25, '1993-10-08', 'Female', '7123456789', '09551234567', 21000.00, 'Regular'),
+(33, 'Vasquez', 'Oscar', 'Rivera', 41, '1985-03-17', 'Male', '8123456789', '09661234567', 24000.00, 'Regular'),
+(34, 'Del Rosario', 'Patricia', 'Domingo', 32, '1992-09-05', 'Female', '9123456789', '09771234567', 25000.00, 'Regular'),
+(35, 'Escobar', 'Alfredo', 'Pascual', 19, '1991-06-14', 'Male', '0123456789', '09881234567', 19500.00, 'Regular');
 
 -- --------------------------------------------------------
 
@@ -812,8 +875,8 @@ DELIMITER ;
 -- Indexes for table `account_request`
 --
 ALTER TABLE `account_request`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `MemberId` (`MemberId`);
+  ADD PRIMARY KEY (`RequestID`),
+  ADD KEY `MemberID` (`MemberID`);
 
 --
 -- Indexes for table `address`
@@ -922,6 +985,12 @@ ALTER TABLE `member_credentials`
   ADD UNIQUE KEY `unique_email` (`Email`);
 
 --
+-- Indexes for table `old_members`
+--
+ALTER TABLE `old_members`
+  ADD PRIMARY KEY (`MemberID`);
+
+--
 -- Indexes for table `service`
 --
 ALTER TABLE `service`
@@ -958,7 +1027,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `account_request`
 --
 ALTER TABLE `account_request`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `RequestID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `address`
@@ -1030,7 +1099,7 @@ ALTER TABLE `medical`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `MemberID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `membership_application`
@@ -1070,7 +1139,7 @@ ALTER TABLE `transaction`
 -- Constraints for table `account_request`
 --
 ALTER TABLE `account_request`
-  ADD CONSTRAINT `account_request_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `account_request_ibfk_1` FOREIGN KEY (`MemberID`) REFERENCES `old_members` (`MemberID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `admin_messages`

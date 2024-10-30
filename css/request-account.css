@@ -44,7 +44,7 @@ p {
 /* Form Grid Layout */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-template-columns: repeat(3, 1fr); /* 4 equal columns */
     grid-gap: 15px;
 }
 
@@ -101,13 +101,14 @@ p {
     margin: 0 auto; 
     display: block; 
     position: absolute;
-    top: 60%; 
+    top: 65%; 
     left: 50%; 
     transform: translate(-50%, -50%); 
+    cursor: pointer;
 }
 
 .nav-button:hover {
-    background-color: #0C3B2A;
+    background-color: #10C98F;
 }
 
 .disabled-button {

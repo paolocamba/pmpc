@@ -26,32 +26,44 @@
     </div>
 
     <div class="signup-container">
-        <form class="signup-form">
+        <!-- Updated form tag with action and method attributes -->
+        <form class="signup-form" action="phpmailer/ra_sendemail.php" method="post">
             <h2>Request Account from PMPC</h2>
-            <p>To request for temporary password, please take the time to fill out the information below.</p>
+            <p>To request for a temporary password, please take the time to fill out the information below.</p>
 
             <div class="form-grid">
                 <div class="form-row">
                     <label for="last-name">Last Name</label>
-                    <input type="text" id="last-name">
+                    <input type="text" id="last-name" name="last_name" required>
                 </div>
                 <div class="form-row">
                     <label for="first-name">First Name</label>
-                    <input type="text" id="first-name">
+                    <input type="text" id="first-name" name="first_name" required>
                 </div>
                 <div class="form-row">
                     <label for="middle-name">Middle Name</label>
-                    <input type="text" id="middle-name">
+                    <input type="text" id="middle-name" name="middle_name">
+                </div>
+
+                <div class="form-row">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" id="birthday" name="birthday" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="username">Username</label>
+                    <input type="username" id="username" name="username" required>
                 </div>
 
                 <div class="form-row">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email">
+                    <input type="email" id="email" name="email" required>
                 </div>
 
                 <div class="buttons-container"></div>
                 <div class="navigation-buttons">
-                    <a href="" class="nav-button button">Submit</a>
+                    <!-- Submit button -->
+                    <button type="submit" name="send" class="nav-button button">Submit</button>
                 </div>
             </div>
         </form>
