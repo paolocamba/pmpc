@@ -12,14 +12,31 @@ html, body {
 
 /* Body Styling */
 body {
-    padding-top: 80px;
+    
     background-image: url('../assets/bg.jpg');
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
+.background-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    background-image: url('../assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
 .signup-container {
+    position: relative;
+    z-index: 1;
     max-width: 800px;
     margin: 80px auto;
     padding: 30px;
@@ -119,7 +136,7 @@ p {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: calc(100% + 40px); /* Length of the line */
+    width: calc(100%); /* Length of the line */
     height: 4px;
     background-color: inherit;
     z-index: -1; 
@@ -160,6 +177,7 @@ p {
     text-decoration: none;
     width: 120px;
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .nav-button:hover {

@@ -81,6 +81,7 @@ if (empty($memberID)) {
     </div>
 
     <!-- Sign Up Content -->
+    <div class="background-wrapper">
     <div class="signup-container">
         <h2>Video Seminar</h2>
 
@@ -101,13 +102,7 @@ if (empty($memberID)) {
                 <input type="checkbox" id="seminar-completed" name="seminar-completed">
             </div>
 
-            <div class="navigation-buttons">
-                <a href="sign-up-membershipapplication.php" class="nav-button prev-button">Previous</a>
-                <button type="submit" class="nav-button next-button">Next</button>
-            </div>
-        </form>
-
-        <!-- Step and Button Navigation -->
+            <!-- Step and Button Navigation -->
         <div class="step-and-buttons-container">
             <div class="step-indicators">
                 <span class="step">1</span>
@@ -116,6 +111,15 @@ if (empty($memberID)) {
                 <span class="step">4</span>
             </div>
         </div>
+
+            <div class="navigation-buttons">
+                <a href="sign-up-membershipapplication.php" class="nav-button prev-button">Previous</a>
+                <button type="submit" class="nav-button next-button">Next</button>
+            </div>
+        </form>
+
+    
+    </div>
     </div>
 
 </body>

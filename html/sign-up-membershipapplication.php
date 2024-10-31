@@ -191,6 +191,7 @@ $conn->close();
     </div>
 
     <!-- Sign Up Content -->
+    <div class="background-wrapper">
     <div class="signup-container">
         <form class="signup-form" action="sign-up-membershipapplication.php" method="POST">
             <h2>Sign Up | Membership Application</h2>
@@ -263,11 +264,21 @@ $conn->close();
                 </div>
             </div>
 
+             <!-- Step and Button Navigation -->
+             <div class="step-and-buttons-container">
+                <div class="step-indicators">
+                    <span class="step active">1</span>
+                    <span class="step">2</span>
+                    <span class="step">3</span>
+                    <span class="step">4</span>
+                </div>
+
             <div class="navigation-buttons">
                 <a href="sign-up-typemembership.html" class="nav-button prev-button">Previous</a>
                 <button type="submit" class="nav-button next-button">Next</button>
             </div>
         </form>
+    </div>
     </div>
 </body>
 </html>

@@ -90,6 +90,7 @@ if (empty($memberID)) {
     </div>
 
     <!-- Date Appointment Form -->
+    <div class="background-wrapper">
     <div class="appointment-container">
         <div class="appointment-form">
             <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="form-logo">
@@ -117,6 +118,7 @@ if (empty($memberID)) {
                 </div>
             </form>
         </div>
+    </div>
     </div>
 
 </body>
