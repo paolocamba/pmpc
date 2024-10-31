@@ -234,10 +234,7 @@ $conn->close();
 document.addEventListener('DOMContentLoaded', function() {
     loadMessages(1); // Load the first page of messages when the document is ready.
 
-    // Function to redirect to the index page
-    function redirectToIndex() {
-        window.location.href = "../../html/index.php";
-    }
+    
 
     // Function to load messages with pagination
     function loadMessages(page) {
@@ -281,6 +278,8 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => console.error('Error fetching messages:', error));
     }
+
+    
 
     // Function to show the view message modal
     function showViewMessageModal(messageId) {
