@@ -60,6 +60,16 @@ $stmt->bind_param("sssssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm,
 $stmt->execute();
 $appointmentsResult = $stmt->get_result();
 
+// Fetch unique appointment dates for calendar display
+$calendarQuery = "SELECT DISTINCT AppointmentDate FROM appointments";
+$calendarResult = $conn->query($calendarQuery);
+$appointmentDates = [];
+if ($calendarResult) {
+    while ($row = $calendarResult->fetch_assoc()) {
+        $appointmentDates[] = $row['AppointmentDate'];
+    }
+}
+
 // Close the database connection
 $conn->close();
 ?>
@@ -115,11 +125,15 @@ $conn->close();
             <section class="member-list">
                 <div class="table-header">
                     <h3>Appointment List</h3>
+                    <!-- Calendar Button -->
+                    <button onclick="openModal()">Calendar</button>
                     <!-- Search Form -->
                     <form action="admin-appointments.php" method="GET">
                         <input type="text" name="search" placeholder="Search by name, date, description, or email" value="<?php echo htmlspecialchars($searchQuery); ?>">
                         <button type="submit">Search</button>
                     </form>
+
+                                        
                 </div>
                 <table>
                     <thead>
@@ -168,10 +182,48 @@ $conn->close();
         </div>
     </div>
 
+    <!-- Modal for Calendar -->
+    <div id="calendarModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Appointment Dates</h2>
+            <div class="calendar-grid">
+                <?php
+                // Generate numbers for a simple 30-day month calendar for display
+                for ($day = 1; $day <= 30; $day++): ?>
+                    <div class="calendar-day <?php echo in_array($day, $appointmentDates) ? 'appointment-day' : ''; ?>">
+                        <?php echo $day; ?>
+                    </div>
+                <?php endfor; ?>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/admin-calendar.js"></script> <!-- JavaScript for Calendar modal -->
+</body>
+
     <script>
         function redirectToIndex() {
             window.location.href = "../../html/index.php";
         }
+
+function openModal() {
+    document.getElementById("calendarModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("calendarModal").style.display = "none";
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById("calendarModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
     </script>
 </body>
 </html>
