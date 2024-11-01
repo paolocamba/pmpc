@@ -24,6 +24,82 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Pagination variables
+$limit = 5; // Messages per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Fetch total messages count
+$countQuery = "SELECT COUNT(*) AS total FROM admin_messages WHERE Category = 'loan'";
+$countResult = $conn->query($countQuery);
+$totalMessages = $countResult->fetch_assoc()['total'];
+$totalPages = ceil($totalMessages / $limit);
+
+
+// AJAX handler for paginated message loading
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $limit;
+
+    $messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
+                             a.Category, a.MessageContent, a.DateSent, a.MessageID 
+                      FROM admin_messages a 
+                      JOIN member m ON a.MemberID = m.MemberID
+                      WHERE a.Category = 'loan' 
+                      ORDER BY a.DateSent DESC
+                      LIMIT ? OFFSET ?";
+    $stmt = $conn->prepare($messagesQuery);
+    $stmt->bind_param("ii", $limit, $offset);
+    $stmt->execute();
+    $messagesResult = $stmt->get_result();
+
+    $messages = [];
+    while ($message = $messagesResult->fetch_assoc()) {
+        $messages[] = $message;
+    }
+
+    echo json_encode([
+        'messages' => $messages,
+        'totalPages' => $totalPages
+    ]);
+    exit;
+}
+
+
+if (isset($_GET['check_new_messages'])) {
+    header('Content-Type: application/json');
+
+    // Fetch only unread messages
+    $newMessagesQuery = "
+        SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
+               a.Category, a.MessageContent, a.DateSent, a.MessageID 
+        FROM admin_messages a 
+        JOIN member m ON a.MemberID = m.MemberID 
+        WHERE a.isViewed = 0 
+        ORDER BY a.DateSent DESC
+    ";
+    $newMessagesResult = $conn->query($newMessagesQuery);
+
+    $newMessages = [];
+    if ($newMessagesResult->num_rows > 0) {
+        while ($message = $newMessagesResult->fetch_assoc()) {
+            $newMessages[] = $message;
+        }
+    }
+
+    // Update `isViewed` status for newly fetched messages
+    if (!empty($newMessages)) {
+        $messageIds = implode(',', array_column($newMessages, 'MessageID'));
+        $updateViewedQuery = "UPDATE admin_messages SET isViewed = 1 WHERE MessageID IN ($messageIds)";
+        $conn->query($updateViewedQuery);
+    }
+
+    ob_end_clean();
+    echo json_encode(['newMessages' => $newMessages]);
+    exit;
+}
+
+
 // Handle AJAX requests based on the provided parameters
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['message_id'])) {
@@ -62,6 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 }
+
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -171,14 +249,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch messages from members with "About Membership" category
+// Fetch paginated messages from members
 $messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
-                         a.MessageContent, a.DateSent, a.MessageID 
+                         a.Category, a.MessageContent, a.DateSent, a.MessageID 
                   FROM admin_messages a 
                   JOIN member m ON a.MemberID = m.MemberID 
-                  WHERE a.Category = 'Loan'
-                  ORDER BY a.DateSent DESC";
-$messagesResult = $conn->query($messagesQuery);
+                  WHERE a.Category = 'loan'
+                  ORDER BY a.DateSent DESC
+                  LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($messagesQuery);
+$stmt->bind_param("ii", $limit, $offset); // Bind limit and offset values
+$stmt->execute();
+$messagesResult = $stmt->get_result();
 
 
 // Fetch member names for sending messages to specific members
@@ -215,7 +297,7 @@ $conn->close();
             
             <ul class="sidebar-menu">
                 <li><a href="loanofficer.php" >Loans</a></li>
-                <li><a href="Loan-inbox.php" class="active">Inbox</a></li>
+                <li><a href="loan-inbox.php" class="active">Inbox</a></li>
             </ul>
 
             <ul class="sidebar-settings">
@@ -225,9 +307,12 @@ $conn->close();
 
         <div class="main-content">
             <header>
-                <h1>Inbox</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <h1>Membership Officer Inbox</h1>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
+
+            <!-- Send Message Button -->
+            <button class="send-message-button" onclick="openSendMessageModal()">Send Message</button>
 
             <!-- Message Inbox Section -->
             <section class="inbox-section">
@@ -235,6 +320,7 @@ $conn->close();
                     <thead>
                         <tr>
                             <th>Member Name</th>
+                            <th>Category</th>
                             <th>Message</th>
                             <th>Date</th>
                             <th>Actions</th>
@@ -246,6 +332,7 @@ $conn->close();
                             while ($message = $messagesResult->fetch_assoc()) {
                                 echo "<tr>
                                     <td>{$message['MemberName']}</td>
+                                    <td>{$message['Category']}</td>
                                     <td>{$message['MessageContent']}</td>
                                     <td>" . date('F j, Y, g:i a', strtotime($message['DateSent'])) . "</td>
                                     <td><button class='view-btn' onclick='showViewMessageModal({$message['MessageID']})'>View</button></td>
@@ -258,9 +345,15 @@ $conn->close();
                     </tbody>
                 </table>
             </section>
+                <!-- Pagination Controls -->
+                <div id="pagination" class="pagination">
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a href="?page=<?= $i ?>" class="<?= ($i === $page) ? 'active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+                </div>
 
-            <!-- Send Message Button -->
-            <button class="send-message-button" onclick="openSendMessageModal()">Send Message</button>
+
+            
 
         </div>
     </div>
@@ -324,6 +417,83 @@ $conn->close();
     <!-- Scripts at the Bottom of the Body -->
     <script>
 document.addEventListener("DOMContentLoaded", function () {
+
+/// Automatically check for new messages every 2 seconds
+setInterval(checkForNewMessages, 2000);
+
+function checkForNewMessages() {
+    fetch('loan-inbox.php?check_new_messages=true')
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                
+                // Check if there are new messages
+                if (data.newMessages && data.newMessages.length > 0) {
+                    // Reload the current page to respect pagination
+                    const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+                    loadPageData(currentPage);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error, 'Response text:', text);
+            }
+        })
+        .catch(error => console.error('Error checking for new messages:', error));
+}
+
+// Load specific page data and update messages list
+function loadPageData(page) {
+    fetch(`loan-inbox.php?page=${page}&ajax=true`)
+        .then(response => response.json())
+        .then(data => {
+            const inboxMessages = document.getElementById("inboxMessages");
+            inboxMessages.innerHTML = ""; // Clear current messages
+
+            data.messages.forEach(message => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${message.MemberName}</td>
+                    <td>${message.Category}</td>
+                    <td>${message.MessageContent}</td>
+                    <td>${new Date(message.DateSent).toLocaleString()}</td>
+                    <td><button class='view-btn' onclick='showViewMessageModal(${message.MessageID})'>View</button></td>
+                `;
+                inboxMessages.appendChild(row);
+            });
+        })
+        .catch(error => console.error("Error loading page:", error));
+}
+
+
+document.querySelectorAll("#pagination a").forEach(link => {
+    link.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent page reload
+        const page = this.getAttribute("href").split("page=")[1];
+
+        fetch(`loan-inbox.php?page=${page}&ajax=true`)
+            .then(response => response.json())
+            .then(data => {
+                const inboxMessages = document.getElementById("inboxMessages");
+                inboxMessages.innerHTML = ""; // Clear current messages
+
+                data.messages.forEach(message => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${message.MemberName}</td>
+                        <td>${message.Category}</td>
+                        <td>${message.MessageContent}</td>
+                        <td>${new Date(message.DateSent).toLocaleString()}</td>
+                        <td><button class='view-btn' onclick='showViewMessageModal(${message.MessageID})'>View</button></td>
+                    `;
+                    inboxMessages.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Error loading page:", error));
+    });
+});
+
+
+
     // Show the Send Message Modal
     function openSendMessageModal() {
         document.getElementById('sendMessageModal').classList.add('active');

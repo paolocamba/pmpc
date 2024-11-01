@@ -30,7 +30,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Fetch total messages count
-$countQuery = "SELECT COUNT(*) AS total FROM admin_messages";
+$countQuery = "SELECT COUNT(*) AS total FROM admin_messages WHERE Category = 'Membership'";
 $countResult = $conn->query($countQuery);
 $totalMessages = $countResult->fetch_assoc()['total'];
 $totalPages = ceil($totalMessages / $limit);
@@ -44,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
     $messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
                              a.Category, a.MessageContent, a.DateSent, a.MessageID 
                       FROM admin_messages a 
-                      JOIN member m ON a.MemberID = m.MemberID 
+                      JOIN member m ON a.MemberID = m.MemberID
+                      WHERE a.Category = 'Membership' 
                       ORDER BY a.DateSent DESC
                       LIMIT ? OFFSET ?";
     $stmt = $conn->prepare($messagesQuery);
@@ -307,7 +308,7 @@ $conn->close();
         <div class="main-content">
             <header>
                 <h1>Membership Officer Inbox</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <!-- Send Message Button -->

@@ -172,7 +172,7 @@ $conn->close();
         <div class="main-content">
             <header>
                 <h1>Inbox</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <!-- Add the "Send Message to Admin" button here -->
