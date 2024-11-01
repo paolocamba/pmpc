@@ -14,13 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Collect form data
     $memberID = $_POST['member-id'];
+    $appointmentDate = $_POST['appointment-date'];
+    $currentDate = date('Y-m-d');
+    $maxDate = date('Y-m-d', strtotime('+30 days'));
 
-    if (isset($_POST['seminar-completed'])) {
-        // Existing seminar-completion logic...
+    // Validate appointment date is within range
+    if ($appointmentDate < $currentDate || $appointmentDate > $maxDate) {
+        die("Error: Appointment date must be within the next 30 days and cannot be in the past.");
+    }
 
-    } elseif (isset($_POST['appointment-date'])) {
-        $appointmentDate = $_POST['appointment-date'];
-
+    if (isset($memberID) && isset($appointmentDate)) {
         // Fetch member details for LastName, FirstName, and Email
         $memberQuery = $conn->prepare("SELECT FirstName, LastName, Email FROM member WHERE MemberID = ?");
         $memberQuery->bind_param('i', $memberID);
@@ -35,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $description = "Membership Application Payment";
             $serviceID = 11;
 
-            // Insert the appointment into the appointment table
+            // Insert the appointment into the appointments table
             $stmt = $conn->prepare("INSERT INTO appointments (MemberID, AppointmentDate, LastName, FirstName, Email, Description, ServiceID) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param('isssssi', $memberID, $appointmentDate, $lastName, $firstName, $email, $description, $serviceID);
             $stmt->execute();
@@ -51,8 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             die("Error: Member details not found.");
         }
+    } else {
+        die("Error: Missing member ID or appointment date.");
     }
 }
+
 
 // Get member ID from GET parameters
 $memberID = isset($_GET['member-id']) ? $_GET['member-id'] : '';
@@ -97,7 +103,10 @@ if (empty($memberID)) {
             <h3>Date of Appointment *</h3>
             <p>For Payment Settlement</p>
             <form action="sign-up-doa.php" method="POST">
-                <input type="date" id="appointment-date" name="appointment-date" required>
+            <input type="date" id="appointment-date" name="appointment-date" 
+                min="<?php echo date('Y-m-d'); ?>" 
+                max="<?php echo date('Y-m-d', strtotime('+30 days')); ?>" 
+                required>
                 
                 <!-- Hidden field to store member ID -->
                 <input type="hidden" name="member-id" value="<?php echo htmlspecialchars($memberID); ?>"> 

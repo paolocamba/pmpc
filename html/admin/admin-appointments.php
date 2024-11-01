@@ -16,17 +16,25 @@ if ($conn->connect_error) {
 }
 
 // Fetch total number of appointments
-$completedAppointmentsQuery = "SELECT COUNT(*) as total FROM appointments"; // Update this if needed to filter by status
+$completedAppointmentsQuery = "SELECT COUNT(*) as total FROM appointments";
 $completedAppointmentsResult = $conn->query($completedAppointmentsQuery);
 if (!$completedAppointmentsResult) {
     die("Query failed: " . $conn->error);
 }
 $completedAppointments = $completedAppointmentsResult->fetch_assoc()['total'];
 
+// Pagination setup
+$limit = 5; // Number of records per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page - 1) * $limit;
+
+// Calculate total pages
+$totalPages = ceil($completedAppointments / $limit);
+
 // Fetch appointment list with member details
 $searchQuery = isset($_GET['search']) ? $_GET['search'] : "";
 
-// Modify the query to handle search, including Status
+// Modify the query to handle search, including Status, with pagination
 $appointmentsQuery = "
     SELECT 
         AppointmentID, 
@@ -35,7 +43,7 @@ $appointmentsQuery = "
         AppointmentDate, 
         Description, 
         Email,
-        Status  -- Added Status to the query
+        Status
     FROM 
         appointments
     WHERE 
@@ -44,11 +52,11 @@ $appointmentsQuery = "
         AppointmentDate LIKE ? OR
         Description LIKE ? OR
         Email LIKE ?
-    LIMIT 5
+    LIMIT ?, ?
 ";
 $stmt = $conn->prepare($appointmentsQuery);
 $searchTerm = "%{$searchQuery}%";
-$stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+$stmt->bind_param("sssssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $start, $limit);
 $stmt->execute();
 $appointmentsResult = $stmt->get_result();
 
@@ -122,7 +130,7 @@ $conn->close();
                             <th>Date</th>
                             <th>Description</th>
                             <th>Email</th>
-                            <th>Status</th> <!-- Added Status column -->
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -137,7 +145,7 @@ $conn->close();
                                 echo "<td>" . htmlspecialchars($row['AppointmentDate']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Description']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>"; // Displaying the Status
+                                echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
                                 echo "<td><a href='admin-view-appointment.php?AppointmentID=" . htmlspecialchars($row['AppointmentID']) . "'>View</a></td>";
                                 echo "</tr>";
                             }
@@ -147,8 +155,16 @@ $conn->close();
                         ?>
                     </tbody>
                 </table>
-            </section>
 
+                <!-- Pagination Links -->
+                <div class="pagination">
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($searchQuery); ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
+            </section>
         </div>
     </div>
 
