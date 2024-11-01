@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// Log errors to a file instead of displaying them
+ini_set('log_errors', 1);
+ini_set('error_log', 'path/to/error.log'); // Set the path to your PHP error log file
+
 // Include database connection
 $servername = "localhost";
 $dbUsername = "root";
@@ -22,36 +29,32 @@ $limit = 6; // Number of messages per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
+
+$memberID = $_SESSION['MemberID'] ?? null;
+$messages = [];
+$totalMessages = 0;
+
+// Load messages if memberID is set
 if ($memberID) {
-    // Fetch total message count
+    // Fetch total messages
     $countQuery = "SELECT COUNT(*) as total FROM inbox WHERE MemberID = ?";
     $countStmt = $conn->prepare($countQuery);
     $countStmt->bind_param("i", $memberID);
     $countStmt->execute();
-    $countResult = $countStmt->get_result();
-    $totalMessages = $countResult->fetch_assoc()['total'];
+    $totalMessages = $countStmt->get_result()->fetch_assoc()['total'];
     
-    // Fetch inbox messages for the logged-in member with pagination
+    // Fetch paginated messages
     $query = "SELECT Message, Date, isRead, MessageID FROM inbox WHERE MemberID = ? ORDER BY Date DESC LIMIT ? OFFSET ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("iii", $memberID, $limit, $offset);
     $stmt->execute();
     $result = $stmt->get_result();
-
-    $messages = [];
-    while ($row = $result->fetch_assoc()) {
-        $messages[] = $row;
-    }
+    $messages = $result->fetch_all(MYSQLI_ASSOC);
     
-    // Return messages and total count as JSON if it's an AJAX request
+    // Handle AJAX request to load messages
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
-        echo json_encode([
-            'messages' => $messages,
-            'total' => $totalMessages,
-            'page' => $page,
-            'limit' => $limit
-        ]);
-        exit; // Exit to avoid rendering the HTML below
+        echo json_encode(['messages' => $messages, 'total' => $totalMessages, 'page' => $page, 'limit' => $limit]);
+        exit;
     }
 
     // Handle fetching a specific message details
@@ -141,6 +144,7 @@ $conn->close();
     <title>Member Inbox Page</title>
     <link rel="stylesheet" href="../../css/member-inbox.css"> <!-- Linking CSS -->
     <link rel="stylesheet" href="../../css/member-general.css">
+    
 </head>
 <body>
 
@@ -231,80 +235,84 @@ $conn->close();
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    loadMessages(1); // Load the first page of messages when the document is ready.
-
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMessages(1);
+            setInterval(checkForNewMessages, 2000);
     
 
-    // Function to load messages with pagination
-    function loadMessages(page) {
-        fetch('member-inbox.php?page=' + page + '&ajax=true')
-            .then(response => response.json())
-            .then(data => {
-                const inboxMessages = document.getElementById('inboxMessages');
+            function loadMessages(page) {
+                fetch('member-inbox.php?page=' + page + '&ajax=true')
+                    .then(response => response.json())
+                    .then(data => {
+                        const inboxMessages = document.getElementById('inboxMessages');
+                        inboxMessages.innerHTML = '';
+                        data.messages.forEach(message => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                        <td>${message.Message}</td>
+                        <td>${new Date(message.Date).toLocaleDateString()}</td>
+                        <td><button class='view-btn' onclick="showViewMessageModal(${message.MessageID})">View</button></td>
+                    `;
+                            inboxMessages.appendChild(row);
+                        });
+                        setPagination(data.total, data.page, data.limit);
+                    })
+                    .catch(error => console.error('Error loading messages:', error));
+            }
+
+            function setPagination(total, page, limit) {
                 const pagination = document.getElementById('pagination');
-
-                inboxMessages.innerHTML = '';
-
-                if (data.messages.length === 0) {
-                    inboxMessages.innerHTML = '<tr><td colspan="3">No messages found.</td></tr>';
-                } else {
-                    data.messages.forEach(message => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td style="font-weight: ${message.isRead ? 'normal' : 'bold'};">${message.Message}</td>
-                            <td>${new Date(message.Date).toLocaleDateString()}</td>
-                            <td><button class="view-btn" onclick="showViewMessageModal(${message.MessageID})">View</button></td>
-                        `;
-                        inboxMessages.appendChild(row);
-                    });
-                }
-
-                const totalPages = Math.ceil(data.total / data.limit);
                 pagination.innerHTML = '';
-
+                const totalPages = Math.ceil(total / limit);
                 for (let i = 1; i <= totalPages; i++) {
                     const link = document.createElement('a');
                     link.href = '#';
                     link.textContent = i;
-                    link.className = (i === data.page) ? 'active' : '';
-                    link.onclick = (function(page) {
-                        return function() {
-                            loadMessages(page);
+                    link.className = (i === page) ? 'active' : '';
+                    link.onclick = (function(i) {
+                        return function(event) {
+                            event.preventDefault();
+                            loadMessages(i);
                         };
                     })(i);
                     pagination.appendChild(link);
                 }
-            })
-            .catch(error => console.error('Error fetching messages:', error));
-    }
+            }
 
+            function checkForNewMessages() {
+                fetch('member-inbox.php?page=1&ajax=true')
+                    .then(response => response.json())
+                    .then(data => {
+                        loadMessages(1); // Reload first page if new messages are found
+                    })
+                    .catch(error => console.error('Error checking for new messages:', error));
+            }
     
 
     // Function to show the view message modal
     function showViewMessageModal(messageId) {
-        fetch('member-inbox.php?message_id=' + messageId)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('modalMessageTitle').innerText = 'Message Details';
-                document.getElementById('modalMessageContent').innerText = data.Message;
-                document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
+    fetch('member-inbox.php?message_id=' + messageId)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('modalMessageTitle').innerText = 'Message Details';
+            document.getElementById('modalMessageContent').innerText = data.Message;
+            document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
 
-                // Check if there is an admin message to display
-                if (data.related_message_id) {
-                    const adminMessageContent = data.AdminMessage || 'No reply found.';
-                    const adminMessageDate = new Date(data.AdminMessageDate).toLocaleString() || '';
+            // Check if there is an admin message to display
+            if (data.related_message_id) {
+                const adminMessageContent = data.AdminMessage || 'No reply found.';
+                const adminMessageDate = new Date(data.AdminMessageDate).toLocaleString() || '';
+                document.getElementById('modalMessageContent').innerText += `\n\nAdmin Replied to:\n${adminMessageContent} \n`;
+            }
 
-                    // Display the admin message details
-                    document.getElementById('modalMessageContent').innerText += `\n\nAdmin Replied to:\n${adminMessageContent} \n`;
-                }
+            // Set the messageId in the delete button's data attribute
+            document.getElementById('deleteMessageButton').setAttribute('data-id', messageId);
+            document.getElementById('viewMessageModal').style.display = 'flex';
+            document.getElementById('modalBackground').style.display = 'block'; // Show dim background
+        })
+        .catch(error => console.error('Error fetching message:', error));
+}
 
-                document.getElementById('deleteMessageButton').setAttribute('data-id', messageId); // Set the message ID here
-                document.getElementById('viewMessageModal').style.display = 'flex';
-                document.getElementById('modalBackground').style.display = 'block'; // Show dim background
-            })
-            .catch(error => console.error('Error fetching message:', error));
-    }
 
     // Function to close the view message modal
     function closeViewMessageModal() {
@@ -333,27 +341,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to delete a message
-    function deleteMessage(messageId) {
-        fetch('member-inbox.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                delete_id: messageId // Pass the message ID for deletion
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Message deleted successfully.');
-                loadMessages(1); // Reload messages after deletion
-            } else {
-                alert(data.error || 'Failed to delete message.');
-            }
-        })
-        .catch(error => console.error('Error deleting message:', error));
+    function deleteMessage() {
+    const messageId = document.getElementById('deleteMessageButton').getAttribute('data-id');
+    
+    if (!messageId) {
+        alert("Invalid message ID.");
+        return;
     }
+
+    fetch('member-inbox.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            delete_id: messageId // Pass the message ID for deletion
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Message deleted successfully.');
+            closeViewMessageModal();
+            loadMessages(1); // Reload messages after deletion
+        } else {
+            alert(data.error || 'Failed to delete message.');
+        }
+    })
+    .catch(error => console.error('Error deleting message:', error));
+}
+
 
     // Function to send a message
     function sendMessage() {
