@@ -63,44 +63,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } else {
-        // Close the statement and check in the account_request table if not found in member_credentials
         $stmt->close();
 
+        // Check in account_request table
         $stmt = $conn->prepare("SELECT MemberID, GeneratedPassword, IsPasswordUsed, PasswordExpiration FROM account_request WHERE Email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
-        // Check if the email exists in account_request table
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($memberId, $hashedGeneratedPassword, $isPasswordUsed, $passwordExpiration);
             $stmt->fetch();
 
-            // Check if the password token has expired
             if (new DateTime() > new DateTime($passwordExpiration)) {
-                echo "<script>alert('The password has already expired. Please request a new password.'); document.location.href = '../memblogin.html';</script>";
+                echo "<script>alert('The password has expired. Please request a new password.'); document.location.href = '../memblogin.html';</script>";
             } else {
-                // Verify password for account_request table
                 if (password_verify($password, $hashedGeneratedPassword)) {
-                    // Mark password as used
                     $updateStmt = $conn->prepare("UPDATE account_request SET IsPasswordUsed = 1 WHERE MemberID = ?");
                     $updateStmt->bind_param("i", $memberId);
                     $updateStmt->execute();
                     $updateStmt->close();
 
-                    // Sign-in succeeded
                     $_SESSION['email'] = $email;
                     $_SESSION['MemberID'] = $memberId;
-
-                    // Redirect to the member landing page
                     header("Location: ../html/member/member-landing.php");
                     exit();
                 } else {
-                    echo "<script>alert('Invalid email or password.'); document.location.href = '../memblogin.html';</script>";
+                    echo "<script>alert('Invalid email or password.');</script>";
                 }
             }
         } else {
-            echo "<script>alert('Invalid email or password. Email not found in both databases.');</script>";
+            $stmt->close();
+
+            // Check in old_members table
+            $stmt = $conn->prepare("SELECT MemberID, Password FROM old_members WHERE Email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->store_result();
+
+            if ($stmt->num_rows > 0) {
+                $stmt->bind_result($memberId, $oldHashedPassword);
+                $stmt->fetch();
+
+                // Verify password for old_members table
+                if (password_verify($password, $oldHashedPassword)) {
+                    $_SESSION['email'] = $email;
+                    $_SESSION['MemberID'] = $memberId;
+                    header("Location: ../html/member/member-landing.php");
+                    exit();
+                } else {
+                    echo "<script>alert('Invalid email or password.');</script>";
+                }
+            } else {
+                echo "<script>alert('Invalid email or password. Email not found in any records.');</script>";
+            }
         }
     }
     $stmt->close();

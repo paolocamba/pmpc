@@ -93,7 +93,7 @@ if (isset($_POST["send"])) {
             echo "
             <script>
             alert('Email sent successfully with a temporary password.');
-            document.location.href = '../html/memblogin.html';
+            document.location.href = '../memblogin.html';
             </script>";
         } else {
             echo "Error inserting into account_request: " . $conn->error;
