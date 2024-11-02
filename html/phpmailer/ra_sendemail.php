@@ -60,8 +60,10 @@ if (isset($_POST["send"])) {
         // Hash the generated password
         $hashedPassword = password_hash($temporaryPassword, PASSWORD_DEFAULT);
 
-        // Set password expiration time to ten minutes from now
-        $expirationTime = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        // Set password expiration time to one hour from now in UTC
+        $date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+        $date->modify('+1 hour');
+        $expirationTime = $date->format('Y-m-d H:i:s');
 
         // Insert into account_request table, set IsPasswordUsed to 0
         $insertStmt = $conn->prepare("INSERT INTO account_request (MemberID, Email, Username, GeneratedPassword, RequestDate, PasswordExpiration, IsPasswordUsed) VALUES (?, ?, ?, ?, NOW(), ?, 0)");
@@ -113,4 +115,4 @@ if (isset($_POST["send"])) {
     $stmt->close();
     $conn->close();
 }
-
+?>

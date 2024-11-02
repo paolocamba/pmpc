@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Manila');
 // Database connection
 $host = 'localhost'; // Your MySQL host
 $db = 'pmpc'; // Your database name
@@ -18,14 +19,14 @@ if (isset($_POST['email'], $_POST['token'], $_POST['newPassword'])) {
     $newPassword = password_hash($_POST['newPassword'], PASSWORD_DEFAULT); // Hash the new password
 
     // Check if the token and email match
-    $stmt = $conn->prepare("SELECT * FROM member_credentials WHERE email = ? AND reset_token = ?");
+    $stmt = $conn->prepare("SELECT * FROM member_credentials WHERE email = ? AND reset_token = > NOW()");
     $stmt->bind_param("ss", $email, $token);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // Token is valid, update the password
-        $updateStmt = $conn->prepare("UPDATE member_credentials SET password = ?, reset_token = NULL WHERE email = ?");
+        $updateStmt = $conn->prepare("UPDATE member_credentials SET password = ?, reset_token = NULL, token_expiry = NULL WHERE email = ?");
         $updateStmt->bind_param("ss", $newPassword, $email);
         if ($updateStmt->execute()) {
             echo 'success: Password has been updated.';

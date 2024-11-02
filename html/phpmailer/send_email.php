@@ -48,18 +48,26 @@ if (isset($_POST["send"])) {
             $mail->isHTML(true);
             $mail->Subject = $_POST["subject"] ?? 'Password Reset Request';
 
-           // Generate a unique token
+            // Generate a unique token
             $token = bin2hex(random_bytes(16)); // Generate a random token
-            $expiration = date("Y-m-d H:i:s", strtotime("+1 hour")); // Token expires in 1 hour
+
+            // Set timezone to Manila
+            date_default_timezone_set('Asia/Manila');
+            
+            // Calculate expiration time in Manila and convert to UTC
+            $expirationManila = new DateTime('+1 hour');
+            $expirationUTC = $expirationManila->setTimezone(new DateTimeZone("Asia/Manila"))-> format("Y-m-d H:i:s");
+
+            // Update database with token and UTC expiration time
             $stmt = $conn->prepare("UPDATE member_credentials SET reset_token = ?, token_expiry = ? WHERE email = ?");
-            $stmt->bind_param("sss", $token, $expiration, $email);
+            $stmt->bind_param("sss", $token, $expirationUTC, $email);
             $stmt->execute();
 
-            $local_ip = '192.168.100.27:8080';
+            $local_ip = '192.168.100.9:8080';
             // Include the token in the email body link
             $mail->Body = $_POST["message"] ?? '
             <p>Good day!</p>
-            <p>We have received a request to reset your password. You can reset it by clicking this <a href="http://' . $local_ip . '/html/forgot-password.php?token=' . $token . '&email=' . urlencode($email) .'">link</a>. Please note that the reset link will expire 1 hour after this email is sent.</p>
+            <p>We have received a request to reset your password. You can reset it by clicking this <a href="http://' . $local_ip . '/pmpcv6/pmpc/html/forgot-password.php?token=' . $token . '&email=' . urlencode($email) .'">link</a>.</p>
             <p>Thank you,</p>
                 <p>Paschal Multi-Purpose Cooperative</p>
             ';
@@ -83,4 +91,4 @@ if (isset($_POST["send"])) {
 }
 
 $conn->close();
-
+?>
