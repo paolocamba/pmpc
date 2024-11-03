@@ -2,7 +2,7 @@
 session_start();
 
 // Check if MemberID is set in the session
-if (!isset($_SESSION['MemberID'])) {
+if (!isset($_SESSION['memberID'])) {
     // Redirect to login page if MemberID is not found
     header("Location: ../../html/index.php");
     exit();
@@ -21,7 +21,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$memberID = $_SESSION['MemberID'];
+$memberID = $_SESSION['memberID'];
 
 // Fetch member's information
 $query = "

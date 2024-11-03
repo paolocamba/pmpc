@@ -1,5 +1,12 @@
 <?php
 session_start();
+session_regenerate_id(true);
+
+// Check if the user is logged in
+if (!isset($_SESSION['memberID'])) {
+    header("Location: ../../html/index.php");
+    exit();
+}
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -22,7 +29,7 @@ if ($conn->connect_error) {
 }
 
 // Get MemberID from session
-$memberID = $_SESSION['MemberID'] ?? null;
+$memberID = $_SESSION['memberID'] ?? null;
 
 // Pagination variables
 $limit = 6; // Number of messages per page
@@ -30,7 +37,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 
-$memberID = $_SESSION['MemberID'] ?? null;
+$memberID = $_SESSION['memberID'] ?? null;
 $messages = [];
 $totalMessages = 0;
 

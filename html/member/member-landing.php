@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Check if user is logged in
+if (!isset($_SESSION['memberID'])) {
+    // Redirect to login page if not authenticated
+    header("Location: ../memblogin.html");
+    exit;
+}
+
 // Connect to the database
 $servername = "localhost";
 $username = "root";
@@ -14,20 +21,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (isset($_SESSION['member_id'])) {
-    $member_id = $_SESSION['member_id'];
-
-    // Fetch first name of the logged-in user
-    $first_name_query = "SELECT FirstName FROM member WHERE MemberID = ?";
-    $stmt = $conn->prepare($first_name_query);
-    $stmt->bind_param("i", $member_id);
-    $stmt->execute();
-    $stmt->bind_result($first_name);
-    $stmt->fetch();
-    $stmt->close();
-} else {
-    $first_name = "Guest";
-}
+// If the session is set, get the user's first name
+$member_id = $_SESSION['memberID'];
+$first_name_query = "SELECT FirstName FROM member WHERE MemberID = ?";
+$stmt = $conn->prepare($first_name_query);
+$stmt->bind_param("i", $member_id);
+$stmt->execute();
+$stmt->bind_result($first_name);
+$stmt->fetch();
+$stmt->close();
 
 // Pagination setup
 $limit = 3;
@@ -35,10 +37,13 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Fetch events with pagination
-$sql = "SELECT title, event_date, event_description, image FROM events ORDER BY event_date DESC LIMIT $limit OFFSET $offset";
-$result = $conn->query($sql);
-?>
+$sql = "SELECT title, event_date, event_description, image FROM events ORDER BY event_date DESC LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $limit, $offset);
+$stmt->execute();
+$result = $stmt->get_result();
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +78,6 @@ $result = $conn->query($sql);
             <header>
                 <h1>Welcome, <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
                 <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
-
             </header>
 
             <section class="news-bulletin">
@@ -138,10 +142,6 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <script>
-    function redirectToIndex() {
-        window.location.href = "../../html/index.php";
-    }
-</script>
+
 </body>
 </html>

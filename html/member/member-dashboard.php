@@ -22,7 +22,7 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
 // Check if the user is logged in
-if (!isset($_SESSION['MemberID'])) {
+if (!isset($_SESSION['memberID'])) {
     header("Location: ../../html/index.php");
     exit();
 }
@@ -39,7 +39,7 @@ if ($conn->connect_error) {
 }
 
 // Retrieve MemberID from session
-$member_id = $_SESSION['MemberID'];
+$member_id = $_SESSION['memberID'];
 
 // Fetch savings balance
 $savings_balance = 0;

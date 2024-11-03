@@ -75,7 +75,7 @@ if (isset($_POST["send"])) {
             // Attempt to send the email
             if ($mail->send()) {
                 // If email is sent successfully, show alert
-                echo "<script>alert('Password reset link sent to $email'); window.location.href='memblogin.html';</script>";
+                echo "<script>alert('Password reset link sent to $email'); window.location.href='../memblogin.html';</script>";
             } else {
                 // Handle the case where the mail is not sent
                 echo "<script>alert('Failed to send password reset link. Please try again later.'); window.location.href='memblogin.html';</script>";

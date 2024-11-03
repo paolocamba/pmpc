@@ -8,7 +8,7 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 // Check if the user is logged in
-if (!isset($_SESSION['MemberID'])) {
+if (!isset($_SESSION['memberID'])) {
     header("Location: ../../html/index.php");
     exit();
 }
@@ -26,7 +26,7 @@ if ($conn->connect_error) {
 }
 
 // Retrieve MemberID from session
-$member_id = $_SESSION['MemberID'];
+$member_id = $_SESSION['memberID'];
 
 // Fetch member details (LastName, FirstName, Email)
 $member_query = "SELECT LastName, FirstName, Email FROM member WHERE MemberID = ?";
@@ -175,7 +175,10 @@ $conn->close();
                         <option value="Space for Rent">Space for Rent</option>
                     </select>
                     <label for="product-date">Date</label>
-                    <input type="date" id="product-date" name="date" required>
+                    <input type="date" id="product-date" name="date" 
+                    min="<?php echo date('Y-m-d'); ?>" 
+                    max="<?php echo date('Y-m-d', strtotime('+30 days')); ?>" 
+                    required>
                     <button type="submit" class="submit-button">Submit</button>
                 </form>
             </div>
@@ -199,7 +202,10 @@ $conn->close();
                         <option value="Health Card">Health Card</option>
                     </select>
                     <label for="medical-date">Date</label>
-                    <input type="date" id="medical-date" name="date" required>
+                    <input type="date" id="medical-date" name="date" 
+                    min="<?php echo date('Y-m-d'); ?>" 
+                    max="<?php echo date('Y-m-d', strtotime('+30 days')); ?>" 
+                    required>
                     <button type="submit" class="submit-button">Submit</button>
                 </form>
             </div>

@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (password_verify($password, $hashedPassword)) {
                 // Set session variables
                 $_SESSION['email'] = $email;
-                $_SESSION['MemberID'] = $memberId;
+                $_SESSION['memberID'] = $memberId;
 
                 // Redirect to the member landing page
                 header("Location: ../html/member/member-landing.php");
@@ -66,7 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
 
         // Check in account_request table
-        $stmt = $conn->prepare("SELECT MemberID, GeneratedPassword, IsPasswordUsed, PasswordExpiration FROM account_request WHERE Email = ?");
+        $stmt = $conn->prepare("
+            SELECT 
+                MemberID, 
+                GeneratedPassword, 
+                IsPasswordUsed, 
+                PasswordExpiration 
+            FROM 
+                account_request 
+            WHERE 
+                Email = ?
+        ");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
@@ -75,17 +85,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_result($memberId, $hashedGeneratedPassword, $isPasswordUsed, $passwordExpiration);
             $stmt->fetch();
 
+            // Check if password has expired
             if (new DateTime() > new DateTime($passwordExpiration)) {
-                echo "<script>alert('The password has expired. Please request a new password.'); document.location.href = '../memblogin.html';</script>";
+                echo "<script>alert('The password has expired. Please request a new password.');</script>";
             } else {
                 if (password_verify($password, $hashedGeneratedPassword)) {
+                    // Mark password as used
                     $updateStmt = $conn->prepare("UPDATE account_request SET IsPasswordUsed = 1 WHERE MemberID = ?");
                     $updateStmt->bind_param("i", $memberId);
                     $updateStmt->execute();
                     $updateStmt->close();
 
+                    // Set session variables
                     $_SESSION['email'] = $email;
-                    $_SESSION['MemberID'] = $memberId;
+                    $_SESSION['memberID'] = $memberId;
+
+                    // Redirect to the member landing page
                     header("Location: ../html/member/member-landing.php");
                     exit();
                 } else {
@@ -107,8 +122,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Verify password for old_members table
                 if (password_verify($password, $oldHashedPassword)) {
+                    // Set session variables
                     $_SESSION['email'] = $email;
-                    $_SESSION['MemberID'] = $memberId;
+                    $_SESSION['memberID'] = $memberId;
+
+                    // Redirect to the member landing page
                     header("Location: ../html/member/member-landing.php");
                     exit();
                 } else {
@@ -123,3 +141,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+?>
