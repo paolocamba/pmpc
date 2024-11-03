@@ -8,22 +8,56 @@ if (!isset($_SESSION['memberID'])) {
     exit();
 }
 
-// Include database connection
+// Database connection
 $servername = "localhost";
 $dbUsername = "root";
 $dbPassword = "";
 $dbname = "pmpc";
 
 $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
-
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 $memberID = $_SESSION['memberID'];
 
-// Fetch member's information
+// Handle AJAX request for changing password
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['currentPassword'], $_POST['newPassword'])) {
+    header('Content-Type: application/json'); // Ensure JSON response header
+    $currentPassword = $_POST['currentPassword'];
+    $newPassword = $_POST['newPassword'];
+
+    // Verify current password
+    $query = "SELECT Password FROM member_credentials WHERE MemberID = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $memberID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $memberData = $result->fetch_assoc();
+
+    if (!$memberData || !password_verify($currentPassword, $memberData['Password'])) {
+        echo json_encode(['success' => false, 'error' => 'Current password is incorrect.']);
+        exit();
+    }
+
+    // Update the password
+    $newPasswordHash = password_hash($newPassword, PASSWORD_BCRYPT);
+    $updateQuery = "UPDATE member_credentials SET Password = ? WHERE MemberID = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param("si", $newPasswordHash, $memberID);
+    $updateSuccess = $updateStmt->execute();
+
+    if ($updateSuccess) {
+        echo json_encode(['success' => true, 'message' => 'Password changed successfully.']);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Failed to update password.']);
+    }
+    $conn->close();
+    exit();
+}
+
+
+// Fetch member's information for account management display
 $query = "
     SELECT 
         m.LastName, 
@@ -61,8 +95,8 @@ if (!$memberData) {
     exit();
 }
 
-// Handle form submission for saving changes
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Handle form submission for saving account details
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['newPassword'])) {
     $lastName = $_POST['lastName'];
     $firstName = $_POST['firstName'];
     $middleName = $_POST['middleName'];
@@ -146,110 +180,162 @@ $conn->close();
                 <li><a href="member-about.html">About</a></li>
             </ul>
             <ul class="sidebar-settings">
-                <li><a href="member-manageaccount.html" class="active">Settings</a></li>
+                <li><a href="member-manageaccount.php" class="active">Settings</a></li>
             </ul>
         </div>
 
         <div class="main-content">
             <header>
-                <h1>Account Settings</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <h1>Personal Information</h1>   
             </header>
 
             <section class="personal-info-section">
-            <div class="personal-info-header">
-                    <h2>Personal Information</h2>
-                    <span>MemberID: <?php echo htmlspecialchars($memberID); ?></span>
-                </div>
-
                 <div class="personal-info-form">
-                    <div class="input-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($memberData['LastName']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($memberData['FirstName']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="middleName">Middle Name</label>
-                        <input type="text" id="middleName" name="middleName" value="<?php echo htmlspecialchars($memberData['MiddleName']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender">
-                            <option value="male" <?php echo ($memberData['Sex'] == 'male') ? 'selected' : ''; ?>>Male</option>
-                            <option value="female" <?php echo ($memberData['Sex'] == 'female') ? 'selected' : ''; ?>>Female</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="street">Street</label>
-                        <input type="text" id="street" name="street" value="<?php echo htmlspecialchars($memberData['Street']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="barangay">Barangay</label>
-                        <input type="text" id="barangay" name="barangay" value="<?php echo htmlspecialchars($memberData['Barangay']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="municipality">Municipality</label>
-                        <input type="text" id="municipality" name="municipality" value="<?php echo htmlspecialchars($memberData['Municipality']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="province">Province</label>
-                        <input type="text" id="province" name="province" value="<?php echo htmlspecialchars($memberData['Province']); ?>">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="tin">TIN No. (Required)</label>
-                        <input type="text" id="tin" name="tin" value="<?php echo htmlspecialchars($memberData['TINNumber']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="birthday">Birthday</label>
-                        <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($memberData['Birthday']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo htmlspecialchars($memberData['ContactNo']); ?>">
-                    </div>
-                    <div class="input-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($memberData['Email']); ?>">
-                    </div>
-
-                    <div class="button-group">
-                        <button class="save-changes" type="button" onclick="askForPassword()">Save Changes</button>
-                    </div>
-                </div>
-
+                    <form id="accountForm" method="POST">
+                        <div class="input-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($memberData['LastName']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($memberData['FirstName']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" id="middleName" name="middleName" value="<?php echo htmlspecialchars($memberData['MiddleName']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" disabled>
+                                <option value="male" <?php echo ($memberData['Sex'] == 'male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="female" <?php echo ($memberData['Sex'] == 'female') ? 'selected' : ''; ?>>Female</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="street">Street</label>
+                            <input type="text" id="street" name="street" value="<?php echo htmlspecialchars($memberData['Street']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="barangay">Barangay</label>
+                            <input type="text" id="barangay" name="barangay" value="<?php echo htmlspecialchars($memberData['Barangay']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="municipality">Municipality</label>
+                            <input type="text" id="municipality" name="municipality" value="<?php echo htmlspecialchars($memberData['Municipality']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="province">Province</label>
+                            <input type="text" id="province" name="province" value="<?php echo htmlspecialchars($memberData['Province']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="tin">TIN No. (Required)</label>
+                            <input type="text" id="tin" name="tin" value="<?php echo htmlspecialchars($memberData['TINNumber']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="birthday">Birthday</label>
+                            <input type="date" id="birthday" name="birthday" value="<?php echo htmlspecialchars($memberData['Birthday']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo htmlspecialchars($memberData['ContactNo']); ?>" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($memberData['Email']); ?>" readonly>
+                        </div>
+                        
+                        <div class="button-group">
+                            <div class="left-buttons">
+                                <button class="save-changes" type="button" onclick="askForPassword()">Save Changes</button>
+                                <button type="button" class="edit-button" onclick="toggleEdit()">Edit</button>
+                            </div>
+                            <button type="button" class="change-password" onclick="openChangePasswordModal()">Change Password</button>
+                        </div>
+                    </form>
                 </div>
             </section>
         </div>
 
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeChangePasswordModal()">&times;</span>
+                <h2>Change Password</h2>
+                
+                <form id="changePasswordForm">
+                    <div class="input-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" onclick="submitChangePassword()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
+        function toggleEdit() {
+            const formElements = document.querySelectorAll("#accountForm input, #accountForm select");
+            formElements.forEach(el => el.readOnly = !el.readOnly);
+            document.getElementById("gender").disabled = !document.getElementById("gender").disabled;
+            document.getElementById("saveChangesGroup").style.display = formElements[0].readOnly ? "none" : "block";
+        }
+
         function askForPassword() {
             const currentPassword = prompt("Please enter your current password:");
-            
             if (currentPassword) {
-                // Create a hidden input to hold the password
                 const passwordInput = document.createElement("input");
                 passwordInput.type = "hidden";
                 passwordInput.name = "currentPassword";
                 passwordInput.value = currentPassword;
-
-                // Append the hidden input to the form
-                const form = document.querySelector("form");
-                form.appendChild(passwordInput);
-
-                // Submit the form
-                form.submit();
+                document.getElementById("accountForm").appendChild(passwordInput);
+                document.getElementById("accountForm").submit();
             }
         }
 
-        function redirectToIndex() {
-            window.location.href = '../../html/index.php';
+        function openChangePasswordModal() {
+            document.getElementById("changePasswordModal").style.display = "block";
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById("changePasswordModal").style.display = "none";
+        }
+
+        function submitChangePassword() {
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+
+            if (!currentPassword || !newPassword) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const formData = new URLSearchParams({
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            });
+
+            fetch('member-settings.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Password changed successfully.");
+                    closeChangePasswordModal();
+                } else {
+                    alert(data.error || "Failed to change password.");
+                }
+            })
+            .catch(error => console.error("Error changing password:", error));
         }
     </script>
 

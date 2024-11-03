@@ -6,127 +6,107 @@
     <title>Member Login - PASCHAL COOPERATIVE</title>
     <link rel="stylesheet" href="../css/memblogin.css">
     <script>
-        // JavaScript function to handle form submission and email format validation
         function validateEmail(email) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailPattern.test(email);
         }
 
         function handleLogin(event) {
-            // Prevent the form from submitting the traditional way
-            event.preventDefault(); 
-
-            // Capture the input values
-            const username = document.getElementById('username').value;
+            event.preventDefault();
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Email validation
-            if (!validateEmail(username)) {
+            if (!validateEmail(email)) {
                 alert("Please enter a valid email address.");
                 return;
             }
 
-            // Submit the form if the email is valid
+            if (password === "") {
+                alert("Please enter your password.");
+                return;
+            }
+
             document.querySelector('form').submit();
         }
 
-        // Modal functionality for Forgot Password
         window.onload = function() {
             const modal = document.getElementById("forgotPasswordModal");
             const forgotPasswordLink = document.querySelector(".forgot-password");
             const closeModal = document.querySelector(".close");
             const submitEmailButton = document.querySelector(".submit-email");
 
-            // Open modal when "Forgot Password?" link is clicked
             forgotPasswordLink.onclick = function(event) {
-                event.preventDefault(); // Prevent default link behavior
-                modal.style.display = "flex"; // Show the modal
+                event.preventDefault();
+                modal.style.display = "flex";
             };
 
-            // Close modal when clicking on the close button
             closeModal.onclick = function() {
-                modal.style.display = "none"; // Hide the modal
+                modal.style.display = "none";
             };
 
-            // Close modal when clicking outside the modal content
             window.onclick = function(event) {
                 if (event.target === modal) {
-                    modal.style.display = "none"; // Hide modal if clicked outside of it
+                    modal.style.display = "none";
                 }
             };
 
-            // Handle email submission
-            submitEmailButton.onclick = function() {
+            submitEmailButton.onclick = function(event) {
+                event.preventDefault();
                 const emailInput = document.getElementById('emailToReset').value;
+
                 if (!validateEmail(emailInput)) {
                     alert("Please enter a valid email address.");
                     return;
                 }
-                modal.style.display = "none"; // Hide the modal after submission
+
+                alert("A password reset link has been sent to " + emailInput);
+                modal.style.display = "none";
             };
-            };
-
-        // Email validation for the modal
-        function validateModalEmail(event) {
-            event.preventDefault(); // Prevent default form submission
-            const emailInput = document.getElementById('resetEmail').value;
-
-            if (!validateEmail(emailInput)) {
-                alert("Please enter a valid email address for password reset.");
-                return;
-            }
-
-            alert("A password reset link has been sent to"  + emailInput);
-            closeModal(); // Close the modal after submission
-        }
+        };
     </script>
 </head>
 <body>
+    <div class="login-container">
+        <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="login-logo">
+        <h1>PASCHAL COOPERATIVE</h1>
+        <p class="welcome-text">Welcome Back!</p>
 
-        <!-- Login Container -->
-        <div class="login-container">
-            <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="login-logo">
-            <h1>PASCHAL COOPERATIVE</h1>
-            <p class="welcome-text">Welcome Back!</p>
-    
-            <!-- Login Form -->
-            <form method="post" action="login.php">
-                <div class="input-group">
-                    <input type="text" id="email" name="email" placeholder="Enter email address" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Enter password" required>
-                </div>
-            
-                <button type="submit" class="login-button">Sign-In</button>
-            
-                <div class="checkbox-options">
-                    <label>
-                        <input type="checkbox" name="remember"> Remember me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
-                </div>
+        <!-- Login Form -->
+        <form method="post" action="login.php" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <input type="text" id="email" name="email" placeholder="Enter email address" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-button">Sign-In</button>
+
+            <div class="checkbox-options">
+                <label>
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+        </form>
+
+        <!-- Additional Links -->
+        <div class="additional-links">
+            <p>Not a Member? <a href="signup.html">Create Account</a> instead.</p>
+            <p>If already a member, <a href="request-account.html">Request Account Credentials</a>.</p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Reset Your Password<br><br></h2>
+            <p>Please enter the email address you registered with PMPC to receive a password reset link:</p>
+            <form action="phpmailer/send_email.php" method="POST">
+                <input type="email" id="emailToReset" name="email" placeholder="Enter your email address" required>
+                <button type="submit" class="submit-email" name="send">Submit</button>
             </form>
-            
-            <!-- Additional Links -->
-            <div class="additional-links">
-                <p>Not a Member? <a href="signup.html">Create Account</a> instead.</p>
-                <p>If already a member, <a href="request-account.html">Request Account Credentials</a>.</p>
-            </div>
         </div>
-    
-        <!-- Forgot Password Modal -->
-        <div id="forgotPasswordModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Reset Your Password<br><br></h2>
-                <p>Please enter the email address you registered with PMPC to receive a password reset link:</p>
-                <form action="phpmailer/send_email.php" method="POST">
-                    <input type="email" id="emailToReset" name="email" placeholder="Enter your email address" required>
-                    <button type="submit" class="submit-email" name="send">Submit</button>
-                </form>
-            </div>
-        </div>
-    
+    </div>
 </body>
 </html>
