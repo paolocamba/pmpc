@@ -10,3 +10,8 @@ Duplicate entry '1' for key 'unique_number'
 Duplicate entry '1' for key 'unique_number'
 Duplicate entry '1' for key 'unique_number'
 Duplicate entry '1' for key 'unique_number'
+Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`membership_application`, CONSTRAINT `fk_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE)
+Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`membership_application`, CONSTRAINT `fk_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE)
+Cannot add or update a child row: a foreign key constraint fails (`pmpc`.`membership_application`, CONSTRAINT `fk_member` FOREIGN KEY (`MemberID`) REFERENCES `member` (`MemberID`) ON DELETE CASCADE)
+Duplicate entry '09182876543' for key 'unique_number'
+Duplicate entry '09182876543' for key 'unique_number'

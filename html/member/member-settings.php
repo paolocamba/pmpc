@@ -177,7 +177,7 @@ $conn->close();
                 <li><a href="member-dashboard.php">Dashboard</a></li>
                 <li><a href="member-services.php">Services</a></li>
                 <li><a href="member-inbox.php">Inbox</a></li>
-                <li><a href="member-about.html">About</a></li>
+                <li><a href="member-about.php">About</a></li>
             </ul>
             <ul class="sidebar-settings">
                 <li><a href="member-manageaccount.php" class="active">Settings</a></li>

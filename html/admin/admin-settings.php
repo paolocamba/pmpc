@@ -96,7 +96,7 @@ $conn->close();
                 <li><a href="admin.html">Dashboard</a></li>
                 <li><a href="admin-members.html">Members</a></li>
                 <li><a href="admin-loans.html">Loans</a></li>
-                <li><a href="admin-transactions.html">Transactions</a></li>
+                <li><a href="admin-transactions.php">Transactions</a></li>
                 <li><a href="admin-appointments.html">Appointments</a></li>
             </ul>
 

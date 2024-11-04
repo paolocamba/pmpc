@@ -29,7 +29,7 @@ if (isset($_SESSION['lockout_time']) && time() - $_SESSION['lockout_time'] < 300
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     // Email format validation
@@ -58,23 +58,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
 
+    // Check if the email exists
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($memberId, $hashedPassword, $membershipStatus);
         $stmt->fetch();
 
-        if ($membershipStatus !== "Active") {
-            echo "<script>
-                    alert('Your membership status is not active. Please contact support.');
-                    window.location.href = 'memblogin.html';
-                  </script>";
-        } else if (password_verify($password, $hashedPassword)) {
-            $_SESSION['email'] = $email;
-            $_SESSION['memberID'] = $memberId;
-            unset($_SESSION['failed_attempts']);
-            unset($_SESSION['lockout_time']);
+        // Debugging output for fetched data
+        echo "<script>console.log('Fetched Hashed Password: " . addslashes($hashedPassword) . "');</script>";
+        echo "<script>console.log('Entered Password: " . addslashes($password) . "');</script>";
 
-            header("Location: ../html/member/member-landing.php");
-            exit();
+        // Verify password
+        if (password_verify($password, $hashedPassword)) {
+            echo "<script>console.log('Password verification succeeded.');</script>";
+
+            // Check if membership status is "Active"
+            if ($membershipStatus !== "Active") {
+                echo "<script>
+                        alert('Your membership status is not active. Please contact support.');
+                        window.location.href = 'memblogin.html';
+                      </script>";
+            } else {
+                // Set session variables
+                $_SESSION['email'] = $email;
+                $_SESSION['memberID'] = $memberId;  // Ensure 'memberID' matches other scripts
+
+                // Redirect to the member landing page
+                header("Location: ../html/member/member-landing.php");
+                exit();
+            }
         } else {
             handle_failed_attempt();
         }
