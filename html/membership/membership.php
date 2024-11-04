@@ -44,13 +44,6 @@ if (!$activeMemberApplicationsResult) {
 }
 $activeMemberApplications = $activeMemberApplicationsResult->fetch_assoc()['total'];
 
-// Fetch account requests
-$accountRequestsQuery = "SELECT COUNT(*) as total FROM Account_request";
-$accountRequestsResult = $conn->query($accountRequestsQuery);
-if (!$accountRequestsResult) {
-    die("Query failed: " . $conn->error);
-}
-$accountRequests = $accountRequestsResult->fetch_assoc()['total'];
 
 // Fetch members list
 $membersQuery = "SELECT MemberID, LastName, FirstName, MiddleName, ContactNo, Email FROM member LIMIT 5";
@@ -108,10 +101,6 @@ $conn->close();
                 <p>Member Application</p>
             </div>
         </a>
-        <div class="card" onclick="window.location.href='admin-account-req.php'">
-            <h2><?php echo $accountRequests; ?></h2>
-            <p>Account Request</p>
-        </div>
             </section>
 
 

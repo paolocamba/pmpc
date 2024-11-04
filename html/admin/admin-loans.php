@@ -203,7 +203,7 @@ $conn->close();
                                 echo "<td>" . htmlspecialchars($row['TypeOfLoan']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['AmountOfLoan']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['LoanStatus']) . "</td>";
-                                echo "<td><a href='view_loan_application.php?id=" . htmlspecialchars($row['LoanID']) . "' class='view-button'>View</a></td>";
+                                echo "<td><a href='admin-view-loan-app.php?id=" . htmlspecialchars($row['LoanID']) . "' class='view-button'>View</a></td>";
                                 echo "</tr>";
                             }
                         } else {
