@@ -59,12 +59,12 @@ if (!isset($_SESSION['memberID'])) {
             <!-- Vision and Mission Section -->
             <section class="vision-mission-section">
                 <div class="vision">
-                    <img src="../../assets/vision.jpg" alt="Vision Image">
+                    <img src="../../assets/vision-mission.png" alt="Vision Image">
                     <h2>VISION</h2>
                     <p>"A model cooperative responsive for the total development of its members and the community."</p>
                 </div>
                 <div class="mission">
-                    <img src="../../assets/mission.jpg" alt="Mission Image">
+                    <img src="../../assets/vision-mission.png" alt="Mission Image">
                     <h2>MISSION</h2>
                     <p>"To share talent, time & treasure for the total development of the members and the community."</p>
                 </div>
