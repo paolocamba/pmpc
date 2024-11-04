@@ -235,17 +235,17 @@ $conn->close();
                     <input type="text" id="province" name="province" required>
                 </div>
                 <div class="form-row">
-                    <label for="tin">TIN No. (Required)</label>
-                    <input type="text" id="tin" name="tin" required>
-                </div>
+                <label for="tin">TIN No. (Required)</label>
+                <input type="text" id="tin" name="tin" pattern="\d{9}" maxlength="9" title="TIN number must be 9 digits" required>
+            </div>
                 <div class="form-row">
                     <label for="birthday">Birthday</label>
                     <input type="date" id="birthday" name="birthday" required>
                 </div>
                 <div class="form-row">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" required>
-                </div>
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" name="phone" pattern="\d{11}" maxlength="11" title="Phone number must be 11 digits" required>
+</div>
                 <div class="form-row">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" required>
@@ -256,11 +256,11 @@ $conn->close();
                 </div>
                 <div class="form-row">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" minlength="8" title="Password must be at least 8 characters" required>
                 </div>
                 <div class="form-row">
                     <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <input type="password" id="confirm-password" name="confirm-password" minlength="8" title="Password must be at least 8 characters" required>
                 </div>
             </div>
 
