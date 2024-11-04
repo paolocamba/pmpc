@@ -201,9 +201,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="type-of-land">Type of Land:</label>
                         <select id="type-of-land" name="type-of-land" required>
                             <option value="" disabled selected hidden>Select</option>
-                            <option value="residential">Residential</option>
-                            <option value="commercial">Commercial</option>
-                            <option value="agricultural">Agricultural</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Agricultural">Agricultural</option>
                         </select>
                     </div>
 
@@ -211,28 +211,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="location">Location:</label>
                         <select id="location" name="location">
                             <option value="" disabled selected hidden>Select</option>
-                            <option value="bagbugin">Bagbugin</option>
-                            <option value="bagong-barrio">Bagong Barrio</option>
-                            <option value="baka-bakahan">Baka-bakahan</option>
-                            <option value="bunsuran-i">Bunsuran I</option>
-                            <option value="bunsuran-ii">Bunsuran II</option>
-                            <option value="bunsuran-iii">Bunsuran III</option>
-                            <option value="cacarong-bata">Cacarong Bata</option>
-                            <option value="cacarong-matanda">Cacarong Matanda</option>
-                            <option value="cupang">Cupang</option>
-                            <option value="malibong-bata">Malibong Bata</option>
-                            <option value="malibong-matanda">Malibong Matanda</option>
-                            <option value="manatal">Manatal</option>
-                            <option value="mapulang-lupa">Mapulang Lupa</option>
-                            <option value="masagana">Masagana</option>
-                            <option value="masuso">Masuso</option>
-                            <option value="pinagkuartelan">Pinagkuartelan</option>
-                            <option value="poblacion">Poblacion</option>
-                            <option value="real-de-cacarong">Real de Cacarong</option>
-                            <option value="san-roque">San Roque</option>
-                            <option value="santo-niño">Santo Niño</option>
-                            <option value="siling-bata">Siling Bata</option>
-                            <option value="siling-matanda">Siling Matanda</option>
+                            <option value="Bagbaguin">Bagbaguin</option>
+                                    <option value="Bagong Barrio">Bagong Barrio</option>
+                                    <option value="Baka-bakahan">Baka-bakahan</option>
+                                    <option value="Bunsuran I">Bunsuran I</option>
+                                    <option value="Bunsuran II">Bunsuran II</option>
+                                    <option value="Bunsuran III">Bunsuran III</option>
+                                    <option value="Cacarong Bata">Cacarong Bata</option>
+                                    <option value="Cacarong Matanda">Cacarong Matanda</option>
+                                    <option value="Cupang">Cupang</option>
+                                    <option value="Malibong Bata">Malibong Bata</option>
+                                    <option value="Malibong Matanda">Malibong Matanda</option>
+                                    <option value="Manatal">Manatal</option>
+                                    <option value="Mapulang Lupa">Mapulang Lupa</option>
+                                    <option value="Masagana">Masagana</option>
+                                    <option value="Masuso">Masuso</option>
+                                    <option value="Pinagkuartelan">Pinagkuartelan</option>
+                                    <option value="Poblacion">Poblacion</option>
+                                    <option value="Real de Cacarong">Real de Cacarong</option>
+                                    <option value="San Roque">San Roque</option>
+                                    <option value="Santo Niño">Santo Niño</option>
+                                    <option value="Siling Bata">Siling Bata</option>
+                                    <option value="Siling Matanda">Siling Matanda</option>
                         </select>
                     </div>
 

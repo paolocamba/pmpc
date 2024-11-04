@@ -1,3 +1,52 @@
+<?php
+// Start the session
+session_start();
+
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+// Check if the user is logged in
+if (!isset($_SESSION['staffID'])) {
+    header("Location: ../stafflogin.php");
+    exit();
+}
+
+// Retrieve staffID from session
+$staffId = $_SESSION['staffID'];
+
+// Include database connection
+$servername = "localhost";
+$dbUsername = "root"; // Update if you have a different username
+$dbPassword = ""; // Update if you have a password
+$dbname = "pmpc"; // Your database name
+
+$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Set the desired LoanID
+$loanId = 1; // Replace this with the desired LoanID
+$query = "SELECT * FROM collateral_info WHERE LoanID = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $loanId); // Bind the parameter
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
+
+
+// Function to determine proximity display based on 'yes' or 'no' value
+function proximityDisplay($value) {
+    return $value === 'yes' ? '>1KM' : '<1KM';
+}
+
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +112,7 @@
                         <!-- Square Meters -->
                         <tr>
                             <td>Square Meters</td>
-                            <td><input type="text" placeholder="Enter Square Meters" name="borrowerSquareMeters" oninput="calculateTotalValue(); calculateLoanableValue();"></td>
+                            <td><input type="text" name="borrowerSquareMeters" value="<?php echo htmlspecialchars($data['square_meters']); ?>" readonly></td>
                             <td><input type="text" placeholder="Validate Square Meters" name="validatorSquareMeters" oninput="validateField(this);"></td>
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
@@ -71,7 +120,7 @@
                         <!-- Type of Land -->
                         <tr>
                             <td>Type of Land</td>
-                            <td><input type="text" placeholder="Enter Type of Land" name="borrowerLandType" oninput="validateField(this);"></td>
+                            <td><input type="text" name="borrowerLandType" value="<?php echo htmlspecialchars($data['type_of_land']); ?>" readonly></td>
                             <td>
                                 <select name="validatorLandType" onchange="calculateEMV(); calculateTotalValue(); calculateLoanableValue(); validateField(this);">
                                     <option value="">Select Type of Land</option>
@@ -86,7 +135,7 @@
                         <!-- Location -->
                         <tr>
                             <td>Location</td>
-                            <td><input type="text" placeholder="Enter Location" name="borrowerLocation" oninput="validateField(this);"></td>
+                            <td><input type="text" name="borrowerLocation" value="<?php echo htmlspecialchars($data['location']); ?>" readonly></td>
                             <td>
                                 <select name="validatorLocation" onchange="calculateEMV(); calculateTotalValue(); calculateLoanableValue(); validateField(this);">
                                     <option value="">Select Location</option>
@@ -120,7 +169,7 @@
                         <!-- Right of Way -->
                         <tr>
                             <td>Right of Way</td>
-                            <td><input type="text" placeholder="Enter Right of Way" name="borrowerRightOfWay" oninput="validateField(this)"></td>
+                            <td><input type="text" name="borrowerRightOfWay" value="<?php echo htmlspecialchars($data['right_of_way']); ?>" readonly></td>
                             <td>
                                 <select name="validatorRightOfWay" onchange="validateField(this)">
                                     <option value="">Select Right of Way</option>
@@ -133,8 +182,8 @@
 
                         <!-- Commodities (Hospital, Clinics, etc.) -->
                         <tr>
-                            <td>Hospital Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerHospital" oninput="validateCommodity(this)"></td>
+                            <td>Hospital</td>
+                            <td><input type="text" name="borrowerHospital" value="<?php echo proximityDisplay($data['hospital']); ?>" readonly></td>
                             <td>
                                 <select name="validatorHospital" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>
@@ -145,8 +194,8 @@
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
                         <tr>
-                            <td>Clinics Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerClinics" oninput="validateCommodity(this)"></td>
+                            <td>Clinics</td>
+                            <td><input type="text" name="borrowerClinics" value="<?php echo proximityDisplay($data['clinic']); ?>" readonly></td>
                             <td>
                                 <select name="validatorClinics" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>
@@ -157,8 +206,8 @@
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
                         <tr>
-                            <td>School Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerSchool" oninput="validateCommodity(this)"></td>
+                            <td>School</td>
+                            <td><input type="text" name="borrowerSchool" value="<?php echo proximityDisplay($data['school']); ?>" readonly></td>
                             <td>
                                 <select name="validatorSchool" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>
@@ -169,8 +218,8 @@
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
                         <tr>
-                            <td>Market Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerMarket" oninput="validateCommodity(this)"></td>
+                            <td>Market</td>
+                            <td><input type="text" name="borrowerMarket" value="<?php echo proximityDisplay($data['market']); ?>" readonly></td>
                             <td>
                                 <select name="validatorMarket" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>
@@ -181,8 +230,8 @@
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
                         <tr>
-                            <td>Church Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerChurch" oninput="validateCommodity(this)"></td>
+                            <td>Church</td>
+                            <td><input type="text" name="borrowerChurch" value="<?php echo proximityDisplay($data['church']); ?>" readonly></td>
                             <td>
                                 <select name="validatorChurch" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>
@@ -193,8 +242,8 @@
                             <td><input type="text" class="result-box" readonly></td>
                         </tr>
                         <tr>
-                            <td>Public Terminals Proximity</td>
-                            <td><input type="text" placeholder="Enter Yes/No" name="borrowerTerminals" oninput="validateCommodity(this)"></td>
+                            <td>Public Terminals</td>
+                            <td><input type="text" name="borrowerTerminals" value="<?php echo proximityDisplay($data['public_terminal']); ?>" readonly></td>
                             <td>
                                 <select name="validatorTerminals" onchange="validateCommodity(this)">
                                     <option value="">Select Distance</option>

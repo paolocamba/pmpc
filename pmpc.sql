@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2024 at 09:39 PM
+-- Generation Time: Nov 04, 2024 at 10:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -320,8 +320,8 @@ DELIMITER ;
 CREATE TABLE `collateral_info` (
   `LoanID` int(11) NOT NULL,
   `square_meters` varchar(255) NOT NULL,
-  `type_of_land` enum('residential','commercial','agricultural') NOT NULL,
-  `location` enum('bagbugin','bagong-barrio','baka-bakahan','bunsuran-i','bunsuran-ii','bunsuran-iii','cacarong-bata','cacarong-matanda','cupang','malibong-bata','malibong-matanda','manatal','mapulang-lupa','masagana','masuso','pinagkuartelan','poblacion','real-de-cacarong','santo-niño','san-roque','siling-bata','siling-matanda') NOT NULL,
+  `type_of_land` enum('Residential','Commercial','Agricultural') NOT NULL,
+  `location` enum('Bagbugin','Bagong Barrio','Baka-bakahan','Bunsuran I','Bunsuran II','Bunsuran III','Cacarong Bata','Cacarong Matanda','Cupang','Malibong Bata','Malibong Matanda','Manatal','Mapulang Lupa','Masagana','Masuso','Pinagkuartelan','Poblacion','Real de Cacarong','Santo Niño','San Roque','Siling Bata','Siling Matanda') NOT NULL,
   `right_of_way` enum('yes','no') NOT NULL,
   `land_title_path` varchar(255) NOT NULL,
   `hospital` enum('yes','no') DEFAULT 'no',
@@ -331,6 +331,13 @@ CREATE TABLE `collateral_info` (
   `church` enum('yes','no') DEFAULT 'no',
   `public_terminal` enum('yes','no') DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `collateral_info`
+--
+
+INSERT INTO `collateral_info` (`LoanID`, `square_meters`, `type_of_land`, `location`, `right_of_way`, `land_title_path`, `hospital`, `clinic`, `school`, `market`, `church`, `public_terminal`) VALUES
+(1, '160', 'Residential', 'Pinagkuartelan', 'no', '', 'no', 'no', 'no', 'no', 'no', 'no');
 
 -- --------------------------------------------------------
 
@@ -618,6 +625,13 @@ CREATE TABLE `loanapplication` (
   `reference3_address` varchar(255) NOT NULL,
   `reference3_contact_no` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loanapplication`
+--
+
+INSERT INTO `loanapplication` (`LoanID`, `MemberID`, `DateOfLoan`, `AmountRequested`, `LoanTerm`, `Purpose`, `LoanType`, `ModeOfPayment`, `years_stay_present_address`, `own_house`, `renting`, `living_with_relative`, `status`, `spouse_name`, `number_of_dependents`, `dependents_in_school`, `dependent1_name`, `dependent1_age`, `dependent1_grade_level`, `dependent2_name`, `dependent2_age`, `dependent2_grade_level`, `dependent3_name`, `dependent3_age`, `dependent3_grade_level`, `dependent4_name`, `dependent4_age`, `dependent4_grade_level`, `family_member_count`, `self_income`, `self_income_amount`, `other_income`, `other_income_amount`, `spouse_income`, `spouse_income_amount`, `spouse_other_income`, `spouse_other_income_amount`, `total_income`, `food_groceries_expense`, `gas_oil_transportation_expense`, `schooling_expense`, `utilities_expense`, `miscellaneous_expense`, `total_expenses`, `net_family_income`, `employer_name`, `employer_address`, `present_position`, `date_of_employment`, `monthly_income`, `contact_person`, `contact_telephone_no`, `self_employed_business_type`, `business_start_date`, `savings_account`, `savings_bank`, `savings_branch`, `current_account`, `current_bank`, `current_branch`, `asset1`, `asset2`, `asset3`, `asset4`, `creditor1_name`, `creditor1_address`, `creditor1_original_amount`, `creditor1_present_balance`, `creditor2_name`, `creditor2_address`, `creditor2_original_amount`, `creditor2_present_balance`, `creditor3_name`, `creditor3_address`, `creditor3_original_amount`, `creditor3_present_balance`, `creditor4_name`, `creditor4_address`, `creditor4_original_amount`, `creditor4_present_balance`, `property_foreclosed_repossessed`, `co_maker_cosigner_guarantor`, `reference1_name`, `reference1_address`, `reference1_contact_no`, `reference2_name`, `reference2_address`, `reference2_contact_no`, `reference3_name`, `reference3_address`, `reference3_contact_no`) VALUES
+(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '', 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', '', '', NULL, 0.00, '', '', NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -1422,7 +1436,7 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `collateral_info`
 --
 ALTER TABLE `collateral_info`
-  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `LoanID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `events`
