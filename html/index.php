@@ -53,7 +53,7 @@ if ($conn->connect_error) {
         <h1>Welcome to <span>PASCHAL</span></h1>
         <h2>Multi-Purpose Cooperative</h2>
         <p>Tulay sa Pag-unlad</p>
-        <button class="services-btn" href="services.html">Our Services</button>
+        <button class="services-btn" onclick="window.location.href='services.html'">Our Services</button>
     </div>
     <div class="coop-image">
         <img src="../assets/paschal.png" alt="Paschal Coop Building">
