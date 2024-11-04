@@ -1,12 +1,19 @@
 <?php
 session_start();
 
-// Check if MemberID is set in the session
-if (!isset($_SESSION['MemberID'])) {
-    // Redirect to login page if MemberID is not found
-    header("Location: ../../html/index.php");
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+// Check if the user is logged in
+if (!isset($_SESSION['staffID'])) {
+    header("Location: ../stafflogin.php");
     exit();
 }
+
+// Retrieve staffID from session
+$staffId = $_SESSION['staffID'];
+
 
 // Include database connection
 $servername = "localhost";
@@ -21,8 +28,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$memberID = $_SESSION['MemberID'];
+// Get the member ID from URL
+$memberID = $_GET['id'] ?? null;
 
+if ($memberID) {
 // Fetch member's information
 $query = "
     SELECT 
@@ -52,6 +61,7 @@ $stmt->bind_param("i", $memberID);
 $stmt->execute();
 $result = $stmt->get_result();
 $memberData = $result->fetch_assoc();
+}
 
 // Check if data was found
 if (!$memberData) {
@@ -149,7 +159,7 @@ $conn->close();
         <main class="main-content">
             <header>
                 <h1>Manage Member Information</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <section class="personal-info-section">

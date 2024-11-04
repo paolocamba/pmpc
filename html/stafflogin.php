@@ -1,37 +1,55 @@
 <?php
-// Start the session
 session_start();
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Database connection
+// Database connection setup
 $servername = "localhost";
 $dbUsername = "root";
-$dbPassword = ""; // Update if you have a password
+$dbPassword = ""; 
 $dbname = "pmpc";
 
 $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Reset failed attempts after 5 minutes
+if (isset($_SESSION['lockout_time']) && time() - $_SESSION['lockout_time'] > 300) {
+    unset($_SESSION['failed_attempts']);
+    unset($_SESSION['lockout_time']);
+}
+
+// Check if the user is locked out
+if (isset($_SESSION['lockout_time']) && time() - $_SESSION['lockout_time'] < 300) {
+    echo "<script>
+            alert('You have been locked out. Please try again after 5 minutes.');
+            window.location.href = 'stafflogin.php';
+          </script>";
+    exit();
+}
+
 // Check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // Fetch user credentials from the database
-    $stmt = $conn->prepare("SELECT Password, Role FROM staff_credentials WHERE Email = ?");
+    // Email format validation
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>
+                alert('Invalid email format.');
+                window.location.href = 'stafflogin.php';
+              </script>";
+        exit();
+    }
+
+    // Prepare statement to select user credentials
+    $stmt = $conn->prepare("SELECT staffID, Password, Role FROM staff_credentials WHERE Email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($hashedPassword, $role);
+        $stmt->bind_result($staffId, $hashedPassword, $role);
         $stmt->fetch();
 
         // Verify the password against the hashed password
@@ -39,6 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Successful login
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+            $_SESSION['staffID'] = $staffId; // Store staffID in session
+            unset($_SESSION['failed_attempts']);
+            unset($_SESSION['lockout_time']);
 
             // Redirect based on role
             switch ($role) {
@@ -62,35 +83,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         } else {
-            echo "<script>alert('Invalid email or password.');</script>";
+            handle_failed_attempt();
         }
     } else {
-        echo "<script>alert('No user found with this email.');</script>";
+        handle_failed_attempt();
     }
 
     $stmt->close();
 }
 
-// Close the connection
 $conn->close();
+
+function handle_failed_attempt() {
+    if (!isset($_SESSION['failed_attempts'])) {
+        $_SESSION['failed_attempts'] = 0;
+    }
+    $_SESSION['failed_attempts']++;
+
+    $remaining_attempts = 3 - $_SESSION['failed_attempts'];
+
+    if ($_SESSION['failed_attempts'] >= 3) {
+        $_SESSION['lockout_time'] = time();
+        echo "<script>
+                alert('Too many failed attempts. You have been locked out for 5 minutes.');
+                window.location.href = 'stafflogin.php';
+              </script>";
+    } else {
+        echo "<script>
+                alert('Invalid email or password. You have $remaining_attempts attempt(s) remaining.');
+                window.location.href = 'stafflogin.php';
+              </script>";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Login - PASCHAL COOPERATIVE</title>
-    <link rel="stylesheet" href="../css/stafflogin.css"> <!-- Linking the updated staff login CSS -->
-
+    <link rel="stylesheet" href="../css/stafflogin.css">
 </head>
 <body>
-    <!-- Login Container -->
     <div class="login-container">
-        <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="login-logo"> <!-- Logo -->
+        <img src="../assets/pmpc-logo.png" alt="PMPC Logo" class="login-logo">
         <h1>PASCHAL COOPERATIVE</h1>
         <p class="welcome-text">Welcome Staff!</p>
 
-        <!-- Login Form -->
         <form method="post" action="stafflogin.php">
             <div class="input-group">
                 <input type="text" id="email" name="email" placeholder="Enter email address" required>
@@ -109,10 +149,8 @@ $conn->close();
             </div>
         </form>
 
-        <!-- Additional Links -->
         <div class="additional-links">
-            <p>Not a Staff Member? <a href="signup.html">Create Account</a> instead.</p>
-            <p>If already a staff member, <a="#">Request Account Credentials</a>.</p>
+            <p>Not a Staff Member? <a href="memblogin.html">Log in as a member</a> instead.</p>
         </div>
     </div>
 </body>

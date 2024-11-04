@@ -1,3 +1,19 @@
+<?php
+// Start the session and regenerate ID for security
+session_start();
+session_regenerate_id(true);
+
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+// Check if the user is logged in
+if (!isset($_SESSION['memberID'])) {
+    header("Location: ../memblogin.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +53,7 @@
         <div class="main-content">
             <header>
                 <h1>About Us</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <!-- Vision and Mission Section -->

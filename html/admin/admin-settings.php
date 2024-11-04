@@ -1,16 +1,30 @@
 <?php
-                    // Connect to the database
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "";
-                    $dbname = "pmpc";
+session_start();
 
-                    $conn = new mysqli($servername, $username, $password, $dbname);
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
 
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
+// Check if the user is logged in
+if (!isset($_SESSION['staffID'])) {
+    header("Location: ../stafflogin.php");
+    exit();
+}
+
+// Retrieve staffID from session
+$staffId = $_SESSION['staffID'];
+// Connect to the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pmpc";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -94,7 +108,7 @@ $conn->close();
         <main class="main-content">
             <header>
                 <h1>Settings</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <section class="dashboard-metrics">

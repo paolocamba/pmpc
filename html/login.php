@@ -4,7 +4,7 @@ session_start();
 // Database connection setup
 $servername = "localhost";
 $dbUsername = "root";
-$dbPassword = ""; // Update if you have a password
+$dbPassword = ""; 
 $dbname = "pmpc";
 
 $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
@@ -23,7 +23,7 @@ if (isset($_SESSION['lockout_time']) && time() - $_SESSION['lockout_time'] > 300
 if (isset($_SESSION['lockout_time']) && time() - $_SESSION['lockout_time'] < 300) {
     echo "<script>
             alert('You have been locked out. Please try again after 5 minutes.');
-            window.location.href = 'login.html';
+            window.location.href = 'memblogin.html';
           </script>";
     exit();
 }
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "<script>
                 alert('Invalid email format.');
-                window.location.href = 'login.html';
+                window.location.href = 'memblogin.html';
               </script>";
         exit();
     }
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($membershipStatus !== "Active") {
             echo "<script>
                     alert('Your membership status is not active. Please contact support.');
-                    window.location.href = 'login.html';
+                    window.location.href = 'memblogin.html';
                   </script>";
         } else if (password_verify($password, $hashedPassword)) {
             $_SESSION['email'] = $email;
@@ -99,12 +99,12 @@ function handle_failed_attempt() {
         $_SESSION['lockout_time'] = time();
         echo "<script>
                 alert('Too many failed attempts. You have been locked out for 5 minutes.');
-                window.location.href = 'login.html';
+                window.location.href = 'memblogin.html';
               </script>";
     } else {
         echo "<script>
                 alert('Invalid email or password. You have $remaining_attempts attempt(s) remaining.');
-                window.location.href = 'login.html';
+                window.location.href = 'memblogin.html';
               </script>";
     }
 }

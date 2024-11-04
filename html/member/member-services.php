@@ -9,7 +9,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
 // Check if the user is logged in
 if (!isset($_SESSION['memberID'])) {
-    header("Location: ../../html/index.php");
+    header("Location: ../memblogin.html");
     exit();
 }
 

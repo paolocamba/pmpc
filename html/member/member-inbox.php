@@ -4,7 +4,7 @@ session_regenerate_id(true);
 
 // Check if the user is logged in
 if (!isset($_SESSION['memberID'])) {
-    header("Location: ../../html/index.php");
+    header("Location: ../memblogin.html");
     exit();
 }
 

@@ -1,6 +1,19 @@
 <?php
 session_start();
 
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+// Check if the user is logged in
+if (!isset($_SESSION['staffID'])) {
+    header("Location: ../stafflogin.php");
+    exit();
+}
+
+// Retrieve staffID from session
+$staffId = $_SESSION['staffID'];
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -23,6 +36,8 @@ ob_start();
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+
 
 // Pagination variables
 $limit = 5; // Messages per page

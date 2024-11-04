@@ -4,7 +4,7 @@ session_start();
 // Check if MemberID is set in the session
 if (!isset($_SESSION['memberID'])) {
     // Redirect to login page if MemberID is not found
-    header("Location: ../../html/index.php");
+    header("Location: ../memblogin.html");
     exit();
 }
 

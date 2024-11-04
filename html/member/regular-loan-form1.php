@@ -4,7 +4,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['MemberID'])) {
-    header("Location: ../../html/index.php");
+    header("Location: ../memblogin.html");
     exit();
 }
 

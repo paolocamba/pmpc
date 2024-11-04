@@ -2,6 +2,19 @@
 // Start the session
 session_start();
 
+// Prevent caching
+header("Cache-Control: no-cache, must-revalidate"); 
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
+
+// Check if the user is logged in
+if (!isset($_SESSION['staffID'])) {
+    header("Location: ../stafflogin.php");
+    exit();
+}
+
+// Retrieve staffID from session
+$staffId = $_SESSION['staffID'];
+
 // Include database connection
 $servername = "localhost";
 $dbUsername = "root";
@@ -111,7 +124,7 @@ $conn->close();
         <div class="main-content">
             <header>
                 <h1>View Appointment</h1>
-                <button class="logout-button" onclick="redirectToIndex()">Log out</button>
+                <button class="logout-button" onclick="window.location.href='../logout.php'">Log out</button>
             </header>
 
             <!-- Appointment Details -->
@@ -141,10 +154,5 @@ $conn->close();
         </div>
     </div>
 
-    <script>
-        function redirectToIndex() {
-            window.location.href = "../../html/index.php";
-        }
-    </script>
 </body>
 </html>
