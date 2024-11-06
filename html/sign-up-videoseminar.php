@@ -62,6 +62,44 @@ if (empty($memberID)) {
     <title>Sign Up - Video Seminar</title>
     <link rel="stylesheet" href="../css/style.css">  <!-- Main styles -->
     <link rel="stylesheet" href="../css/sign-up-videoseminar.css">  <!-- Signup specific styles -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const video = document.getElementById("seminarVideo");
+            const nextButton = document.querySelector("button.next-button");
+            const checkbox = document.getElementById("seminar-completed");
+            let lastPlayedTime = 0; // Track last playback time
+
+            
+           
+            checkbox.disabled = true;
+
+            // Listen for the "timeupdate" event to prevent forwarding
+            video.addEventListener("timeupdate", function() {
+                if (video.currentTime > lastPlayedTime + 1) {
+                    // If user tries to skip ahead, reset to last allowed time
+                    video.currentTime = lastPlayedTime;
+                } else {
+                    // Update the last played time as video plays normally
+                    lastPlayedTime = video.currentTime;
+                }
+            });
+
+            // Allow rewind by listening for "seeked" event
+            video.addEventListener("seeked", function() {
+                if (video.currentTime < lastPlayedTime) {
+                    lastPlayedTime = video.currentTime; // Update last played time for rewind
+                }
+            });
+
+            // When video ends, enable the Next button
+            video.addEventListener("ended", function() {
+                checkbox.disabled = false;
+            });
+            checkbox.addEventListener("change", function() {
+                nextButton.disabled = !checkbox.checked; // Enable Next only if checkbox is checked
+            });
+        });
+    </script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -87,8 +125,8 @@ if (empty($memberID)) {
 
         <!-- Video Player -->
         <div class="video-seminar">
-            <video width="100%" height="auto" controls>
-                <source src="../assets/seminar-video.mp4" type="video/mp4">
+            <video id="seminarVideo" width="100%" height="auto" controls controlsList="nodownload">
+                <source src="../assets/PMES.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
@@ -114,13 +152,12 @@ if (empty($memberID)) {
 
             <div class="navigation-buttons">
                 <a href="sign-up-membershipapplication.php" class="nav-button prev-button">Previous</a>
-                <button type="submit" class="nav-button next-button">Next</button>
+                <button type="submit" class="nav-button next-button" disabled>Next</button>
             </div>
         </form>
 
     
     </div>
     </div>
-
 </body>
 </html>
