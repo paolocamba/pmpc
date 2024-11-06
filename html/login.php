@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Prepare statement to select the member's hashed password and membership status
+    // First, check in the member_credentials table
     $stmt = $conn->prepare("
         SELECT 
             mc.MemberID, 
@@ -58,19 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->store_result();
 
-    // Check if the email exists
+    // Check if the email exists in member_credentials
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($memberId, $hashedPassword, $membershipStatus);
         $stmt->fetch();
 
-        // Debugging output for fetched data
-        echo "<script>console.log('Fetched Hashed Password: " . addslashes($hashedPassword) . "');</script>";
-        echo "<script>console.log('Entered Password: " . addslashes($password) . "');</script>";
-
         // Verify password
         if (password_verify($password, $hashedPassword)) {
-            echo "<script>console.log('Password verification succeeded.');</script>";
-
             // Check if membership status is "Active"
             if ($membershipStatus !== "Active") {
                 echo "<script>
@@ -78,9 +72,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         window.location.href = 'memblogin.html';
                       </script>";
             } else {
-                // Set session variables
+                // Successful login
                 $_SESSION['email'] = $email;
-                $_SESSION['memberID'] = $memberId;  // Ensure 'memberID' matches other scripts
+                $_SESSION['memberID'] = $memberId;
 
                 // Redirect to the member landing page
                 header("Location: ../html/member/member-landing.php");
@@ -90,7 +84,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             handle_failed_attempt();
         }
     } else {
-        handle_failed_attempt();
+        // If not found in member_credentials, check in account_request
+        $stmt = $conn->prepare("
+            SELECT 
+                MemberID, 
+                GeneratedPassword, 
+                IsPasswordUsed, 
+                PasswordExpiration 
+            FROM 
+                account_request 
+            WHERE 
+                Email = ?
+        ");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($memberId, $hashedGeneratedPassword, $isPasswordUsed, $passwordExpiration);
+            $stmt->fetch();
+
+            // Check if the password has expired
+            if (new DateTime() > new DateTime($passwordExpiration)) {
+                echo "<script>alert('The password has expired. Please request a new password.'); window.location.href = 'memblogin.html';</script>"; 
+            } else {
+                // Verify generated password
+                if (password_verify($password, $hashedGeneratedPassword)) {
+                    // Mark the password as used
+                    $updateStmt = $conn->prepare("UPDATE account_request SET IsPasswordUsed = 1 WHERE MemberID = ?");
+                    $updateStmt->bind_param("i", $memberId);
+                    $updateStmt->execute();
+                    $updateStmt->close();
+
+                    // Successful login
+                    $_SESSION['email'] = $email;
+                    $_SESSION['memberID'] = $memberId;
+
+                    // Redirect to the member landing page
+                    header("Location: ../html/member/member-landing.php");
+                    exit();
+                } else {
+                    handle_failed_attempt();
+                }
+            }
+        } else {
+            // If not found in either table, handle failed attempt
+            handle_failed_attempt();
+        }
     }
 
     $stmt->close();
