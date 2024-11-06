@@ -53,12 +53,12 @@ if ($memberID) {
         exit;
     }
 
-    // Handle fetching a specific message details
+// Handle fetching a specific message details
 if (isset($_GET['message_id'])) {
     $messageId = (int)$_GET['message_id'];
     
-    // Fetch the message details
-    $messageQuery = "SELECT Message, Date, related_message_id FROM inbox WHERE MessageID = ?";
+    // Fetch the message details along with isRead status
+    $messageQuery = "SELECT Message, Date, related_message_id, isRead FROM inbox WHERE MessageID = ?";
     $messageStmt = $conn->prepare($messageQuery);
     $messageStmt->bind_param("i", $messageId);
     $messageStmt->execute();
@@ -78,9 +78,12 @@ if (isset($_GET['message_id'])) {
         $messageResult['AdminMessageDate'] = $adminMessageResult['DateSent'];
     }
 
+    // Return the message details including isRead, AdminMessage, and AdminMessageDate
     echo json_encode($messageResult);
     exit;
 }
+
+
 
 
     // Handle message deletion
@@ -107,6 +110,30 @@ if (isset($_GET['message_id'])) {
     $messages = [];
     $totalMessages = 0;
 }
+
+// Handle marking a message as read
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_as_read'])) {
+    $messageId = (int)$_POST['mark_as_read'];
+
+    if ($messageId) {
+        // Update the isRead column to 1 (message marked as read)
+        $updateQuery = "UPDATE inbox SET isRead = 1 WHERE MessageID = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param("i", $messageId);
+        $updateStmt->execute();
+
+        // Check if the update was successful
+        if ($updateStmt->affected_rows > 0) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Message could not be marked as read.']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid message ID.']);
+    }
+    exit;
+}
+
 
 // Handle sending a message to the admin
 if (isset($_POST['message_category']) && isset($_POST['message_content'])) {
@@ -204,7 +231,7 @@ $conn->close();
             <h2 id="modalMessageTitle">Message Details</h2>
             <p id="modalMessageContent">Message content goes here...</p>
             <p id="modalMessageDate"></p>
-            <button id="deleteMessageButton" onclick="deleteMessage()">Delete Message</button>
+            <button id="deleteMessageButton" onclick="confirmDelete('messageId123')">Delete Message</button>
         </div>
     </div>
 
@@ -237,24 +264,29 @@ $conn->close();
     
 
             function loadMessages(page) {
-                fetch('member-inbox.php?page=' + page + '&ajax=true')
-                    .then(response => response.json())
-                    .then(data => {
-                        const inboxMessages = document.getElementById('inboxMessages');
-                        inboxMessages.innerHTML = '';
-                        data.messages.forEach(message => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                        <td>${message.Message}</td>
-                        <td>${new Date(message.Date).toLocaleDateString()}</td>
-                        <td><button class='view-btn' onclick="showViewMessageModal(${message.MessageID})">View</button></td>
-                    `;
-                            inboxMessages.appendChild(row);
-                        });
-                        setPagination(data.total, data.page, data.limit);
-                    })
-                    .catch(error => console.error('Error loading messages:', error));
-            }
+    fetch('member-inbox.php?page=' + page + '&ajax=true')
+        .then(response => response.json())
+        .then(data => {
+            const inboxMessages = document.getElementById('inboxMessages');
+            inboxMessages.innerHTML = '';
+            data.messages.forEach(message => {
+                const row = document.createElement('tr');
+
+                // Check if the message is unread (isRead = 0)
+                const messageText = message.isRead === 0 ? `<b>${message.Message}</b>` : message.Message;
+
+                row.innerHTML = `
+                    <td>${messageText}</td>
+                    <td>${new Date(message.Date).toLocaleString()}</td>
+                    <td><button class='view-btn' onclick="showViewMessageModal(${message.MessageID})">View</button></td>
+                `;
+                inboxMessages.appendChild(row);
+            });
+            setPagination(data.total, data.page, data.limit);
+        })
+        .catch(error => console.error('Error loading messages:', error));
+}
+
 
             function setPagination(total, page, limit) {
                 const pagination = document.getElementById('pagination');
@@ -283,6 +315,21 @@ $conn->close();
                     })
                     .catch(error => console.error('Error checking for new messages:', error));
             }
+
+            document.querySelectorAll('.message').forEach(function(message) {
+                message.addEventListener('click', function() {
+                    const messageId = message.getAttribute('data-id');
+                    fetch('/updateMessageStatus.php?messageId=' + messageId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                message.classList.remove('unread-message');
+                                message.classList.add('read-message');
+                            }
+                        });
+                });
+            });
+
     
 
     // Function to show the view message modal
@@ -290,15 +337,37 @@ $conn->close();
     fetch('member-inbox.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
+            // Update the message status to 'read' (isRead = 1)
+            fetch('member-inbox.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    mark_as_read: messageId // Sending the messageId to update isRead
+                })
+            }).catch(error => console.error('Error marking message as read:', error));
+
             document.getElementById('modalMessageTitle').innerText = 'Message Details';
-            document.getElementById('modalMessageContent').innerText = data.Message;
             document.getElementById('modalMessageDate').innerText = new Date(data.Date).toLocaleString();
+
+            // Get the message content element
+            const messageContentElement = document.getElementById('modalMessageContent');
+
+            // Check if the message is unread (isRead is 0) and apply bold style
+            if (data.isRead === 0) {
+                messageContentElement.classList.add('unread-message'); // Add the class for unread messages
+            } else {
+                messageContentElement.classList.remove('unread-message'); // Remove the class for read messages
+            }
+
+            messageContentElement.innerText = data.Message;
 
             // Check if there is an admin message to display
             if (data.related_message_id) {
                 const adminMessageContent = data.AdminMessage || 'No reply found.';
                 const adminMessageDate = new Date(data.AdminMessageDate).toLocaleString() || '';
-                document.getElementById('modalMessageContent').innerText += `\n\nAdmin Replied to:\n${adminMessageContent} \n`;
+                messageContentElement.innerText += `\n\nAdmin Replied to:\n${adminMessageContent} \n`;
             }
 
             // Set the messageId in the delete button's data attribute
@@ -308,6 +377,8 @@ $conn->close();
         })
         .catch(error => console.error('Error fetching message:', error));
 }
+
+
 
 
     // Function to close the view message modal
@@ -330,11 +401,12 @@ $conn->close();
 
     // Function to confirm deletion of a message
     function confirmDelete(messageId) {
-        const confirmation = confirm("Are you sure you want to delete this message?");
-        if (confirmation) {
-            deleteMessage(messageId);
-        }
+    const confirmation = confirm("Are you sure you want to delete this message?");
+    if (confirmation) {
+        deleteMessage(messageId);
     }
+}
+
 
     // Function to delete a message
     function deleteMessage() {

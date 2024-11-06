@@ -38,6 +38,18 @@
     background-color: #f9f9f9;
 }
 
+/* Style for unread messages */
+.unread-message {
+    font-weight: bold;
+}
+
+/* Style for read messages */
+.read-message {
+    font-weight: normal;
+}
+
+
+
 /* Pagination styling */
 .pagination {
     margin-top: 20px;
