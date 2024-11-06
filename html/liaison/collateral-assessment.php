@@ -15,18 +15,7 @@ if (!isset($_SESSION['staffID'])) {
 // Retrieve staffID from session
 $staffId = $_SESSION['staffID'];
 
-// Include database connection
-$servername = "localhost";
-$dbUsername = "root"; // Update if you have a different username
-$dbPassword = ""; // Update if you have a password
-$dbname = "pmpc"; // Your database name
-
-$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Get the LoanID from URL
 $loanID = $_GET['LoanID'] ?? null;

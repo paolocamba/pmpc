@@ -2,18 +2,7 @@
 // Start the session
 session_start();
 
-// Include database connection
-$servername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbname = "pmpc";
-
-$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Get the logged-in user's ID
 $recipientID = $_SESSION['user_id']; // Assuming you store the logged-in user ID in the session

@@ -11,19 +11,7 @@ if (!isset($_SESSION['memberID']) || !isset($_SESSION['loan_application_id'])) {
 // Get the loan type from the URL (either 'regular' or 'collateral')
 $loan_type = isset($_GET['loanType']) ? $_GET['loanType'] : 'regular';
 
-// Database connection settings
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pmpc";
-
-// Create connection to the database
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Initialize variables for form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

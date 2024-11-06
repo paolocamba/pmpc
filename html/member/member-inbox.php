@@ -15,18 +15,7 @@ error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', 'path/to/error.log'); // Set the path to your PHP error log file
 
-// Include database connection
-$servername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbname = "pmpc";
-
-$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Get MemberID from session
 $memberID = $_SESSION['memberID'] ?? null;

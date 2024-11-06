@@ -8,18 +8,7 @@ if (!isset($_SESSION['memberID'])) {
     exit;
 }
 
-// Connect to the database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pmpc";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // If the session is set, get the user's first name
 $member_id = $_SESSION['memberID'];

@@ -13,18 +13,7 @@ if (!isset($_SESSION['staffID'])) {
 
 // Retrieve staffID from session
 $staffId = $_SESSION['staffID'];
-// Connect to the database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pmpc";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

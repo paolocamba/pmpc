@@ -95,16 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $public_terminal = isset($_POST['facility']) && in_array('public-terminal', $_POST['facility']) ? 'yes' : 'no';
 
     // Database connection
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "pmpc";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    include('../db_connect.php');
 
     // Insert collateral information into the database
     $query = "INSERT INTO collateral_info (LoanID, square_meters, type_of_land, location, right_of_way, land_title_path, hospital, clinic, school, market, church, public_terminal)

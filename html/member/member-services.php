@@ -13,17 +13,7 @@ if (!isset($_SESSION['memberID'])) {
     exit();
 }
 
-// Database connection settings
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pmpc";
-
-// Connect to the database with error handling
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include('../db_connect.php');
 
 // Retrieve MemberID from session
 $member_id = $_SESSION['memberID'];
