@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['MemberID'])) {
+if (!isset($_SESSION['memberID'])) {
     header("Location: ../memblogin.html");
     exit();
 }
@@ -28,7 +28,7 @@ if ($conn->connect_error) {
 // Initialize variables for form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Fetch the MemberID from the session
-    $member_id = $_SESSION['MemberID'];
+    $member_id = $_SESSION['memberID'];
 
     // Collect form data
     $date_of_loan = isset($_POST['date']) ? $_POST['date'] : null;
@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
