@@ -272,11 +272,13 @@ $conn->close();
             data.messages.forEach(message => {
                 const row = document.createElement('tr');
 
-                // Check if the message is unread (isRead = 0)
-                const messageText = message.isRead === 0 ? `<b>${message.Message}</b>` : message.Message;
+                // Check if the message is unread (isRead === 0) and apply bold styling to the whole row
+                if (message.isRead === 0) {
+                    row.style.fontWeight = "bold"; // Apply bold style to the entire row
+                }
 
                 row.innerHTML = `
-                    <td>${messageText}</td>
+                    <td>${message.Message}</td>
                     <td>${new Date(message.Date).toLocaleString()}</td>
                     <td><button class='view-btn' onclick="showViewMessageModal(${message.MessageID})">View</button></td>
                 `;
@@ -286,6 +288,7 @@ $conn->close();
         })
         .catch(error => console.error('Error loading messages:', error));
 }
+
 
 
             function setPagination(total, page, limit) {
@@ -353,13 +356,6 @@ $conn->close();
 
             // Get the message content element
             const messageContentElement = document.getElementById('modalMessageContent');
-
-            // Check if the message is unread (isRead is 0) and apply bold style
-            if (data.isRead === 0) {
-                messageContentElement.classList.add('unread-message'); // Add the class for unread messages
-            } else {
-                messageContentElement.classList.remove('unread-message'); // Remove the class for read messages
-            }
 
             messageContentElement.innerText = data.Message;
 

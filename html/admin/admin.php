@@ -50,6 +50,21 @@ $countResult = $conn->query($countQuery);
 $totalMessages = $countResult->fetch_assoc()['total'];
 $totalPages = ceil($totalMessages / $limit);
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['mark_as_viewed'])) {
+    $messageId = intval($_GET['message_id']);
+    
+    // Update the isViewed column to 1 (read)
+    $updateViewedQuery = "UPDATE admin_messages SET isViewed = 1 WHERE MessageID = ?";
+    $stmt = $conn->prepare($updateViewedQuery);
+    $stmt->bind_param("i", $messageId);
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Failed to mark message as viewed.']);
+    }
+    exit;
+}
+
 
 // AJAX handler for paginated message loading
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
@@ -57,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
     $offset = ($page - 1) * $limit;
 
     $messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
-                             a.Category, a.MessageContent, a.DateSent, a.MessageID 
+                             a.Category, a.MessageContent, a.DateSent, a.MessageID, a.isViewed
                       FROM admin_messages a 
                       JOIN member m ON a.MemberID = m.MemberID 
                       ORDER BY a.DateSent DESC
@@ -83,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
 if (isset($_GET['check_new_messages'])) {
     header('Content-Type: application/json');
 
-    // Fetch only unread messages
+    // Fetch new messages
     $newMessagesQuery = "
         SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
-               a.Category, a.MessageContent, a.DateSent, a.MessageID 
+               a.Category, a.MessageContent, a.DateSent, a.MessageID, a.isViewed
         FROM admin_messages a 
         JOIN member m ON a.MemberID = m.MemberID 
         WHERE a.isViewed = 0 
@@ -99,13 +114,6 @@ if (isset($_GET['check_new_messages'])) {
         while ($message = $newMessagesResult->fetch_assoc()) {
             $newMessages[] = $message;
         }
-    }
-
-    // Update `isViewed` status for newly fetched messages
-    if (!empty($newMessages)) {
-        $messageIds = implode(',', array_column($newMessages, 'MessageID'));
-        $updateViewedQuery = "UPDATE admin_messages SET isViewed = 1 WHERE MessageID IN ($messageIds)";
-        $conn->query($updateViewedQuery);
     }
 
     ob_end_clean();
@@ -296,7 +304,7 @@ $appointments = $appointmentsResult->fetch_assoc()['total'];
 
 // Fetch paginated messages from members
 $messagesQuery = "SELECT CONCAT(m.FirstName, ' ', m.LastName) AS MemberName, 
-                         a.Category, a.MessageContent, a.DateSent, a.MessageID 
+                         a.Category, a.MessageContent, a.DateSent, a.MessageID, a.isViewed
                   FROM admin_messages a 
                   JOIN member m ON a.MemberID = m.MemberID 
                   ORDER BY a.DateSent DESC
@@ -403,21 +411,23 @@ $conn->close();
                         </tr>
                     </thead>
                     <tbody id="inboxMessages">
-                        <?php
-                        if ($messagesResult->num_rows > 0) {
-                            while ($message = $messagesResult->fetch_assoc()) {
-                                echo "<tr>
-                                    <td>{$message['MemberName']}</td>
-                                    <td>{$message['Category']}</td>
-                                    <td>{$message['MessageContent']}</td>
-                                    <td>" . date('F j, Y, g:i a', strtotime($message['DateSent'])) . "</td>
-                                    <td><button class='view-btn' onclick='showViewMessageModal({$message['MessageID']})'>View</button></td>
-                                </tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No messages found.</td></tr>";
+                    <?php
+                    if ($messagesResult->num_rows > 0) {
+                        while ($message = $messagesResult->fetch_assoc()) {
+                            // Add a class based on the isViewed status
+                            $isViewedClass = ($message['isViewed'] == 0) ? 'unread' : '';
+                            echo "<tr class='$isViewedClass'>
+                                <td>{$message['MemberName']}</td>
+                                <td>{$message['Category']}</td>
+                                <td>{$message['MessageContent']}</td>
+                                <td>" . date('F j, Y, g:i a', strtotime($message['DateSent'])) . "</td>
+                                <td><button class='view-btn' onclick='showViewMessageModal({$message['MessageID']})'>View</button></td>
+                            </tr>";
                         }
-                        ?>
+                    } else {
+                        echo "<tr><td colspan='5'>No messages found.</td></tr>";
+                    }
+                    ?>
                     </tbody>
                 </table>
             </section>
@@ -527,6 +537,12 @@ function loadPageData(page) {
 
             data.messages.forEach(message => {
                 const row = document.createElement("tr");
+
+                // Check if the message is unread (isViewed === 0) and apply bold styling to the whole row
+                if (message.isViewed === 0) {
+                    row.style.fontWeight = "bold"; // Apply bold style to the row
+                }
+
                 row.innerHTML = `
                     <td>${message.MemberName}</td>
                     <td>${message.Category}</td>
@@ -536,9 +552,16 @@ function loadPageData(page) {
                 `;
                 inboxMessages.appendChild(row);
             });
+
+            // Optionally, handle pagination if present in the response
+            if (data.total) {
+                setPagination(data.total, data.page, data.limit);
+            }
         })
         .catch(error => console.error("Error loading page:", error));
 }
+
+
 
 
 document.querySelectorAll("#pagination a").forEach(link => {
@@ -568,6 +591,32 @@ document.querySelectorAll("#pagination a").forEach(link => {
     });
 });
 
+function markMessageAsViewed(messageId) {
+    // Send a request to the server to mark the message as viewed
+    fetch('mark_message_as_viewed.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messageId: messageId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Find the row in the inbox table and remove bold styling
+            const row = document.querySelector(`tr[data-message-id="${messageId}"]`);
+            if (row) {
+                row.style.fontWeight = 'normal'; // Remove bold styling from the row
+                row.classList.remove('unread'); // Optionally remove the unread class if you're using it
+            }
+        } else {
+            console.error("Error marking message as viewed.");
+        }
+    })
+    .catch(error => console.error("Error marking message as viewed:", error));
+}
+
+
 
 
     // Show the Send Message Modal
@@ -586,6 +635,7 @@ document.querySelectorAll("#pagination a").forEach(link => {
     fetch('admin.php?message_id=' + messageId)
         .then(response => response.json())
         .then(data => {
+            // Update modal content
             document.getElementById('modalMessageTitle').innerText = 'Message Details';
             document.getElementById('modalMessageContent').innerText = data.MessageContent;
             document.getElementById('modalMessageDate').innerText = new Date(data.DateSent).toLocaleString();
@@ -601,8 +651,28 @@ document.querySelectorAll("#pagination a").forEach(link => {
             document.getElementById('deleteMessageButton').setAttribute('data-id', messageId);
             document.getElementById('viewMessageModal').style.display = 'flex';
             document.getElementById('modalBackground').style.display = 'block'; // Show dim background
+
+            // Mark the message as viewed and remove bold style from the inbox
+            markMessageAsViewed(messageId);
+            
+            // Immediately unbold the message in the inbox
+            unboldMessageInInbox(messageId);
         })
         .catch(error => console.error('Error fetching message:', error));
+}
+
+// Function to mark the message as viewed and unbold it in the inbox
+function markMessageAsViewed(messageId) {
+    fetch('admin.php?mark_as_viewed=' + messageId)
+        .catch(error => console.error('Error marking message as viewed:', error));
+}
+
+// Function to unbold the message in the inbox
+function unboldMessageInInbox(messageId) {
+    const messageRow = document.querySelector(`.message-row[data-message-id="${messageId}"]`);
+    if (messageRow) {
+        messageRow.style.fontWeight = "normal"; // Immediately unbold the message in the UI
+    }
 }
 
 

@@ -219,3 +219,7 @@
     font-weight: bold; /* Bold dates with appointments */
     color: #4CAF50; /* Optional: a color to indicate appointment dates */
 }
+
+.unread td {
+    font-weight: bold;
+}
